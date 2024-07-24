@@ -1,21 +1,14 @@
-import { auth, signOut } from '@/auth';
+'use client';
 
-export default async function Dashboard() {
-  const session = await auth();
+import { useSession } from 'next-auth/react';
+
+export default function Dashboard() {
+  const { data: session } = useSession();
 
   return (
-    <div>
+    <div className="flex flex-col items-center space-y-10 mt-24">
       <div>ID: {session?.user?.id}</div>
       <div>Name: {session?.user?.name}</div>
-
-      <form
-        action={async () => {
-          'use server';
-          await signOut();
-        }}
-      >
-        <button type="submit">Sign Out</button>
-      </form>
     </div>
   );
 }
