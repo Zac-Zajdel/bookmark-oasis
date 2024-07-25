@@ -1,5 +1,5 @@
-import { ClientSessionProvider } from '@/components/client-session-provider';
-import { ThemeProvider } from '@/components/theme-provider';
+import { ClientSessionProvider } from '@/components/providers/client-session-provider';
+import { ThemeProvider } from '@/components/providers/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
 import { cn } from '@/lib/utils';
 import '@/styles/globals.css';
