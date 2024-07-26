@@ -21,11 +21,28 @@ export default function LandingLayout({ children }: MarketingLayoutProps) {
             <Link href="/signup">
               <Button variant="outline">Sign Up</Button>
             </Link>
-            <ModeToggle />
           </nav>
         </div>
       </header>
       <main className="flex-1">{children}</main>
+      <footer className="container">
+        <div className="flex pt-20 pb-5 items-center justify-between">
+          <div className="flex items-center text-base">
+            <p className="text-muted-foreground">
+              Proudly built in open source by&nbsp;
+            </p>
+            <Link
+              className="font-medium"
+              href="https://github.com/Zac-Zajdel"
+              target="_blank"
+              prefetch={false}
+            >
+              Zac Zajdel
+            </Link>
+          </div>
+          <ModeToggle />
+        </div>
+      </footer>
     </div>
   );
 }

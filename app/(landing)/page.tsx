@@ -37,6 +37,8 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* <section>INSERT PHOTO OF THE APP DASHBOARD</section> */}
+
       <section className="space-y-6 mx-10">
         <div className="container flex max-w-[68rem] flex-col items-center gap-4">
           <ul className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-6 text-sm sm:mt-20 sm:grid-cols-2 md:gap-y-10 lg:max-w-none lg:grid-cols-3">
