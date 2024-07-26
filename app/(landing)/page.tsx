@@ -40,7 +40,16 @@ export default function Landing() {
       {/* <section>INSERT PHOTO OF THE APP DASHBOARD</section> */}
 
       <section className="space-y-6 mx-10">
-        <div className="container flex max-w-[68rem] flex-col items-center gap-4">
+        <motion.div
+          className="container flex max-w-[68rem] flex-col items-center gap-4"
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{
+            duration: 0.5,
+            delay: 0.7,
+            ease: [0, 0.71, 0.2, 1.01],
+          }}
+        >
           <ul className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-6 text-sm sm:mt-20 sm:grid-cols-2 md:gap-y-10 lg:max-w-none lg:grid-cols-3">
             <FeatureCard
               Icon={Bookmark}
@@ -73,7 +82,7 @@ export default function Landing() {
               description="Share your favorite and most valuable resources with others."
             />
           </ul>
-        </div>
+        </motion.div>
       </section>
     </>
   );
