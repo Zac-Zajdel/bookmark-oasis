@@ -11,7 +11,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         <form
           action={async () => {
             'use server';
-            await signOut();
+            await signOut({ redirectTo: '/' });
           }}
         >
           <button type="submit">Sign Out</button>
