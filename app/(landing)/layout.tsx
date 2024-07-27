@@ -42,18 +42,18 @@ export default function LandingLayout({ children }: MarketingLayoutProps) {
             </Link>
           </div>
           <div className="space-x-3">
-            <Button
-              variant="outline"
-              size="icon"
+            <Link
+              href="https://github.com/Zac-Zajdel/bookmark-oasis"
+              target="_blank"
+              prefetch={false}
             >
-              <Link
-                href="https://github.com/Zac-Zajdel/bookmark-oasis"
-                target="_blank"
-                prefetch={false}
+              <Button
+                variant="outline"
+                size="icon"
               >
                 <Github />
-              </Link>
-            </Button>
+              </Button>
+            </Link>
             <ModeToggle />
           </div>
         </div>

@@ -12,7 +12,7 @@ export default function FeatureCard({
   Icon: LucideIcon;
 }) {
   return (
-    <li className="rounded-2xl border border-gray-200 p-8 relative">
+    <li className="rounded-2xl border border-gray-200 p-8 relative transform transition-transform duration-300 hover:scale-105">
       <div className="absolute inset-0 rounded-2xl transition duration-300 [mask-image:linear-gradient(white,transparent)]">
         <svg
           aria-hidden="true"
