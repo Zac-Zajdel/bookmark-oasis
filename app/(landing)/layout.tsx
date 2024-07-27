@@ -1,5 +1,6 @@
 'use client';
 
+import Github from '@/components/icons/github';
 import { Button } from '@/components/ui/button';
 import { ModeToggle } from '@/components/ui/mode-toggle';
 import Link from 'next/link';
@@ -40,7 +41,21 @@ export default function LandingLayout({ children }: MarketingLayoutProps) {
               Zac Zajdel
             </Link>
           </div>
-          <ModeToggle />
+          <div className="space-x-3">
+            <Button
+              variant="outline"
+              size="icon"
+            >
+              <Link
+                href="https://github.com/Zac-Zajdel/bookmark-oasis"
+                target="_blank"
+                prefetch={false}
+              >
+                <Github />
+              </Link>
+            </Button>
+            <ModeToggle />
+          </div>
         </div>
       </footer>
     </div>
