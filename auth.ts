@@ -22,6 +22,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
   pages: {
     signIn: '/login',
+    error: '/error',
   },
   callbacks: {
     jwt({ token, user }) {
