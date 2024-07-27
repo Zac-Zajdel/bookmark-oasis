@@ -1,25 +1,5 @@
-import { signIn, signOut } from '@/auth';
+import { Access } from '@/components/landing/access';
 
 export default async function Signup() {
-  return (
-    <div>
-      <form
-        action={async () => {
-          'use server';
-          await signIn('google');
-        }}
-      >
-        <button type="submit">Sign In with Google</button>
-      </form>
-
-      <form
-        action={async () => {
-          'use server';
-          await signOut();
-        }}
-      >
-        <button type="submit">Sign Out</button>
-      </form>
-    </div>
-  );
+  return <Access type="signup" />;
 }
