@@ -21,93 +21,64 @@ export default function Navbar() {
     <nav>
       <div className="mx-auto px-2 sm:px-6 lg:px-8 border-b">
         <div className="relative flex h-12 items-center justify-between">
-          <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-            <div className="flex flex-shrink-0 items-center">
-              <h1 className="text-lg font-bold">Bookmark Oasis</h1>
+          <div className="flex flex-1 items-center sm:items-center sm:justify-start">
+            <div className="flex-shrink-0 items-center hidden sm:block">
+              <h1 className="text-lg font-bold mr-4">Bookmark Oasis</h1>
             </div>
-            <div className="hidden sm:block">
-              <div className="flex items-center justify-between mx-8 h-14">
-                <ul className="space-x-3">
-                  <Link
-                    href="/bookmarks"
-                    className={cn(
-                      pathname === '/bookmarks'
-                        ? 'border-b-2 border-b-white'
-                        : 'text-muted-foreground',
-                      'whitespace-nowrap px-2 pb-[0.90rem] text-sm',
-                    )}
-                  >
-                    Bookmarks
-                  </Link>
-                  <Link
-                    href="/settings"
-                    className={cn(
-                      pathname === '/settings'
-                        ? 'border-b-2 border-b-white'
-                        : 'text-muted-foreground',
-                      'whitespace-nowrap px-2 pb-[0.90rem] text-sm',
-                    )}
-                  >
-                    Settings
-                  </Link>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className="flex rounded-full hover:bg-black cursor-pointer">
-                  <Avatar>
-                    <AvatarImage
-                      src={session?.user?.image as string}
-                      alt="Profile Photo"
-                    />
-                    <AvatarFallback>
-                      <Skeleton className="h-12 w-12 rounded-full" />
-                    </AvatarFallback>
-                  </Avatar>
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="mt-1 mr-2 sm:mr-5 xl:mr-1">
-                <DropdownMenuItem
-                  className="cursor-pointer"
-                  onClick={() => signOut()}
+            <div className="flex items-center justify-between ml-4">
+              <ul className="space-x-3">
+                <Link
+                  href="/bookmarks"
+                  className={cn(
+                    pathname === '/bookmarks'
+                      ? 'border-b-2 border-b-white font-medium'
+                      : 'text-muted-foreground',
+                    'whitespace-nowrap px-2 pb-[0.90rem] text-sm',
+                  )}
                 >
-                  Log out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                  Bookmarks
+                </Link>
+                <Link
+                  href="/settings"
+                  className={cn(
+                    pathname === '/settings'
+                      ? 'border-b-2 border-b-white font-medium'
+                      : 'text-muted-foreground',
+                    'whitespace-nowrap px-2 pb-[0.90rem] text-sm',
+                  )}
+                >
+                  Settings
+                </Link>
+              </ul>
+            </div>
           </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              asChild
+              className="mr-4 sm:mr-0"
+            >
+              <button className="flex rounded-full hover:bg-black cursor-pointer">
+                <Avatar>
+                  <AvatarImage
+                    src={session?.user?.image as string}
+                    alt="Profile Photo"
+                  />
+                  <AvatarFallback>
+                    <Skeleton className="h-12 w-12 rounded-full" />
+                  </AvatarFallback>
+                </Avatar>
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="mt-1 mr-2 sm:mr-5 xl:mr-1">
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={() => signOut()}
+              >
+                Log out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
-      </div>
-
-      {/* This is on mobile displays */}
-      <div className="sm:hidden pt-2 mx-2">
-        <ul className="space-x-3">
-          <Link
-            href="/bookmarks"
-            className={cn(
-              pathname === '/bookmarks'
-                ? 'border-b-2 border-b-white'
-                : 'text-muted-foreground',
-              'whitespace-nowrap px-2 pb-4 text-sm',
-            )}
-          >
-            Bookmarks
-          </Link>
-          <Link
-            href="/settings"
-            className={cn(
-              pathname === '/settings'
-                ? 'border-b-2 border-b-white'
-                : 'text-muted-foreground',
-              'whitespace-nowrap px-2 pb-4 text-sm',
-            )}
-          >
-            Settings
-          </Link>
-        </ul>
       </div>
     </nav>
   );
