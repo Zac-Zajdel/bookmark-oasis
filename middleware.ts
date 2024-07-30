@@ -6,7 +6,7 @@ export default auth((req) => {
   const isAuthRoute = /\/(login|signup)/.test(req.url);
 
   if (req.auth && isAuthRoute) {
-    return NextResponse.redirect(new URL('/dashboard', req.url));
+    return NextResponse.redirect(new URL('/bookmarks', req.url));
   }
 
   if (!req.auth && req.url !== env.NEXT_PUBLIC_APP_URL && !isAuthRoute) {
@@ -15,5 +15,5 @@ export default auth((req) => {
 });
 
 export const config = {
-  matcher: ['/dashboard', '/login', '/signup'],
+  matcher: ['/login', '/signup', '/bookmarks', '/settings'],
 };

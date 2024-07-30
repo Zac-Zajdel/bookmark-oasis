@@ -2,10 +2,10 @@
 
 import { Button } from '@/components/ui/button';
 import { ModeToggle } from '@/components/ui/mode-toggle';
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import { toast } from 'sonner';
 
-export default function Dashboard() {
+export default function Bookmarks() {
   const { data: session } = useSession();
 
   return (
@@ -27,6 +27,13 @@ export default function Dashboard() {
         }
       >
         Show Toast
+      </Button>
+
+      <Button
+        variant="outline"
+        onClick={() => signOut()}
+      >
+        Sign Out
       </Button>
     </div>
   );
