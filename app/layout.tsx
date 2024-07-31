@@ -3,7 +3,7 @@ import { ThemeProvider } from '@/components/providers/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
 import { cn } from '@/lib/utils';
 import '@/styles/globals.css';
-import type { Metadata } from 'next';
+import { Metadata } from 'next';
 import { Inter as FontSans } from 'next/font/google';
 
 const fontSans = FontSans({
@@ -11,9 +11,51 @@ const fontSans = FontSans({
   variable: '--font-sans',
 });
 
+export const META_URL =
+  process.env.NODE_ENV !== 'production'
+    ? 'http://localhost:3000'
+    : 'https://www.bookmarkoasis.com';
+
 export const metadata: Metadata = {
+  metadataBase: new URL(META_URL),
   title: 'Bookmark Oasis',
-  description: 'A better way to organize links',
+  description:
+    'Organize, manage, and access your favorite links all in one place',
+  applicationName: 'Bookmark Oasis',
+  authors: [{ name: 'Zac', url: 'https://www.zaczajdel.com/' }],
+  keywords: ['Tools', 'Bookmarks', 'Browser'],
+  openGraph: {
+    title: 'Bookmark Oasis',
+    description:
+      'Organize, manage, and access your favorite links all in one place',
+    images: '/android-chrome-192x192.png',
+  },
+  twitter: {
+    title: 'Bookmark Oasis',
+    description:
+      'Organize, manage, and access your favorite links all in one place',
+    creator: '@zac_zajdel',
+  },
+  icons: [
+    {
+      rel: 'apple-touch-icon',
+      sizes: '180x180',
+      url: '/apple-touch-icon.png',
+    },
+    {
+      rel: 'icon',
+      type: 'image/png',
+      sizes: '32x32',
+      url: '/favicon-32x32.png',
+    },
+    {
+      rel: 'icon',
+      type: 'image/png',
+      sizes: '16x16',
+      url: '/favicon-16x16.png',
+    },
+  ],
+  manifest: '/site.webmanifest',
 };
 
 export default function RootLayout({
