@@ -6,7 +6,10 @@ export default function Error() {
     <>
       <header className="pt-6">
         <div className="container flex items-center text-center">
-          <Link href="/">
+          <Link
+            href="/"
+            prefetch={false}
+          >
             <h1 className="text-xl font-bold">Bookmark Oasis</h1>
           </Link>
         </div>
@@ -19,7 +22,10 @@ export default function Error() {
           </h2>
           <div className="text-center">
             <Button variant="outline">
-              <Link href="/login">
+              <Link
+                href="/login"
+                prefetch={false}
+              >
                 <p className="text-sm">Try Again</p>
               </Link>
             </Button>

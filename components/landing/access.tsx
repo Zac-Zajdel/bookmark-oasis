@@ -7,7 +7,10 @@ export function Access({ type }: { type: 'signup' | 'login' }) {
     <>
       <header className="pt-6">
         <div className="container flex items-center text-center">
-          <Link href="/">
+          <Link
+            href="/"
+            prefetch={false}
+          >
             <h1 className="text-xl font-bold">Bookmark Oasis</h1>
           </Link>
         </div>
@@ -48,6 +51,7 @@ export function Access({ type }: { type: 'signup' | 'login' }) {
                 </p>
                 <Link
                   href="/signup"
+                  prefetch={false}
                   className="font-semibold"
                 >
                   Sign Up
@@ -60,6 +64,7 @@ export function Access({ type }: { type: 'signup' | 'login' }) {
                 </p>
                 <Link
                   href="/login"
+                  prefetch={false}
                   className="font-semibold"
                 >
                   Login

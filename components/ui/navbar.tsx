@@ -29,6 +29,7 @@ export default function Navbar() {
               <ul className="space-x-3">
                 <Link
                   href="/bookmarks"
+                  prefetch={false}
                   className={cn(
                     pathname === '/bookmarks'
                       ? 'border-b-2 border-b-white font-medium'
@@ -40,6 +41,7 @@ export default function Navbar() {
                 </Link>
                 <Link
                   href="/settings"
+                  prefetch={false}
                   className={cn(
                     pathname === '/settings'
                       ? 'border-b-2 border-b-white font-medium'
