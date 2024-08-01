@@ -3,10 +3,31 @@
 import { Button } from '@/components/ui/button';
 import { ModeToggle } from '@/components/ui/mode-toggle';
 import { signOut, useSession } from 'next-auth/react';
+import { useEffect } from 'react';
 import { toast } from 'sonner';
 
 export default function Bookmarks() {
   const { data: session } = useSession();
+
+  // TODO - Replace with TanStack Query
+  useEffect(() => {
+    async function getOGData() {
+      const response = await fetch('/api/bookmarks', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          url: 'https://zod.dev/?id=basic-usage',
+        }),
+      });
+
+      const data = await response.json();
+      console.log('RESPONSE: ', data);
+    }
+
+    getOGData();
+  }, []);
 
   return (
     <div className="flex flex-col items-center space-y-10 mt-24">
