@@ -2,37 +2,43 @@
 
 import { Button } from '@/components/ui/button';
 import { ModeToggle } from '@/components/ui/mode-toggle';
+import { useQuery } from '@tanstack/react-query';
 import { signOut, useSession } from 'next-auth/react';
-import { useEffect } from 'react';
 import { toast } from 'sonner';
 
 export default function Bookmarks() {
   const { data: session } = useSession();
 
-  // TODO - Replace with TanStack Query
-  useEffect(() => {
-    async function getOGData() {
-      const response = await fetch('/api/bookmarks', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          url: 'https://zod.dev/?id=basic-usage',
-        }),
-      });
+  const { data } = useQuery({
+    queryKey: ['bookmark-create'],
+    queryFn: async () => await getOGData(),
+  });
 
-      const data = await response.json();
-      console.log('RESPONSE: ', data);
-    }
+  async function getOGData(): Promise<{
+    success: boolean;
+    message: string;
+    data: any;
+  }> {
+    const response = await fetch('/api/bookmarks', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        url: 'https://www.youtube.com/',
+      }),
+    });
 
-    getOGData();
-  }, []);
+    return await response.json();
+  }
+  console.log('DATA: ', data);
 
   return (
     <div className="flex flex-col items-center space-y-10 mt-24">
       <div>ID: {session?.user?.id}</div>
       <div>Name: {session?.user?.name}</div>
+
+      <div>API RESPONSE: {data?.message}</div>
 
       <ModeToggle />
       <Button
