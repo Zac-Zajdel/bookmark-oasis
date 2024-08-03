@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 export default function Bookmarks() {
   const { data: session } = useSession();
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['bookmark-create'],
     queryFn: async () => await getOGData(),
   });
@@ -26,7 +26,13 @@ export default function Bookmarks() {
       }),
     });
 
-    return await response.json();
+    const jsonData = await response.json();
+
+    if (!response.ok) {
+      throw new Error(jsonData.message || 'An error occurred');
+    }
+
+    return jsonData;
   }
 
   return (
@@ -34,7 +40,9 @@ export default function Bookmarks() {
       <div>ID: {session?.user?.id}</div>
       <div>Name: {session?.user?.name}</div>
 
-      <div>API RESPONSE: {data?.message}</div>
+      <div>
+        API RESPONSE: {isLoading && <span>Loading...</span>} {data?.message}
+      </div>
 
       <ModeToggle />
       <Button

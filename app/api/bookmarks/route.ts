@@ -10,7 +10,10 @@ const createBookmarkSchema = z.object({
 export async function POST(req: Request) {
   const session = await auth();
   if (!session)
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+    return NextResponse.json(
+      { success: false, error: 'Unauthorized' },
+      { status: 403 },
+    );
 
   try {
     const { url } = createBookmarkSchema.parse(await req.json());
@@ -28,10 +31,13 @@ export async function POST(req: Request) {
       },
     });
   } catch (error) {
-    return NextResponse.json({
-      success: false,
-      message: 'A problem occurred trying to create this bookmark.',
-      error,
-    });
+    return NextResponse.json(
+      {
+        success: false,
+        message: 'A problem occurred trying to create this bookmark.',
+        error,
+      },
+      { status: 500 },
+    );
   }
 }
