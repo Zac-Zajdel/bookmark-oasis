@@ -2,8 +2,9 @@
 
 import { Button } from '@/components/ui/button';
 import { ModeToggle } from '@/components/ui/mode-toggle';
+import { OasisError } from '@/lib/oasisError';
 import { useQuery } from '@tanstack/react-query';
-import { signOut, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
 
 export default function Bookmarks() {
@@ -22,14 +23,14 @@ export default function Bookmarks() {
     const response = await fetch('/api/bookmarks', {
       method: 'POST',
       body: JSON.stringify({
-        url: 'https://www.youtube.com/',
+        url: 'https://sonner.emilkowal.ski/',
       }),
     });
 
     const jsonData = await response.json();
 
     if (!response.ok) {
-      throw new Error(jsonData.message || 'An error occurred');
+      throw new OasisError(jsonData?.message, 404);
     }
 
     return jsonData;
@@ -48,23 +49,12 @@ export default function Bookmarks() {
       <Button
         variant="outline"
         onClick={() =>
-          toast('Event has been created', {
+          toast.success('Event has been created', {
             description: 'Sunday, December 03, 2023 at 9:00 AM',
-            action: {
-              label: 'Undo',
-              onClick: () => console.log('Undo'),
-            },
           })
         }
       >
         Show Toast
-      </Button>
-
-      <Button
-        variant="outline"
-        onClick={() => signOut()}
-      >
-        Sign Out
       </Button>
     </div>
   );

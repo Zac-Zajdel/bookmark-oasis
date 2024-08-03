@@ -1,12 +1,9 @@
 import { auth } from '@/auth';
 import { prisma } from '@/lib/db';
+import { createBookmarkSchema } from '@/lib/zod/bookmarks';
 import { NextResponse } from 'next/server';
 import { default as ogs } from 'open-graph-scraper';
 import { z } from 'zod';
-
-const createBookmarkSchema = z.object({
-  url: z.string().url(),
-});
 
 export async function POST(req: Request) {
   const session = await auth();
@@ -17,25 +14,12 @@ export async function POST(req: Request) {
     );
 
   try {
-    const { url } = createBookmarkSchema.parse(await req.json());
-
-    const urlExists = await prisma.bookmark.findFirst({
-      where: {
-        userId: session.user?.id,
-        url: url,
-      },
-    });
-
-    if (urlExists) {
-      return NextResponse.json(
-        { success: false, message: 'This URL has already been bookmarked.' },
-        { status: 409 },
-      );
-    }
+    const schema = createBookmarkSchema(session);
+    const { url } = await schema.parseAsync(await req.json());
 
     const { result } = await ogs({ url });
 
-    const response = await prisma.bookmark.create({
+    const createdBookmark = await prisma.bookmark.create({
       data: {
         userId: session.user.id,
         url: url,
@@ -45,17 +29,23 @@ export async function POST(req: Request) {
       },
     });
 
-    return NextResponse.json({
-      success: true,
-      message: 'Bookmark was created successfully.',
-      data: {
-        title: result.ogTitle,
-        description: result.ogDescription,
-        url: result.requestUrl,
-        image: result.ogImage?.[0]?.url ?? null,
+    return NextResponse.json(
+      {
+        success: true,
+        message: 'Bookmark was created successfully.',
+        data: createdBookmark,
       },
-    });
+      { status: 201 },
+    );
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      const errorMessage = error.errors[0]?.message || 'Invalid data provided';
+      return NextResponse.json(
+        { success: false, message: errorMessage, error },
+        { status: 400 },
+      );
+    }
+
     return NextResponse.json(
       {
         success: false,

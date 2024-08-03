@@ -85,7 +85,10 @@ export default function RootLayout({
               disableTransitionOnChange
             >
               <main>{children}</main>
-              <Toaster />
+              <Toaster
+                richColors
+                closeButton
+              />
               <ReactQueryDevtools initialIsOpen={false} />
             </ThemeProvider>
           </body>
