@@ -13,5 +13,8 @@ CREATE TABLE "bookmarks" (
     CONSTRAINT "bookmarks_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateIndex
+CREATE UNIQUE INDEX "bookmarks_user_id_url_key" ON "bookmarks"("user_id", "url");
+
 -- AddForeignKey
 ALTER TABLE "bookmarks" ADD CONSTRAINT "bookmarks_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
