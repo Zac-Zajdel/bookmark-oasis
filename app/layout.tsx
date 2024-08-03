@@ -4,6 +4,7 @@ import { ThemeProvider } from '@/components/providers/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
 import { cn } from '@/lib/utils';
 import '@/styles/globals.css';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Metadata } from 'next';
 import { Inter as FontSans } from 'next/font/google';
 
@@ -85,6 +86,7 @@ export default function RootLayout({
             >
               <main>{children}</main>
               <Toaster />
+              <ReactQueryDevtools initialIsOpen={false} />
             </ThemeProvider>
           </body>
         </html>

@@ -31,7 +31,6 @@ export default function Bookmarks() {
 
     return await response.json();
   }
-  console.log('DATA: ', data);
 
   return (
     <div className="flex flex-col items-center space-y-10 mt-24">
