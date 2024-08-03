@@ -1,8 +1,8 @@
+import { AuthUser } from '@/lib/authManager';
 import { prisma } from '@/lib/db';
-import { Session } from 'next-auth';
 import { z } from 'zod';
 
-export const createBookmarkSchema = (session: Session) => {
+export const createBookmarkSchema = (user: AuthUser) => {
   return z
     .object({
       url: z.string().url(),
@@ -10,7 +10,7 @@ export const createBookmarkSchema = (session: Session) => {
     .superRefine(async (data, ctx) => {
       const urlExists = await prisma.bookmark.findFirst({
         where: {
-          userId: session.user?.id,
+          userId: user.id,
           url: data.url,
         },
       });

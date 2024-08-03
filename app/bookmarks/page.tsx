@@ -31,6 +31,8 @@ export default function Bookmarks() {
 
     if (!response.ok) {
       throw new OasisError(jsonData?.message, 404);
+    } else {
+      toast.success(jsonData.message);
     }
 
     return jsonData;
