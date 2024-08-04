@@ -44,6 +44,7 @@ export default function Settings() {
 
       <Button
         variant="outline"
+        disabled={mutation.isPending}
         onClick={() => {
           mutation.mutate({ name: Math.random().toString(36).slice(2, 7) });
         }}

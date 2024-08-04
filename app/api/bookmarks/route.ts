@@ -13,10 +13,10 @@ export const POST = withAuthManager(async ({ req, user }) => {
   const createdBookmark = await prisma.bookmark.create({
     data: {
       userId: user.id,
-      url: url,
+      url: result.ogUrl || url,
       title: result.ogTitle || 'Title',
       description: result.ogDescription,
-      imageUrl: result.requestUrl,
+      imageUrl: result.ogImage?.[0]?.url || null, // TODO - Need to validate this is an actual URL
     },
   });
 

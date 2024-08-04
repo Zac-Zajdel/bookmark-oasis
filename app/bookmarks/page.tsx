@@ -1,51 +1,41 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { ModeToggle } from '@/components/ui/mode-toggle';
-import { OasisError } from '@/lib/oasisError';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
+import { useState } from 'react';
 import { toast } from 'sonner';
 
 export default function Bookmarks() {
   const { data: session } = useSession();
+  const [url, setUrl] = useState('');
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['bookmark-create'],
-    queryFn: async () => await getOGData(),
+  const mutation = useMutation({
+    mutationFn: createBookmark,
   });
 
-  async function getOGData(): Promise<{
-    success: boolean;
-    message: string;
-    data: any;
-  }> {
+  async function createBookmark() {
     const response = await fetch('/api/bookmarks', {
       method: 'POST',
       body: JSON.stringify({
-        url: 'https://tanstack.com/query/v5/docs/framework/react/guides/mutations',
+        url: url,
       }),
     });
 
     const jsonData = await response.json();
-
-    if (!response.ok) {
-      throw new OasisError(jsonData?.message, 404);
+    if (!jsonData.success) {
+      toast.error(jsonData.message);
     } else {
       toast.success(jsonData.message);
     }
-
-    return jsonData;
   }
 
   return (
     <div className="flex flex-col items-center space-y-10 mt-24">
       <div>ID: {session?.user?.id}</div>
       <div>Name: {session?.user?.name}</div>
-
-      <div>
-        API RESPONSE: {isLoading && <span>Loading...</span>} {data?.message}
-      </div>
 
       <ModeToggle />
       <Button
@@ -58,6 +48,25 @@ export default function Bookmarks() {
       >
         Show Toast
       </Button>
+
+      <div className="flex items-center space-x-4">
+        <Input
+          type="url"
+          value={url}
+          className="w-96"
+          onChange={(event) => setUrl(event?.target.value)}
+          placeholder="Supply Bookmark URL Here..."
+        />
+        <Button
+          variant="outline"
+          disabled={mutation.isPending}
+          onClick={() => {
+            mutation.mutate();
+          }}
+        >
+          Create
+        </Button>
+      </div>
     </div>
   );
 }
