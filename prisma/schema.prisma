@@ -44,16 +44,17 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String     @id @default(cuid())
   name          String?
-  email         String?   @unique
-  emailVerified DateTime? @map("email_verified")
+  email         String?    @unique
+  emailVerified DateTime?  @map("email_verified")
   image         String?
   accounts      Account[]
   sessions      Session[]
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @default(now()) @map("updated_at")
-  deletedAt     DateTime? @map("deleted_at")
+  createdAt     DateTime   @default(now()) @map("created_at")
+  updatedAt     DateTime   @default(now()) @map("updated_at")
+  deletedAt     DateTime?  @map("deleted_at")
+  Bookmark      Bookmark[]
 
   @@map("users")
 }
@@ -65,4 +66,21 @@ model VerificationToken {
 
   @@unique([identifier, token])
   @@map("verification_tokens")
+}
+
+model Bookmark {
+  id          String   @id @default(cuid())
+  userId      String   @map("user_id")
+  url         String
+  title       String
+  description String?
+  imageUrl    String?  @map("image_url")
+  visits      Int      @default(0)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, url])
+  @@map("bookmarks")
 }

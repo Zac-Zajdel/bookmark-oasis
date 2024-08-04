@@ -1,8 +1,10 @@
 import { ClientSessionProvider } from '@/components/providers/client-session-provider';
+import { ReactQueryClientProvider } from '@/components/providers/react-query-client-provider';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
 import { cn } from '@/lib/utils';
 import '@/styles/globals.css';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Metadata } from 'next';
 import { Inter as FontSans } from 'next/font/google';
 
@@ -64,28 +66,37 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClientSessionProvider>
-      <html
-        lang="en"
-        suppressHydrationWarning
-      >
-        <body
-          className={cn(
-            'min-h-screen bg-background font-sans antialiased',
-            fontSans.variable,
-          )}
+    <ReactQueryClientProvider>
+      <ClientSessionProvider>
+        <html
+          lang="en"
+          suppressHydrationWarning
         >
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
+          <body
+            className={cn(
+              'min-h-screen bg-background font-sans antialiased',
+              fontSans.variable,
+            )}
           >
-            <main>{children}</main>
-            <Toaster />
-          </ThemeProvider>
-        </body>
-      </html>
-    </ClientSessionProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <main>{children}</main>
+              <Toaster
+                richColors
+                closeButton
+                toastOptions={{
+                  duration: 5000,
+                }}
+              />
+              <ReactQueryDevtools initialIsOpen={false} />
+            </ThemeProvider>
+          </body>
+        </html>
+      </ClientSessionProvider>
+    </ReactQueryClientProvider>
   );
 }
