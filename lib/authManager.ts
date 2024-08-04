@@ -1,24 +1,7 @@
 import { auth } from '@/auth';
+import { AuthUser, WithAuthManagerInterface } from '@/types/auth';
 import { NextResponse, type NextRequest } from 'next/server';
 import { z } from 'zod';
-
-export type AuthUser = {
-  id: string;
-  name: string | null | undefined;
-  email: string | null | undefined;
-};
-
-interface WithAuthManagerInterface {
-  ({
-    req,
-    user,
-    searchParams,
-  }: {
-    req: NextRequest;
-    user: AuthUser;
-    searchParams: URLSearchParams;
-  }): Promise<Response>;
-}
 
 export const withAuthManager =
   (handler: WithAuthManagerInterface) => async (req: NextRequest) => {

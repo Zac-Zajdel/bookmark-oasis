@@ -24,7 +24,7 @@ const queryClient = new QueryClient({
       const message = error?.message || 'An Unknown Error Occurred.';
 
       if (isOasisError(error)) {
-        error.statusCode >= 500 ? toast.error(message) : toast.warning(message);
+        error.statusCode >= 500 ? toast.error(message) : toast.info(message);
       } else {
         toast.error(message);
       }
