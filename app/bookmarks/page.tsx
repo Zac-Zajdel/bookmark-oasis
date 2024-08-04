@@ -23,7 +23,7 @@ export default function Bookmarks() {
     const response = await fetch('/api/bookmarks', {
       method: 'POST',
       body: JSON.stringify({
-        url: 'https://sonner.emilkowal.ski/',
+        url: 'https://tanstack.com/query/v5/docs/framework/react/guides/mutations',
       }),
     });
 
