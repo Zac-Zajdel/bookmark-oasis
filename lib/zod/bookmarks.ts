@@ -1,5 +1,5 @@
-import { AuthUser } from '@/lib/authManager';
 import { prisma } from '@/lib/db';
+import { AuthUser } from '@/types/auth';
 import { z } from 'zod';
 
 export const createBookmarkSchema = (user: AuthUser) => {
