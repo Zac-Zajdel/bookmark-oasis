@@ -1,11 +1,13 @@
 import { prisma } from '@/lib/db';
 import { IntegrationHarness } from '@/tests/utils/integration';
-import { CustomTestContext, getApiToken } from '@/tests/utils/setup';
+import { CustomTestContext, getSetupData } from '@/tests/utils/setup';
 import { Bookmark } from '@prisma/client';
 import { afterAll, expect, test } from 'vitest';
 
 test('POST /bookmarks', async (ctx: CustomTestContext) => {
-  ctx.apiToken = await getApiToken();
+  const setup = await getSetupData();
+  ctx.apiToken = setup.apiToken;
+
   const h = new IntegrationHarness(ctx);
   const { http } = await h.init();
 
@@ -16,8 +18,18 @@ test('POST /bookmarks', async (ctx: CustomTestContext) => {
     },
   });
 
-  expect(status).toEqual(201);
-  expect(bookmark.url).toEqual('https://www.youtube.com/');
+  expect({ status, bookmark }).toEqual({
+    status: 201,
+    bookmark: expect.objectContaining({
+      userId: setup.user.id,
+      url: 'https://www.youtube.com/',
+      title: 'YouTube',
+      description:
+        'Enjoy the videos and music you love, upload original content, and share it all with friends, family, and the world on YouTube.',
+      imageUrl: 'https://www.youtube.com/img/desktop/yt_1200.png',
+      visits: 0,
+    }),
+  });
 });
 
 afterAll(async () => {
