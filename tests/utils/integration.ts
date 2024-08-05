@@ -1,5 +1,5 @@
-import { CustomTestContext } from '../bookmarks/create-bookmark.test';
-import { HttpClient } from './http';
+import { HttpClient } from '@/tests/utils/http';
+import { CustomTestContext } from '@/tests/utils/setup';
 
 export class IntegrationHarness {
   private readonly ctx?: CustomTestContext;
