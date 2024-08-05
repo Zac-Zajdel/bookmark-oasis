@@ -14,6 +14,7 @@ type HttpClientConfig = {
 type ResponseFormat = {
   success: boolean;
   message: string;
+  error?: any;
 };
 
 type Response<TResponse> = {
