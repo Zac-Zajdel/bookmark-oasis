@@ -9,9 +9,11 @@ export class IntegrationHarness {
     this.ctx = ctx;
     this.http = new HttpClient({
       baseUrl: `http://localhost:3000/api`,
-      headers: {
-        Authorization: `Bearer ${this.ctx?.apiToken}`,
-      },
+      headers: this.ctx?.apiToken
+        ? {
+            Authorization: `Bearer ${this.ctx?.apiToken}`,
+          }
+        : {},
     });
   }
 
