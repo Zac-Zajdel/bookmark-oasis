@@ -18,7 +18,7 @@ export default function Settings() {
     message: string;
     data: any;
   }> {
-    const response = await fetch('/api/external-tokens', {
+    const response = await fetch('/api/tokens', {
       method: 'POST',
       body: JSON.stringify({
         name: formData.name,

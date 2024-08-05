@@ -5,7 +5,7 @@ import { User } from '@prisma/client';
 import { randomBytes } from 'crypto';
 import { beforeAll, TestContext } from 'vitest';
 
-export interface CustomTestContext extends TestContext {
+export interface OasisTestContext extends TestContext {
   apiToken: string;
 }
 

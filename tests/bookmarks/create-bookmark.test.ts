@@ -1,26 +1,31 @@
 import { prisma } from '@/lib/db';
 import { IntegrationHarness } from '@/tests/utils/integration';
-import { CustomTestContext, getSetupData } from '@/tests/utils/setup';
+import { OasisTestContext, getSetupData } from '@/tests/utils/setup';
 import { Bookmark } from '@prisma/client';
 import { afterAll, expect, test } from 'vitest';
 
-test('POST /bookmarks', async (ctx: CustomTestContext) => {
+test('POST /bookmarks', async (ctx: OasisTestContext) => {
   const setup = await getSetupData();
   ctx.apiToken = setup.apiToken;
 
   const h = new IntegrationHarness(ctx);
   const { http } = await h.init();
 
-  const { status, data: bookmark } = await http.post<Bookmark>({
+  const {
+    status,
+    data: { success, message, data: bookmark },
+  } = await http.post<Bookmark>({
     path: '/bookmarks',
     body: {
       url: 'https://www.youtube.com/',
     },
   });
 
-  expect({ status, bookmark }).toEqual({
-    status: 201,
-    bookmark: expect.objectContaining({
+  expect(status).toBe(201);
+  expect(success).toBe(true);
+  expect(message).toBe('Bookmark was created successfully.');
+  expect(bookmark).toEqual(
+    expect.objectContaining({
       userId: setup.user.id,
       url: 'https://www.youtube.com/',
       title: 'YouTube',
@@ -29,7 +34,7 @@ test('POST /bookmarks', async (ctx: CustomTestContext) => {
       imageUrl: 'https://www.youtube.com/img/desktop/yt_1200.png',
       visits: 0,
     }),
-  });
+  );
 });
 
 afterAll(async () => {

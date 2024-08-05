@@ -11,8 +11,13 @@ type HttpClientConfig = {
   baseUrl: string;
 };
 
+type ResponseFormat = {
+  success: boolean;
+  message: string;
+};
+
 type Response<TResponse> = {
-  data: TResponse;
+  data: ResponseFormat & { data: TResponse };
   status: number;
 };
 
@@ -45,10 +50,11 @@ export class HttpClient {
       body: JSON.stringify(req.body),
     });
 
-    const { status } = response;
-    const data = (await response.json()).data as TResponse;
+    const data = (await response.json()) as ResponseFormat & {
+      data: TResponse;
+    };
 
-    return { data, status };
+    return { data, status: response.status };
   }
 
   public async get<TResponse>(req: Request) {
