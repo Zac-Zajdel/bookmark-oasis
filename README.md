@@ -10,6 +10,7 @@
 - 🔒 [Auth.js](https://authjs.dev/) - Authentication library (Google provider)
 - 🛡️ [Prisma](https://www.prisma.io/) - Next-generation Node.js and TypeScript ORM
 - 🔍 [Zod](https://zod.dev/) - Schema validation library
+- 🧪 [Vitest](https://vitest.dev/) - Vite powered API and component test framework
 - 💅 [Prettier](https://prettier.io/) - Code formatter
 - 🧹 [Eslint](https://eslint.org/) - Code linting tool
 - 🔹 [Lucide](https://lucide.dev/icons/) - Icons
@@ -52,10 +53,11 @@ and open http://localhost:3000/ to see the landing page.
 ├── .next                           # Auto-generated build files from Next.js
 ├── app                             # Next JS App (App Router)
 ├── components                      # React components
-├── lib                             # Functions and utilities
+├── lib                             # Validation, functions, and utilities
 ├── prisma                          # Prisma schema and migrations
 ├── public                          # Public assets folder
 ├── styles                          # Styles folder
+├── tests                           # Vitest API calls
 ├── types                           # Type definitions
 ├── auth.ts                         # Auth.js configuration
 ├── components.json                 # shadcn/ui configuration
