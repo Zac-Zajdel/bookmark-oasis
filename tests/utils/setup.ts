@@ -1,5 +1,5 @@
+import { hashApiToken } from '@/lib/api/apiTokens/utils';
 import { prisma } from '@/lib/db';
-import { hashApiToken } from '@/lib/utils';
 import { faker } from '@faker-js/faker';
 import { User } from '@prisma/client';
 import { randomBytes } from 'crypto';

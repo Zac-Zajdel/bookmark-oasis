@@ -3,7 +3,9 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ModeToggle } from '@/components/ui/mode-toggle';
-import { useMutation } from '@tanstack/react-query';
+import { queryClient } from '@/lib/utils';
+import { Bookmark } from '@prisma/client';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -12,8 +14,11 @@ export default function Bookmarks() {
   const { data: session } = useSession();
   const [url, setUrl] = useState('');
 
-  const mutation = useMutation({
+  const bookmarkMutation = useMutation({
     mutationFn: createBookmark,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['bookmarks'] });
+    },
   });
 
   async function createBookmark() {
@@ -29,13 +34,25 @@ export default function Bookmarks() {
       toast.error(jsonData.message);
     } else {
       toast.success(jsonData.message);
+      setUrl('');
     }
   }
+
+  const { data: bookmarks } = useQuery({
+    queryKey: ['bookmarks'],
+    queryFn: async (): Promise<Bookmark[]> => {
+      const response = await (await fetch('/api/bookmarks')).json();
+      toast.success(response.message);
+      return response.data;
+    },
+  });
 
   return (
     <div className="flex flex-col items-center space-y-10 mt-24">
       <div>ID: {session?.user?.id}</div>
       <div>Name: {session?.user?.name}</div>
+
+      <div>Bookmark Count: {bookmarks?.length}</div>
 
       <ModeToggle />
       <Button
@@ -59,9 +76,9 @@ export default function Bookmarks() {
         />
         <Button
           variant="outline"
-          disabled={mutation.isPending}
+          disabled={bookmarkMutation.isPending}
           onClick={() => {
-            mutation.mutate();
+            bookmarkMutation.mutate();
           }}
         >
           Create

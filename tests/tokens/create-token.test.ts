@@ -1,5 +1,5 @@
+import { hashApiToken } from '@/lib/api/apiTokens/utils';
 import { prisma } from '@/lib/db';
-import { hashApiToken } from '@/lib/utils';
 import { IntegrationHarness } from '@/tests/utils/integration';
 import { OasisTestContext, getSetupData } from '@/tests/utils/setup';
 import { afterAll, expect, test } from 'vitest';

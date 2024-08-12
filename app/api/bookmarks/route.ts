@@ -1,8 +1,34 @@
+import { parseUrl } from '@/lib/api/bookmarks/utils';
 import { withAuthManager } from '@/lib/authManager';
 import { prisma } from '@/lib/db';
 import { createBookmarkSchema } from '@/lib/zod/bookmarks';
 import { NextResponse } from 'next/server';
 import { default as ogs } from 'open-graph-scraper';
+
+export const GET = withAuthManager(async ({ req, user }) => {
+  const page = 1;
+  const pageSize = 10;
+
+  const bookmarks = await prisma.bookmark.findMany({
+    where: {
+      userId: user.id,
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+    take: pageSize,
+    skip: (page - 1) * pageSize,
+  });
+
+  return NextResponse.json(
+    {
+      success: true,
+      message: 'Bookmarks gathered successfully.',
+      data: bookmarks,
+    },
+    { status: 200 },
+  );
+});
 
 export const POST = withAuthManager(async ({ req, user }) => {
   const schema = createBookmarkSchema(user);
@@ -16,7 +42,7 @@ export const POST = withAuthManager(async ({ req, user }) => {
       url: result.ogUrl || url,
       title: result.ogTitle || 'Title',
       description: result.ogDescription,
-      imageUrl: result.ogImage?.[0]?.url || null, // TODO - Need to validate this is an actual URL
+      imageUrl: parseUrl(result.ogImage?.[0]?.url),
     },
   });
 
