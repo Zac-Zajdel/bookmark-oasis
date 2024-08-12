@@ -1,6 +1,7 @@
+import { prisma } from '@/lib/db';
 import { IntegrationHarness } from '@/tests/utils/integration';
 import { OasisTestContext } from '@/tests/utils/setup';
-import { expect, test } from 'vitest';
+import { afterAll, expect, test } from 'vitest';
 
 test('EXTERNAL API AUTH ERROR', async (ctx: OasisTestContext) => {
   ctx.apiToken = 'INVALID API TOKEN';
@@ -21,4 +22,8 @@ test('EXTERNAL API AUTH ERROR', async (ctx: OasisTestContext) => {
   expect(status).toBe(403);
   expect(success).toBe(false);
   expect(error).toBe('Unauthorized: Invalid API Token');
+});
+
+afterAll(async () => {
+  await prisma.apiToken.deleteMany({});
 });
