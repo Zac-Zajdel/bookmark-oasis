@@ -9,10 +9,14 @@ export interface OasisTestContext extends TestContext {
   apiToken: string;
 }
 
-let apiToken: string;
-let user: User;
+declare global {
+  var user: User;
+  var apiToken: string;
+}
 
 beforeAll(async () => {
+  if (global.user && global.apiToken) return;
+
   const apiUser = await prisma.user.upsert({
     where: {
       email: 'zaczajdel213@gmail.com',
@@ -23,23 +27,24 @@ beforeAll(async () => {
       email: 'zaczajdel213@gmail.com',
     },
   });
-  user = apiUser;
+
+  global.user = apiUser;
 
   const token = randomBytes(32).toString('hex');
   await prisma.apiToken.create({
     data: {
-      userId: user.id,
+      userId: apiUser.id,
       name: faker.lorem.word(),
       token: await hashApiToken(token),
     },
   });
 
-  apiToken = token;
+  global.apiToken = token;
 });
 
 export function getSetupData() {
   return {
-    apiToken,
-    user,
+    apiToken: global.apiToken,
+    user: global.user,
   };
 }

@@ -9,5 +9,6 @@ export default defineConfig({
     testTimeout: 50000,
     setupFiles: './tests/utils/setup.ts',
     fileParallelism: false,
+    isolate: false,
   },
 });

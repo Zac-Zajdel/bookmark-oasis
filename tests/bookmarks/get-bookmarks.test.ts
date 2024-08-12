@@ -47,5 +47,4 @@ test('GET /bookmarks', async (ctx: OasisTestContext) => {
 
 afterAll(async () => {
   await prisma.bookmark.deleteMany({});
-  await prisma.apiToken.deleteMany({});
 });

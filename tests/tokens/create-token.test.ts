@@ -2,7 +2,7 @@ import { hashApiToken } from '@/lib/api/apiTokens/utils';
 import { prisma } from '@/lib/db';
 import { IntegrationHarness } from '@/tests/utils/integration';
 import { OasisTestContext, getSetupData } from '@/tests/utils/setup';
-import { afterAll, expect, test } from 'vitest';
+import { expect, test } from 'vitest';
 
 test('POST /tokens', async (ctx: OasisTestContext) => {
   const setup = await getSetupData();
@@ -42,8 +42,4 @@ test('POST /tokens', async (ctx: OasisTestContext) => {
       lastUsed: null,
     }),
   );
-});
-
-afterAll(async () => {
-  await prisma.apiToken.deleteMany({});
 });
