@@ -16,14 +16,14 @@ export function Access({ type }: { type: 'signup' | 'login' }) {
         </div>
       </header>
       <main className="container mt-56">
-        <div className="flex flex-col justify-center mx-auto">
-          <h1 className="text-center text-5xl lg:text-6xl tracking-tight">
+        <div className="mx-auto flex flex-col justify-center">
+          <h1 className="text-center text-5xl tracking-tight lg:text-6xl">
             {type === 'login'
               ? 'Login To Your Oasis'
               : 'Sign Up To Bookmark Oasis'}
           </h1>
 
-          <div className="flex flex-col text-center mt-10">
+          <div className="mt-10 flex flex-col text-center">
             <form
               action={async () => {
                 'use server';
@@ -39,11 +39,11 @@ export function Access({ type }: { type: 'signup' | 'login' }) {
             </form>
           </div>
 
-          <div className="flex justify-center items-center pt-10">
+          <div className="flex items-center justify-center pt-10">
             <span className="w-80 border-t" />
           </div>
 
-          <div className="flex justify-center text-center mt-8 text-base">
+          <div className="mt-8 flex justify-center text-center text-base">
             {type === 'login' ? (
               <>
                 <p className="text-muted-foreground">
