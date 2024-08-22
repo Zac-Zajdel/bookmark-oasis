@@ -2,7 +2,11 @@ import { prisma } from '@/lib/db';
 import { IntegrationHarness } from '@/tests/utils/integration';
 import { OasisTestContext, getSetupData } from '@/tests/utils/setup';
 import { Bookmark } from '@prisma/client';
-import { afterAll, expect, test } from 'vitest';
+import { afterAll, beforeAll, expect, test } from 'vitest';
+
+beforeAll(async () => {
+  await prisma.bookmark.deleteMany({});
+});
 
 test('GET /bookmarks', async (ctx: OasisTestContext) => {
   const { user, apiToken } = await getSetupData();

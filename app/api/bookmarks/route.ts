@@ -6,8 +6,12 @@ import { NextResponse } from 'next/server';
 import { default as ogs } from 'open-graph-scraper';
 
 export const GET = withAuthManager(async ({ req, user }) => {
-  const page = 1;
-  const pageSize = 10;
+  const searchParams = req.nextUrl.searchParams;
+  const page = searchParams.get('page') || '1';
+  const limit = searchParams.get('limit') || '10';
+
+  const take = parseInt(limit as string);
+  const skip = (parseInt(page as string) - 1) * take;
 
   const bookmarks = await prisma.bookmark.findMany({
     where: {
@@ -16,8 +20,8 @@ export const GET = withAuthManager(async ({ req, user }) => {
     orderBy: {
       createdAt: 'desc',
     },
-    take: pageSize,
-    skip: (page - 1) * pageSize,
+    take,
+    skip,
   });
 
   const total = await prisma.bookmark.count({
