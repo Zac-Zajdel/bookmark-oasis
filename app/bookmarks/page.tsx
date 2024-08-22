@@ -1,6 +1,7 @@
 'use client';
 
 import BookmarkCard from '@/components/bookmarks/bookmark-card';
+import BookmarkCardSkeleton from '@/components/bookmarks/bookmark-card-skeleton';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { queryClient } from '@/lib/utils';
@@ -41,7 +42,7 @@ export default function Bookmarks() {
     }
   }
 
-  const { data: bookmarks } = useQuery({
+  const { isLoading, data: bookmarks } = useQuery({
     queryKey: ['bookmarks', page, itemsPerPage],
     queryFn: async (): Promise<Bookmark[]> => {
       const response = await fetch(
@@ -82,12 +83,16 @@ export default function Bookmarks() {
 
       <div className="container">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-          {bookmarks?.map((bookmark) => (
-            <BookmarkCard
-              key={bookmark.id}
-              bookmark={bookmark}
-            />
-          ))}
+          {isLoading
+            ? Array.from({ length: 10 }).map((_, index) => (
+                <BookmarkCardSkeleton key={index} />
+              ))
+            : bookmarks?.map((bookmark) => (
+                <BookmarkCard
+                  key={bookmark.id}
+                  bookmark={bookmark}
+                />
+              ))}
         </div>
       </div>
 
