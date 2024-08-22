@@ -1,23 +1,26 @@
 'use client';
 
+import BookmarkCard from '@/components/bookmarks/bookmark-card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ModeToggle } from '@/components/ui/mode-toggle';
 import { queryClient } from '@/lib/utils';
 import { Bookmark } from '@prisma/client';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
 export default function Bookmarks() {
-  const { data: session } = useSession();
   const [url, setUrl] = useState('');
+
+  const itemsPerPage = 10;
+  const [page, setPage] = useState(1);
+
+  const [totalBookmarks, setTotalBookmarks] = useState(0);
 
   const bookmarkMutation = useMutation({
     mutationFn: createBookmark,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['bookmarks'] });
+      await queryClient.invalidateQueries({ queryKey: ['bookmarks', page] });
     },
   });
 
@@ -39,40 +42,32 @@ export default function Bookmarks() {
   }
 
   const { data: bookmarks } = useQuery({
-    queryKey: ['bookmarks'],
+    queryKey: ['bookmarks', page, itemsPerPage],
     queryFn: async (): Promise<Bookmark[]> => {
-      const response = await (await fetch('/api/bookmarks')).json();
-      toast.success(response.message);
-      return response.data;
+      const response = await fetch(
+        `/api/bookmarks?page=${page}&limit=${itemsPerPage}`,
+      );
+      const jsonData = await response.json();
+      if (!jsonData.success) {
+        toast.error(jsonData.message);
+      }
+
+      setTotalBookmarks(jsonData.data.total);
+
+      return jsonData.data.bookmarks;
     },
   });
 
+  const totalPages = bookmarks ? Math.ceil(totalBookmarks / itemsPerPage) : 1;
+
   return (
     <div className="mt-24 flex flex-col items-center space-y-10">
-      <div>ID: {session?.user?.id}</div>
-      <div>Name: {session?.user?.name}</div>
-
-      <div>Bookmark Count: {bookmarks?.length}</div>
-
-      <ModeToggle />
-      <Button
-        variant="outline"
-        onClick={() =>
-          toast.success('Event has been created', {
-            description: 'Sunday, December 03, 2023 at 9:00 AM',
-          })
-        }
-      >
-        Show Toast
-      </Button>
-
-      <div className="flex items-center space-x-4">
+      <div className="container flex items-center justify-center space-x-4">
         <Input
           type="url"
           value={url}
-          className="w-96"
           onChange={(event) => setUrl(event?.target.value)}
-          placeholder="Supply Bookmark URL Here..."
+          placeholder="Add Bookmark URL"
         />
         <Button
           variant="outline"
@@ -82,6 +77,37 @@ export default function Bookmarks() {
           }}
         >
           Create
+        </Button>
+      </div>
+
+      <div className="container">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          {bookmarks?.map((bookmark) => (
+            <BookmarkCard
+              key={bookmark.id}
+              bookmark={bookmark}
+            />
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-8 flex w-full max-w-xs items-center justify-between text-sm">
+        <Button
+          variant="outline"
+          disabled={page === 1}
+          onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+        >
+          Previous
+        </Button>
+        <span>
+          Page {page} of {totalPages}
+        </span>
+        <Button
+          variant="outline"
+          disabled={page === totalPages}
+          onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+        >
+          Next
         </Button>
       </div>
     </div>

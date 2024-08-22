@@ -7,6 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { ModeToggle } from '@/components/ui/mode-toggle';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import { signOut, useSession } from 'next-auth/react';
@@ -26,7 +27,7 @@ export default function Navbar() {
               <h1 className="mr-4 text-lg font-bold">Bookmark Oasis</h1>
             </div>
             <div className="ml-4 flex items-center justify-between">
-              <ul className="space-x-3">
+              <ul className="space-x-5">
                 <Link
                   href="/bookmarks"
                   prefetch={false}
@@ -53,6 +54,9 @@ export default function Navbar() {
                 </Link>
               </ul>
             </div>
+          </div>
+          <div className="mr-4">
+            <ModeToggle />
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger

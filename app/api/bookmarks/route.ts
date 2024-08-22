@@ -20,11 +20,20 @@ export const GET = withAuthManager(async ({ req, user }) => {
     skip: (page - 1) * pageSize,
   });
 
+  const total = await prisma.bookmark.count({
+    where: {
+      userId: user.id,
+    },
+  });
+
   return NextResponse.json(
     {
       success: true,
       message: 'Bookmarks gathered successfully.',
-      data: bookmarks,
+      data: {
+        bookmarks,
+        total,
+      },
     },
     { status: 200 },
   );

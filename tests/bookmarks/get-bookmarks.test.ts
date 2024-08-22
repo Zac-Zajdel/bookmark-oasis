@@ -42,7 +42,10 @@ test('GET /bookmarks', async (ctx: OasisTestContext) => {
   expect(status).toBe(200);
   expect(success).toBe(true);
   expect(message).toBe('Bookmarks gathered successfully.');
-  expect(createdBookmarks).toEqual(fetchedBookmarks);
+  expect({
+    bookmarks: createdBookmarks,
+    total: 2,
+  }).toEqual(fetchedBookmarks);
 });
 
 afterAll(async () => {
