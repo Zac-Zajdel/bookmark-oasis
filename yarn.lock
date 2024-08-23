@@ -3087,15 +3087,15 @@ onetime@^6.0.0:
   dependencies:
     mimic-fn "^4.0.0"
 
-open-graph-scraper@^6.7.2:
-  version "6.7.2"
-  resolved "https://registry.yarnpkg.com/open-graph-scraper/-/open-graph-scraper-6.7.2.tgz#088a81f871e161208116647f76e5aa86d62e76e8"
-  integrity sha512-y/1l2NYDFbmYZRM4rTE3YWNc1IufuoxbsObuzXxYdlDrHJDyd4ru6ecUYxEYZN+K0mCViFHMgGDIkfwXhMwqSQ==
+open-graph-scraper@^6.8.0:
+  version "6.8.0"
+  resolved "https://registry.yarnpkg.com/open-graph-scraper/-/open-graph-scraper-6.8.0.tgz#d5d80c4cc3153ede0a3c220e82da52c81cbdf8da"
+  integrity sha512-0Lv+6kWTlFjtnUzkIqzvpgaOZ7AAibZB7GRXj5yLIZv56SOS7jApdhCjlFn8Elr17SnG6L2FAD5NpRUv0f2yCQ==
   dependencies:
     chardet "^2.0.0"
     cheerio "^1.0.0-rc.12"
     iconv-lite "^0.6.3"
-    undici "^6.19.5"
+    undici "^6.19.7"
 
 optionator@^0.9.3:
   version "0.9.4"
@@ -4037,10 +4037,10 @@ undici-types@~6.13.0:
   resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-6.13.0.tgz#e3e79220ab8c81ed1496b5812471afd7cf075ea5"
   integrity sha512-xtFJHudx8S2DSoujjMd1WeWvn7KKWFRESZTMeL1RptAYERu29D6jphMjjY+vn96jvN3kVPDNxU/E13VTaXj6jg==
 
-undici@^6.19.5:
-  version "6.19.5"
-  resolved "https://registry.yarnpkg.com/undici/-/undici-6.19.5.tgz#5829101361b583b53206e81579f4df71c56d6be8"
-  integrity sha512-LryC15SWzqQsREHIOUybavaIHF5IoL0dJ9aWWxL/PgT1KfqAW5225FZpDUFlt9xiDMS2/S7DOKhFWA7RLksWdg==
+undici@^6.19.7:
+  version "6.19.8"
+  resolved "https://registry.yarnpkg.com/undici/-/undici-6.19.8.tgz#002d7c8a28f8cc3a44ff33c3d4be4d85e15d40e1"
+  integrity sha512-U8uCCl2x9TK3WANvmBavymRzxbfFYG+tAu+fgx3zxQy3qdagQqBLwJVrdyO1TBfUXvfKveMKJZhpvUYoOjM+4g==
 
 uri-js@^4.2.2:
   version "4.4.1"
