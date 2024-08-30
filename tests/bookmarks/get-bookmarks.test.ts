@@ -40,7 +40,7 @@ test('GET /bookmarks', async (ctx: OasisTestContext) => {
     status,
     data: { success, message, data: fetchedBookmarks },
   } = await http.get<Bookmark[]>({
-    path: '/bookmarks',
+    path: '/bookmarks?page=1&limit=10',
   });
 
   expect(status).toBe(200);
