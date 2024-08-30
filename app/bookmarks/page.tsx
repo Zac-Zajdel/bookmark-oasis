@@ -44,17 +44,18 @@ export default function Bookmarks() {
 
   const { isLoading, data: bookmarks } = useQuery({
     queryKey: ['bookmarks', page, itemsPerPage],
-    queryFn: async (): Promise<Bookmark[]> => {
+    queryFn: async (): Promise<Bookmark[] | []> => {
       const response = await fetch(
         `/api/bookmarks?page=${page}&limit=${itemsPerPage}`,
       );
       const jsonData = await response.json();
+
       if (!jsonData.success) {
         toast.error(jsonData.message);
+        return [];
       }
 
       setTotalBookmarks(jsonData.data.total);
-
       return jsonData.data.bookmarks;
     },
   });

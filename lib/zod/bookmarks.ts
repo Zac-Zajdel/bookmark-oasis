@@ -2,6 +2,23 @@ import { prisma } from '@/lib/db';
 import { AuthUser } from '@/types/auth';
 import { z } from 'zod';
 
+export const getBookmarkSchema = () => {
+  return z.object({
+    page: z
+      .string()
+      .transform((val) => parseInt(val))
+      .refine((val) => val >= 1, {
+        message: 'page cannot be less than 1',
+      }),
+    limit: z
+      .string()
+      .transform((val) => parseInt(val))
+      .refine((val) => val >= 10, {
+        message: 'limit cannot be less than 10',
+      }),
+  });
+};
+
 export const createBookmarkSchema = (user: AuthUser) => {
   return z
     .object({

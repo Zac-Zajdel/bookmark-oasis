@@ -7,6 +7,8 @@ import Link from 'next/link';
 export default function BookmarkCard({ bookmark }: { bookmark: Bookmark }) {
   const placeholderImageUrl = '/placeholder.svg';
 
+  // TODO - favorite / copy to clipboard link / task for later / delete
+
   return (
     <Link
       href={bookmark.url}
