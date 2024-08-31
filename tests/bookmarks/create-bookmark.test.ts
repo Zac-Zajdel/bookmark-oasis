@@ -5,11 +5,8 @@ import { Bookmark } from '@prisma/client';
 import { afterAll, expect, test } from 'vitest';
 
 test('POST /bookmarks', async (ctx: OasisTestContext) => {
-  const setup = await getSetupData();
-  ctx.apiToken = setup.apiToken;
-
-  const h = new IntegrationHarness(ctx);
-  const { http } = await h.init();
+  const { user } = await getSetupData();
+  const { http } = await new IntegrationHarness(ctx).init();
 
   const {
     status,
@@ -26,7 +23,7 @@ test('POST /bookmarks', async (ctx: OasisTestContext) => {
   expect(message).toBe('Bookmark was created successfully.');
   expect(bookmark).toEqual(
     expect.objectContaining({
-      userId: setup.user.id,
+      userId: user.id,
       url: 'https://www.youtube.com/',
       title: 'YouTube',
       description:

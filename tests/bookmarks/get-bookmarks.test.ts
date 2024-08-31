@@ -9,11 +9,8 @@ beforeAll(async () => {
 });
 
 test('GET /bookmarks', async (ctx: OasisTestContext) => {
-  const { user, apiToken } = await getSetupData();
-  ctx.apiToken = apiToken;
-
-  const h = new IntegrationHarness(ctx);
-  const { http } = await h.init();
+  const { user } = await getSetupData();
+  const { http } = await new IntegrationHarness(ctx).init();
 
   const createdBookmarks = (
     await prisma.bookmark.createManyAndReturn({
