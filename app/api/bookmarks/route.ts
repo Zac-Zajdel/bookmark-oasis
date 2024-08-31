@@ -1,17 +1,16 @@
 import { parseUrl } from '@/lib/api/bookmarks/utils';
 import { withAuthManager } from '@/lib/authManager';
 import { prisma } from '@/lib/db';
-import { createBookmarkSchema } from '@/lib/zod/bookmarks';
+import { createBookmarkSchema, getBookmarkSchema } from '@/lib/zod/bookmarks';
 import { NextResponse } from 'next/server';
 import { default as ogs } from 'open-graph-scraper';
 
-export const GET = withAuthManager(async ({ req, user }) => {
-  const searchParams = req.nextUrl.searchParams;
-  const page = searchParams.get('page') || '1';
-  const limit = searchParams.get('limit') || '10';
-
-  const take = parseInt(limit as string);
-  const skip = (parseInt(page as string) - 1) * take;
+export const GET = withAuthManager(async ({ user, searchParams }) => {
+  const schema = getBookmarkSchema();
+  const { page, limit } = await schema.parse({
+    page: searchParams.get('page'),
+    limit: searchParams.get('limit'),
+  });
 
   const bookmarks = await prisma.bookmark.findMany({
     where: {
@@ -20,8 +19,8 @@ export const GET = withAuthManager(async ({ req, user }) => {
     orderBy: {
       createdAt: 'desc',
     },
-    take,
-    skip,
+    take: limit,
+    skip: (page - 1) * limit,
   });
 
   const total = await prisma.bookmark.count({
@@ -53,7 +52,7 @@ export const POST = withAuthManager(async ({ req, user }) => {
     data: {
       userId: user.id,
       url: result.ogUrl || url,
-      title: result.ogTitle || 'Title',
+      title: result.ogTitle || result.ogSiteName || 'Title',
       description: result.ogDescription,
       imageUrl: parseUrl(result.ogImage?.[0]?.url),
     },

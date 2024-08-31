@@ -3,8 +3,7 @@ import { OasisTestContext } from '@/tests/utils/setup';
 import { expect, test } from 'vitest';
 
 test('INTERNAL API AUTH ERROR', async (ctx: OasisTestContext) => {
-  const h = new IntegrationHarness(ctx);
-  const { http } = await h.init();
+  const { http } = await new IntegrationHarness(ctx, true).init();
 
   const {
     status,

@@ -4,9 +4,7 @@ import { expect, test } from 'vitest';
 
 test('EXTERNAL API AUTH ERROR', async (ctx: OasisTestContext) => {
   ctx.apiToken = 'INVALID API TOKEN';
-
-  const h = new IntegrationHarness(ctx);
-  const { http } = await h.init();
+  const { http } = await new IntegrationHarness(ctx, true).init();
 
   const {
     status,

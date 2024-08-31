@@ -75,11 +75,8 @@ export default function Navbar() {
                 </Avatar>
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="mr-2 mt-1 sm:mr-5 xl:mr-1">
-              <DropdownMenuItem
-                className="cursor-pointer"
-                onClick={() => signOut()}
-              >
+            <DropdownMenuContent className="mr-2 mt-1">
+              <DropdownMenuItem onClick={() => signOut()}>
                 Log out
               </DropdownMenuItem>
             </DropdownMenuContent>

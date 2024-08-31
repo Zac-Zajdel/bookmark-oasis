@@ -13,49 +13,65 @@ import { toast } from 'sonner';
 export default function Bookmarks() {
   const [url, setUrl] = useState('');
 
-  const itemsPerPage = 10;
   const [page, setPage] = useState(1);
-
+  const [itemsPerPage] = useState(10);
   const [totalBookmarks, setTotalBookmarks] = useState(0);
 
-  const bookmarkMutation = useMutation({
-    mutationFn: createBookmark,
+  const { isLoading, data: bookmarks } = useQuery({
+    queryKey: ['bookmarks', page, itemsPerPage],
+    queryFn: async (): Promise<Bookmark[] | []> => {
+      const response = await fetch(
+        `/api/bookmarks?page=${page}&limit=${itemsPerPage}`,
+      );
+      const jsonData = await response.json();
+
+      if (!jsonData.success) {
+        toast.error(jsonData.message);
+        return [];
+      }
+
+      setTotalBookmarks(jsonData.data.total);
+      return jsonData.data.bookmarks;
+    },
+  });
+
+  const createBookmarkMutation = useMutation({
+    mutationFn: async () => {
+      const response = await fetch('/api/bookmarks', {
+        method: 'POST',
+        body: JSON.stringify({
+          url: url,
+        }),
+      });
+
+      const jsonData = await response.json();
+      if (!jsonData.success) {
+        toast.error(jsonData.message);
+      } else {
+        toast.success(jsonData.message);
+        setUrl('');
+      }
+    },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['bookmarks', page] });
     },
   });
 
-  async function createBookmark() {
-    const response = await fetch('/api/bookmarks', {
-      method: 'POST',
-      body: JSON.stringify({
-        url: url,
-      }),
-    });
+  const deleteBookmarkMutation = useMutation({
+    mutationFn: async (bookmark: Bookmark) => {
+      const response = await fetch(`/api/bookmarks/${bookmark.id}`, {
+        method: 'DELETE',
+      });
 
-    const jsonData = await response.json();
-    if (!jsonData.success) {
-      toast.error(jsonData.message);
-    } else {
-      toast.success(jsonData.message);
-      setUrl('');
-    }
-  }
-
-  const { isLoading, data: bookmarks } = useQuery({
-    queryKey: ['bookmarks', page, itemsPerPage],
-    queryFn: async (): Promise<Bookmark[]> => {
-      const response = await fetch(
-        `/api/bookmarks?page=${page}&limit=${itemsPerPage}`,
-      );
       const jsonData = await response.json();
       if (!jsonData.success) {
         toast.error(jsonData.message);
+      } else {
+        toast.success(jsonData.message);
       }
-
-      setTotalBookmarks(jsonData.data.total);
-
-      return jsonData.data.bookmarks;
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['bookmarks', page] });
     },
   });
 
@@ -72,9 +88,9 @@ export default function Bookmarks() {
         />
         <Button
           variant="outline"
-          disabled={bookmarkMutation.isPending}
+          disabled={createBookmarkMutation.isPending}
           onClick={() => {
-            bookmarkMutation.mutate();
+            createBookmarkMutation.mutate();
           }}
         >
           Create
@@ -91,12 +107,15 @@ export default function Bookmarks() {
                 <BookmarkCard
                   key={bookmark.id}
                   bookmark={bookmark}
+                  onDelete={(bookmark) =>
+                    deleteBookmarkMutation.mutate(bookmark)
+                  }
                 />
               ))}
         </div>
       </div>
 
-      <div className="mt-8 flex w-full max-w-xs items-center justify-between text-sm">
+      <div className="flex w-full max-w-xs items-center justify-between py-8 text-sm">
         <Button
           variant="outline"
           disabled={page === 1}
