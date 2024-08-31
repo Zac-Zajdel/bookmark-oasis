@@ -13,8 +13,15 @@ import { Bookmark } from '@prisma/client';
 import { EllipsisVertical } from 'lucide-react';
 import Link from 'next/link';
 
-// todo - add onDelete function for parent to handle.
-export default function BookmarkCard({ bookmark }: { bookmark: Bookmark }) {
+interface BookmarkCardProps {
+  bookmark: Bookmark;
+  onDelete: (bookmark: Bookmark) => void;
+}
+
+export default function BookmarkCard({
+  bookmark,
+  onDelete,
+}: BookmarkCardProps) {
   return (
     <Link
       href={bookmark.url}
@@ -24,7 +31,9 @@ export default function BookmarkCard({ bookmark }: { bookmark: Bookmark }) {
         <CardHeader className="flex h-full flex-col items-start p-5">
           <div className="align-center flex w-full items-center justify-between">
             <div className="mr-1 flex-1 font-semibold leading-none tracking-tight">
-              <h1 className="line-clamp-2">{truncate(bookmark.title, 80)}</h1>
+              <h1 className="line-clamp-2 leading-snug">
+                {truncate(bookmark.title, 80)}
+              </h1>
             </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -38,7 +47,9 @@ export default function BookmarkCard({ bookmark }: { bookmark: Bookmark }) {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem>Delete</DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => onDelete(bookmark)}>
+                  Delete
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>

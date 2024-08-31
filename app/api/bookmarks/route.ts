@@ -5,11 +5,11 @@ import { createBookmarkSchema, getBookmarkSchema } from '@/lib/zod/bookmarks';
 import { NextResponse } from 'next/server';
 import { default as ogs } from 'open-graph-scraper';
 
-export const GET = withAuthManager(async ({ req, user }) => {
+export const GET = withAuthManager(async ({ user, searchParams }) => {
   const schema = getBookmarkSchema();
   const { page, limit } = await schema.parse({
-    page: req.nextUrl.searchParams.get('page'),
-    limit: req.nextUrl.searchParams.get('limit'),
+    page: searchParams.get('page'),
+    limit: searchParams.get('limit'),
   });
 
   const bookmarks = await prisma.bookmark.findMany({

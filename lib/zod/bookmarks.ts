@@ -40,3 +40,25 @@ export const createBookmarkSchema = (user: AuthUser) => {
       }
     });
 };
+
+export const deleteBookmarkSchema = (user: AuthUser) => {
+  return z
+    .object({
+      id: z.string().cuid(),
+    })
+    .superRefine(async (data, ctx) => {
+      const bookmarkExists = await prisma.bookmark.findFirst({
+        where: {
+          userId: user.id,
+          id: data.id,
+        },
+      });
+
+      if (!bookmarkExists) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'This bookmark no longer exists. Please refresh.',
+        });
+      }
+    });
+};
