@@ -29,9 +29,9 @@ export default function BookmarkCard({
     >
       <Card className="flex h-full w-full flex-col justify-between">
         <CardHeader className="flex h-full flex-col items-start p-5">
-          <div className="align-center flex w-full items-center justify-between">
-            <div className="mr-1 flex-1 font-semibold leading-none tracking-tight">
-              <h1 className="line-clamp-2 leading-snug">
+          <div className="flex w-full items-start justify-between">
+            <div className="flex-1">
+              <h1 className="line-clamp-2 h-[40px] font-semibold leading-none leading-snug tracking-tight">
                 {truncate(bookmark.title, 80)}
               </h1>
             </div>
@@ -40,7 +40,7 @@ export default function BookmarkCard({
                 <Button
                   variant="outline"
                   size="icon"
-                  className="h-6 w-6"
+                  className="ml-2 h-6 w-6 flex-shrink-0"
                 >
                   <EllipsisVertical className="h-[1rem] w-[1rem]" />
                   <span className="sr-only">Toggle theme</span>
