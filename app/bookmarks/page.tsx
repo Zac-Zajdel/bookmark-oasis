@@ -2,26 +2,39 @@
 
 import BookmarkCard from '@/components/bookmarks/bookmark-card';
 import BookmarkCardSkeleton from '@/components/bookmarks/bookmark-card-skeleton';
+import BookmarkHeader from '@/components/bookmarks/bookmark-header';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { queryClient } from '@/lib/utils';
 import { Bookmark } from '@prisma/client';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 export default function Bookmarks() {
-  const [url, setUrl] = useState('');
+  const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(search);
+      setPage(1);
+    }, 300);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [search]);
 
   const [page, setPage] = useState(1);
   const [itemsPerPage] = useState(10);
   const [totalBookmarks, setTotalBookmarks] = useState(0);
 
   const { isLoading, data: bookmarks } = useQuery({
-    queryKey: ['bookmarks', page, itemsPerPage],
+    queryKey: ['bookmarks', debouncedSearch, page, itemsPerPage],
     queryFn: async (): Promise<Bookmark[] | []> => {
       const response = await fetch(
-        `/api/bookmarks?page=${page}&limit=${itemsPerPage}`,
+        `/api/bookmarks?search=${debouncedSearch}&page=${page}&limit=${itemsPerPage}`,
       );
       const jsonData = await response.json();
 
@@ -36,11 +49,11 @@ export default function Bookmarks() {
   });
 
   const createBookmarkMutation = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (bookmarkUrl: string) => {
       const response = await fetch('/api/bookmarks', {
         method: 'POST',
         body: JSON.stringify({
-          url: url,
+          url: bookmarkUrl,
         }),
       });
 
@@ -49,11 +62,13 @@ export default function Bookmarks() {
         toast.error(jsonData.message);
       } else {
         toast.success(jsonData.message);
-        setUrl('');
       }
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['bookmarks', page] });
+      await queryClient.invalidateQueries({
+        queryKey: ['bookmarks', debouncedSearch, page, itemsPerPage],
+      });
+      setDialogOpen(false);
     },
   });
 
@@ -71,31 +86,23 @@ export default function Bookmarks() {
       }
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['bookmarks', page] });
+      await queryClient.invalidateQueries({
+        queryKey: ['bookmarks', debouncedSearch, page, itemsPerPage],
+      });
     },
   });
 
   const totalPages = bookmarks ? Math.ceil(totalBookmarks / itemsPerPage) : 1;
 
   return (
-    <div className="mt-24 flex flex-col items-center space-y-10">
-      <div className="container flex items-center justify-center space-x-4">
-        <Input
-          type="url"
-          value={url}
-          onChange={(event) => setUrl(event?.target.value)}
-          placeholder="Add Bookmark URL"
-        />
-        <Button
-          variant="outline"
-          disabled={createBookmarkMutation.isPending}
-          onClick={() => {
-            createBookmarkMutation.mutate();
-          }}
-        >
-          Create
-        </Button>
-      </div>
+    <div className="mt-20 flex flex-col items-center space-y-10">
+      <BookmarkHeader
+        onSearch={setSearch}
+        onCreate={(url) => createBookmarkMutation.mutate(url)}
+        isPending={createBookmarkMutation.isPending}
+        dialogOpen={dialogOpen}
+        setDialogOpen={setDialogOpen}
+      />
 
       <div className="container">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
