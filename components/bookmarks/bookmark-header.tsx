@@ -8,19 +8,21 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Bookmark } from 'lucide-react';
+import { Bookmark, LoaderCircle } from 'lucide-react';
 import { useState } from 'react';
 
 export default function BookmarkHeader({
   onSearch,
   onCreate,
-  isLoading,
-  onClose,
+  isPending,
+  dialogOpen,
+  setDialogOpen,
 }: {
   onSearch: (search: string) => void;
   onCreate: (bookmarkUrl: string) => void;
-  isLoading: boolean;
-  onClose: () => void;
+  isPending: boolean;
+  dialogOpen: boolean;
+  setDialogOpen: (open: boolean) => void;
 }) {
   const [search, setSearch] = useState('');
   const [bookmarkUrl, setBookmarkUrl] = useState('');
@@ -39,7 +41,10 @@ export default function BookmarkHeader({
         onChange={handleSearchChange}
         placeholder="Search Bookmarks"
       />
-      <Dialog onOpenChange={(open) => !open && onClose()}>
+      <Dialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+      >
         <DialogTrigger asChild>
           <Button>
             <Bookmark className="mr-2 h-4 w-4" />
@@ -58,8 +63,15 @@ export default function BookmarkHeader({
             />
           </div>
           <DialogFooter>
-            <Button onClick={() => onCreate(bookmarkUrl)}>
-              <Bookmark className="mr-2 h-4 w-4" />
+            <Button
+              onClick={() => onCreate(bookmarkUrl)}
+              disabled={isPending}
+            >
+              {isPending ? (
+                <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Bookmark className="mr-2 h-4 w-4" />
+              )}
               Add Bookmark
             </Button>
           </DialogFooter>

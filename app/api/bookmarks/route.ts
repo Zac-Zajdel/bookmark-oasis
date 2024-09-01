@@ -10,7 +10,7 @@ export const GET = withAuthManager(async ({ user, searchParams }) => {
   const { page, limit, search } = await schema.parse({
     page: searchParams.get('page'),
     limit: searchParams.get('limit'),
-    search: searchParams.get('search'),
+    search: searchParams.get('search') ?? '',
   });
 
   const bookmarks = await prisma.bookmark.findMany({

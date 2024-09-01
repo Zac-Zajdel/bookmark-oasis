@@ -13,7 +13,7 @@ import { toast } from 'sonner';
 export default function Bookmarks() {
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -68,7 +68,7 @@ export default function Bookmarks() {
       await queryClient.invalidateQueries({
         queryKey: ['bookmarks', debouncedSearch, page, itemsPerPage],
       });
-      setIsDialogOpen(false); // Close the dialog on success
+      setDialogOpen(false);
     },
   });
 
@@ -99,8 +99,9 @@ export default function Bookmarks() {
       <BookmarkHeader
         onSearch={setSearch}
         onCreate={(url) => createBookmarkMutation.mutate(url)}
-        isLoading={createBookmarkMutation.isPending}
-        onClose={() => setIsDialogOpen(false)}
+        isPending={createBookmarkMutation.isPending}
+        dialogOpen={dialogOpen}
+        setDialogOpen={setDialogOpen}
       />
 
       <div className="container">

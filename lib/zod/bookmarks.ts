@@ -16,7 +16,7 @@ export const getBookmarkSchema = () => {
       .refine((val) => val >= 10, {
         message: 'limit cannot be less than 10',
       }),
-    search: z.string(),
+    search: z.string().optional(),
   });
 };
 
