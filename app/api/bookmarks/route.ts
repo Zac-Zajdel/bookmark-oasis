@@ -7,14 +7,21 @@ import { default as ogs } from 'open-graph-scraper';
 
 export const GET = withAuthManager(async ({ user, searchParams }) => {
   const schema = getBookmarkSchema();
-  const { page, limit } = await schema.parse({
+  const { page, limit, search } = await schema.parse({
     page: searchParams.get('page'),
     limit: searchParams.get('limit'),
+    search: searchParams.get('search'),
   });
 
   const bookmarks = await prisma.bookmark.findMany({
     where: {
       userId: user.id,
+      ...(search && {
+        title: {
+          contains: search,
+          mode: 'insensitive',
+        },
+      }),
     },
     orderBy: {
       createdAt: 'desc',
@@ -26,6 +33,12 @@ export const GET = withAuthManager(async ({ user, searchParams }) => {
   const total = await prisma.bookmark.count({
     where: {
       userId: user.id,
+      ...(search && {
+        title: {
+          contains: search,
+          mode: 'insensitive',
+        },
+      }),
     },
   });
 
