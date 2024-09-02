@@ -47,7 +47,7 @@ export default function BookmarkHeader({
       >
         <DialogTrigger asChild>
           <Button>
-            <Bookmark className="mr-2 h-4 w-4" />
+            <Bookmark className="mr-2 size-4" />
             Create
           </Button>
         </DialogTrigger>
@@ -68,9 +68,9 @@ export default function BookmarkHeader({
               disabled={isPending}
             >
               {isPending ? (
-                <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
+                <LoaderCircle className="mr-2 size-4 animate-spin" />
               ) : (
-                <Bookmark className="mr-2 h-4 w-4" />
+                <Bookmark className="mr-2 size-4" />
               )}
               Add Bookmark
             </Button>
