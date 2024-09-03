@@ -5,6 +5,7 @@ import BookmarkCardSkeleton from '@/components/bookmarks/bookmark-card-skeleton'
 import BookmarkHeader from '@/components/bookmarks/bookmark-header';
 import { Button } from '@/components/ui/button';
 import { queryClient } from '@/lib/utils';
+import { OasisResponse } from '@/types/apiHelpers';
 import { Bookmark } from '@prisma/client';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
@@ -32,37 +33,40 @@ export default function Bookmarks() {
 
   const { isLoading, data: bookmarks } = useQuery({
     queryKey: ['bookmarks', debouncedSearch, page, itemsPerPage],
-    queryFn: async (): Promise<Bookmark[] | []> => {
-      const response = await fetch(
-        `/api/bookmarks?search=${debouncedSearch}&page=${page}&limit=${itemsPerPage}`,
-      );
-      const jsonData = await response.json();
+    queryFn: async (): Promise<Bookmark[]> => {
+      const {
+        success,
+        message,
+        data,
+      }: OasisResponse<{ bookmarks: Bookmark[]; total: number }> = await (
+        await fetch(
+          `/api/bookmarks?search=${debouncedSearch}&page=${page}&limit=${itemsPerPage}`,
+        )
+      ).json();
 
-      if (!jsonData.success) {
-        toast.error(jsonData.message);
+      if (!success) {
+        toast.error(message);
         return [];
       }
 
-      setTotalBookmarks(jsonData.data.total);
-      return jsonData.data.bookmarks;
+      setTotalBookmarks(data.total);
+      return data.bookmarks;
     },
   });
 
   const createBookmarkMutation = useMutation({
-    mutationFn: async (bookmarkUrl: string) => {
-      const response = await fetch('/api/bookmarks', {
-        method: 'POST',
-        body: JSON.stringify({
-          url: bookmarkUrl,
-        }),
-      });
+    mutationFn: async (bookmarkUrl: string): Promise<void> => {
+      const { success, message }: OasisResponse<{ bookmark: Bookmark }> =
+        await (
+          await fetch('/api/bookmarks', {
+            method: 'POST',
+            body: JSON.stringify({
+              url: bookmarkUrl,
+            }),
+          })
+        ).json();
 
-      const jsonData = await response.json();
-      if (!jsonData.success) {
-        toast.error(jsonData.message);
-      } else {
-        toast.success(jsonData.message);
-      }
+      !success ? toast.error(message) : toast.success(message);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
@@ -73,22 +77,20 @@ export default function Bookmarks() {
   });
 
   const updateBookmarkMutation = useMutation({
-    mutationFn: async (bookmark: Bookmark) => {
-      const response = await fetch(`/api/bookmarks/${bookmark.id}`, {
-        method: 'PUT',
-        body: JSON.stringify({
-          title: bookmark.title,
-          description: bookmark.description,
-          isFavorite: bookmark.isFavorite,
-        }),
-      });
+    mutationFn: async (bookmark: Bookmark): Promise<void> => {
+      const { success, message }: OasisResponse<{ bookmark: Bookmark }> =
+        await (
+          await fetch(`/api/bookmarks/${bookmark.id}`, {
+            method: 'PUT',
+            body: JSON.stringify({
+              title: bookmark.title,
+              description: bookmark.description,
+              isFavorite: bookmark.isFavorite,
+            }),
+          })
+        ).json();
 
-      const jsonData = await response.json();
-      if (!jsonData.success) {
-        toast.error(jsonData.message);
-      } else {
-        toast.success(jsonData.message);
-      }
+      !success ? toast.error(message) : toast.success(message);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
@@ -98,17 +100,14 @@ export default function Bookmarks() {
   });
 
   const deleteBookmarkMutation = useMutation({
-    mutationFn: async (bookmark: Bookmark) => {
-      const response = await fetch(`/api/bookmarks/${bookmark.id}`, {
-        method: 'DELETE',
-      });
+    mutationFn: async (bookmark: Bookmark): Promise<void> => {
+      const { success, message } = await (
+        await fetch(`/api/bookmarks/${bookmark.id}`, {
+          method: 'DELETE',
+        })
+      ).json();
 
-      const jsonData = await response.json();
-      if (!jsonData.success) {
-        toast.error(jsonData.message);
-      } else {
-        toast.success(jsonData.message);
-      }
+      !success ? toast.error(message) : toast.success(message);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
@@ -123,7 +122,9 @@ export default function Bookmarks() {
     <div className="mt-20 flex flex-col items-center space-y-10">
       <BookmarkHeader
         onSearch={setSearch}
-        onCreate={(url) => createBookmarkMutation.mutate(url)}
+        onCreate={async (url) => {
+          await createBookmarkMutation.mutate(url);
+        }}
         isPending={createBookmarkMutation.isPending}
         dialogOpen={dialogOpen}
         setDialogOpen={setDialogOpen}
