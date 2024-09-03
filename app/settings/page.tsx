@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { OasisError } from '@/lib/oasisError';
+import { OasisResponse } from '@/types/apiHelpers';
 import { useMutation } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
@@ -13,28 +14,22 @@ export default function Settings() {
     mutationFn: createExternalApiToken,
   });
 
-  async function createExternalApiToken(formData: { name: string }): Promise<{
-    success: boolean;
-    message: string;
-    data: any;
-  }> {
-    const response = await fetch('/api/tokens', {
-      method: 'POST',
-      body: JSON.stringify({
-        name: formData.name,
-      }),
-    });
+  async function createExternalApiToken(formData: { name: string }) {
+    const { success, message, data }: OasisResponse<string> = await (
+      await fetch('/api/tokens', {
+        method: 'POST',
+        body: JSON.stringify({
+          name: formData.name,
+        }),
+      })
+    ).json();
 
-    const jsonData = await response.json();
-
-    if (!response.ok) {
-      throw new OasisError(jsonData?.message, 404);
+    if (!success) {
+      throw new OasisError(message, 404);
     } else {
-      toast.success(jsonData.message);
-      toast.success(jsonData.data);
+      toast.success(message);
+      toast.success(data);
     }
-
-    return jsonData;
   }
 
   return (

@@ -34,37 +34,39 @@ export default function Bookmarks() {
   const { isLoading, data: bookmarks } = useQuery({
     queryKey: ['bookmarks', debouncedSearch, page, itemsPerPage],
     queryFn: async (): Promise<Bookmark[]> => {
-      const response: OasisResponse<{ bookmarks: Bookmark[]; total: number }> =
-        await (
-          await fetch(
-            `/api/bookmarks?search=${debouncedSearch}&page=${page}&limit=${itemsPerPage}`,
-          )
-        ).json();
+      const {
+        success,
+        message,
+        data,
+      }: OasisResponse<{ bookmarks: Bookmark[]; total: number }> = await (
+        await fetch(
+          `/api/bookmarks?search=${debouncedSearch}&page=${page}&limit=${itemsPerPage}`,
+        )
+      ).json();
 
-      if (!response.success) {
-        toast.error(response.message);
+      if (!success) {
+        toast.error(message);
         return [];
       }
 
-      setTotalBookmarks(response.data.total);
-      return response.data.bookmarks;
+      setTotalBookmarks(data.total);
+      return data.bookmarks;
     },
   });
 
   const createBookmarkMutation = useMutation({
     mutationFn: async (bookmarkUrl: string): Promise<void> => {
-      const response: OasisResponse<{ bookmark: Bookmark }> = await (
-        await fetch('/api/bookmarks', {
-          method: 'POST',
-          body: JSON.stringify({
-            url: bookmarkUrl,
-          }),
-        })
-      ).json();
+      const { success, message }: OasisResponse<{ bookmark: Bookmark }> =
+        await (
+          await fetch('/api/bookmarks', {
+            method: 'POST',
+            body: JSON.stringify({
+              url: bookmarkUrl,
+            }),
+          })
+        ).json();
 
-      !response.success
-        ? toast.error(response.message)
-        : toast.success(response.message);
+      !success ? toast.error(message) : toast.success(message);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
@@ -76,20 +78,19 @@ export default function Bookmarks() {
 
   const updateBookmarkMutation = useMutation({
     mutationFn: async (bookmark: Bookmark): Promise<void> => {
-      const response: OasisResponse<{ bookmark: Bookmark }> = await (
-        await fetch(`/api/bookmarks/${bookmark.id}`, {
-          method: 'PUT',
-          body: JSON.stringify({
-            title: bookmark.title,
-            description: bookmark.description,
-            isFavorite: bookmark.isFavorite,
-          }),
-        })
-      ).json();
+      const { success, message }: OasisResponse<{ bookmark: Bookmark }> =
+        await (
+          await fetch(`/api/bookmarks/${bookmark.id}`, {
+            method: 'PUT',
+            body: JSON.stringify({
+              title: bookmark.title,
+              description: bookmark.description,
+              isFavorite: bookmark.isFavorite,
+            }),
+          })
+        ).json();
 
-      !response.success
-        ? toast.error(response.message)
-        : toast.success(response.message);
+      !success ? toast.error(message) : toast.success(message);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
@@ -99,16 +100,14 @@ export default function Bookmarks() {
   });
 
   const deleteBookmarkMutation = useMutation({
-    mutationFn: async (bookmark: Bookmark) => {
-      const response = await (
+    mutationFn: async (bookmark: Bookmark): Promise<void> => {
+      const { success, message } = await (
         await fetch(`/api/bookmarks/${bookmark.id}`, {
           method: 'DELETE',
         })
       ).json();
 
-      !response.success
-        ? toast.error(response.message)
-        : toast.success(response.message);
+      !success ? toast.error(message) : toast.success(message);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
@@ -123,7 +122,9 @@ export default function Bookmarks() {
     <div className="mt-20 flex flex-col items-center space-y-10">
       <BookmarkHeader
         onSearch={setSearch}
-        onCreate={(url) => createBookmarkMutation.mutate(url)}
+        onCreate={async (url) => {
+          await createBookmarkMutation.mutate(url);
+        }}
         isPending={createBookmarkMutation.isPending}
         dialogOpen={dialogOpen}
         setDialogOpen={setDialogOpen}
