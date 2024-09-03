@@ -72,6 +72,31 @@ export default function Bookmarks() {
     },
   });
 
+  const updateBookmarkMutation = useMutation({
+    mutationFn: async (bookmark: Bookmark) => {
+      const response = await fetch(`/api/bookmarks/${bookmark.id}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          title: bookmark.title,
+          description: bookmark.description,
+          isFavorite: bookmark.isFavorite,
+        }),
+      });
+
+      const jsonData = await response.json();
+      if (!jsonData.success) {
+        toast.error(jsonData.message);
+      } else {
+        toast.success(jsonData.message);
+      }
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ['bookmarks', debouncedSearch, page, itemsPerPage],
+      });
+    },
+  });
+
   const deleteBookmarkMutation = useMutation({
     mutationFn: async (bookmark: Bookmark) => {
       const response = await fetch(`/api/bookmarks/${bookmark.id}`, {
@@ -114,6 +139,9 @@ export default function Bookmarks() {
                 <BookmarkCard
                   key={bookmark.id}
                   bookmark={bookmark}
+                  onFavorite={(bookmark) =>
+                    updateBookmarkMutation.mutate(bookmark)
+                  }
                   onDelete={(bookmark) =>
                     deleteBookmarkMutation.mutate(bookmark)
                   }

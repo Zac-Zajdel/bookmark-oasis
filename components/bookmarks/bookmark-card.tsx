@@ -10,18 +10,20 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { truncate } from '@/lib/utils';
 import { Bookmark } from '@prisma/client';
-import { EllipsisVertical, Link2Icon, Trash } from 'lucide-react';
+import { EllipsisVertical, Link2Icon, Star, Trash } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
 
 interface BookmarkCardProps {
   bookmark: Bookmark;
   onDelete: (bookmark: Bookmark) => void;
+  onFavorite: (bookmark: Bookmark) => void;
 }
 
 export default function BookmarkCard({
   bookmark,
   onDelete,
+  onFavorite,
 }: BookmarkCardProps) {
   function onCopyLink(url: string) {
     navigator.clipboard.writeText(url);
@@ -56,6 +58,17 @@ export default function BookmarkCard({
                 <DropdownMenuItem onSelect={() => onCopyLink(bookmark.url)}>
                   <Link2Icon className="mr-4 size-4" />
                   Copy Link
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onSelect={() =>
+                    onFavorite({
+                      ...bookmark,
+                      isFavorite: !bookmark.isFavorite,
+                    })
+                  }
+                >
+                  <Star className="mr-4 size-4" />
+                  {bookmark.isFavorite ? 'Remove Favorite' : 'Favorite'}
                 </DropdownMenuItem>
                 <DropdownMenuItem onSelect={() => onDelete(bookmark)}>
                   <Trash className="mr-4 size-4" />

@@ -24,7 +24,7 @@ export const GET = withAuthManager(async ({ user, searchParams }) => {
       }),
     },
     orderBy: {
-      createdAt: 'desc',
+      isFavorite: 'desc',
     },
     take: limit,
     skip: (page - 1) * limit,

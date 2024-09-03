@@ -42,6 +42,31 @@ export const createBookmarkSchema = (user: AuthUser) => {
     });
 };
 
+export const updateBookmarkSchema = (user: AuthUser) => {
+  return z
+    .object({
+      id: z.string().cuid(),
+      title: z.string(),
+      description: z.string().optional(),
+      isFavorite: z.boolean(),
+    })
+    .superRefine(async (data, ctx) => {
+      const bookmarkExists = await prisma.bookmark.findFirst({
+        where: {
+          userId: user.id,
+          id: data.id,
+        },
+      });
+
+      if (!bookmarkExists) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'This bookmark could not be found.',
+        });
+      }
+    });
+};
+
 export const deleteBookmarkSchema = (user: AuthUser) => {
   return z
     .object({
@@ -58,7 +83,7 @@ export const deleteBookmarkSchema = (user: AuthUser) => {
       if (!bookmarkExists) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: 'This bookmark no longer exists. Please refresh.',
+          message: 'This bookmark could not be found.',
         });
       }
     });
