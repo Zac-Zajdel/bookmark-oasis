@@ -2,11 +2,12 @@ import { hashApiToken } from '@/lib/api/apiTokens/utils';
 import { withAuthManager } from '@/lib/authManager';
 import { prisma } from '@/lib/db';
 import { createApiTokenSchema } from '@/lib/zod/apiTokens';
+import { OasisResponse } from '@/types/apiHelpers';
 import { randomBytes } from 'crypto';
 import { NextResponse } from 'next/server';
 
 export const POST = withAuthManager(
-  async ({ req, user }): Promise<NextResponse<{ data: string }>> => {
+  async ({ req, user }): Promise<NextResponse<OasisResponse<string>>> => {
     const schema = createApiTokenSchema();
     const { name } = schema.parse(await req.json());
 
