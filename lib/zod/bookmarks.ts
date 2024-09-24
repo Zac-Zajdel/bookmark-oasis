@@ -20,6 +20,28 @@ export const getBookmarkSchema = () => {
   });
 };
 
+export const showBookmarkSchema = (user: AuthUser) => {
+  return z
+    .object({
+      id: z.string().cuid(),
+    })
+    .superRefine(async (data, ctx) => {
+      const bookmarkExists = await prisma.bookmark.findFirst({
+        where: {
+          id: data.id,
+          userId: user.id,
+        },
+      });
+
+      if (!bookmarkExists) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'This bookmark does not exist.',
+        });
+      }
+    });
+};
+
 export const createBookmarkSchema = (user: AuthUser) => {
   return z
     .object({
