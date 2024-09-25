@@ -119,7 +119,7 @@ export default function Bookmarks() {
   const totalPages = bookmarks ? Math.ceil(totalBookmarks / itemsPerPage) : 1;
 
   return (
-    <div className="mt-20 flex flex-col items-center space-y-10">
+    <div className="mt-10 flex flex-col items-center space-y-10">
       <BookmarkHeader
         onSearch={setSearch}
         onCreate={async (url) => {

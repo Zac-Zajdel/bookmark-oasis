@@ -2,10 +2,12 @@
 
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { OasisResponse } from '@/types/apiHelpers';
 import { Bookmark } from '@prisma/client';
 import { useQuery } from '@tanstack/react-query';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, Save } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
 
@@ -28,36 +30,64 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
 
   return (
     <div className="container mt-10">
-      <Link
-        href="/bookmarks"
-        prefetch={false}
-      >
+      <div className="flex justify-between">
+        <Link
+          href="/bookmarks"
+          prefetch={false}
+        >
+          <Button variant="outline">
+            <ChevronLeft className="mr-1 size-4" />
+            Back
+          </Button>
+        </Link>
         <Button variant="outline">
-          <ChevronLeft className="mr-1 size-4" />
-          Back
+          <Save className="mr-2 size-4" />
+          Save
         </Button>
-      </Link>
-      <div className="mt-10">
-        <Card>
-          <div className="flex items-start space-y-1.5 p-6">
-            <div className="mr-4 w-48 overflow-hidden">
-              <div className="relative mx-auto pb-[56.25%]">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={bookmark?.imageUrl || '/placeholder.svg'}
-                  alt={bookmark?.title}
-                  className="absolute left-0 top-0 h-full w-full rounded-md object-cover"
-                />
-              </div>
-            </div>
-            <div className="font-medium">
-              <h1>{bookmark?.title}</h1>
-              <p className="pt-3 text-sm text-gray-700 dark:text-gray-400">
-                {bookmark?.description}
-              </p>
+      </div>
+
+      <div className="mt-10 flex flex-col items-center md:flex-row md:items-start">
+        <Card className="w-80 flex-none">
+          <div className="overflow-hidden p-5">
+            <div className="relative mx-auto pb-[56.25%]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={bookmark?.imageUrl || '/placeholder.svg'}
+                alt={bookmark?.title}
+                className="absolute left-0 top-0 h-full w-full rounded-md object-cover"
+              />
             </div>
           </div>
         </Card>
+        <div className="mt-4 w-full sm:mt-0 md:ml-4">
+          <div className="mt-5">
+            <Label htmlFor="text">Title</Label>
+            <Input
+              id="text"
+              className="mt-2"
+              value={bookmark?.title}
+            />
+          </div>
+
+          <div className="mt-5 text-sm">
+            <Label htmlFor="url">URL</Label>
+            <Input
+              id="url"
+              className="mt-2"
+              placeholder="Type your message here."
+              value={bookmark?.url || ''}
+            />
+          </div>
+          {/* <div className="mt-5 text-sm">
+            <Label htmlFor="description">Description</Label>
+            <Textarea
+              id="description"
+              className="mt-2 h-20"
+              placeholder="Type your message here."
+              value={bookmark?.description || ''}
+            />
+          </div> */}
+        </div>
       </div>
     </div>
   );
