@@ -41,8 +41,12 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
   });
 
   const updateBookmarkMutation = useMutation({
-    mutationFn: async (updated: Partial<Bookmark>): Promise<void> => {
-      const { success, message }: OasisResponse<Bookmark> = await (
+    mutationFn: async (updated: Partial<Bookmark>): Promise<Bookmark> => {
+      const {
+        success,
+        message,
+        data: updatedBookmark,
+      }: OasisResponse<Bookmark> = await (
         await fetch(`/api/bookmarks/${params.id}`, {
           method: 'PUT',
           body: JSON.stringify({
@@ -55,6 +59,8 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
       ).json();
 
       !success ? toast.error(message) : toast.success(message);
+
+      return updatedBookmark;
     },
     onSuccess: async (updatedBookmark) => {
       queryClient.setQueryData(
@@ -82,7 +88,9 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
           onClick={() => updateBookmarkMutation.mutate({ title, url })}
         >
           <Save className="mr-2 size-4" />
-          Save
+          {bookmark?.title !== title || bookmark?.url !== url
+            ? 'Save'
+            : 'Saved'}
         </Button>
       </div>
 
