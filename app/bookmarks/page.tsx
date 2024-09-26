@@ -83,9 +83,10 @@ export default function Bookmarks() {
           await fetch(`/api/bookmarks/${bookmark.id}`, {
             method: 'PUT',
             body: JSON.stringify({
+              url: bookmark.url,
               title: bookmark.title,
-              description: bookmark.description,
               isFavorite: bookmark.isFavorite,
+              description: bookmark.description,
             }),
           })
         ).json();
@@ -160,7 +161,7 @@ export default function Bookmarks() {
           Previous
         </Button>
         <span>
-          Page {page} of {totalPages}
+          Page {page} of {totalPages || 1}
         </span>
         <Button
           variant="outline"

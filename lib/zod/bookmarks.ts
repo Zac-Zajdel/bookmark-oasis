@@ -68,7 +68,8 @@ export const updateBookmarkSchema = (user: AuthUser) => {
   return z
     .object({
       id: z.string().cuid(),
-      title: z.string(),
+      url: z.string().url(),
+      title: z.string().min(1, { message: 'Title is required' }),
       description: z.string().optional(),
       isFavorite: z.boolean(),
     })

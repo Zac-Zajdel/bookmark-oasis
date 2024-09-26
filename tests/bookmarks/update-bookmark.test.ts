@@ -28,6 +28,7 @@ test('UPDATE /bookmarks', async (ctx: OasisTestContext) => {
     path: `/bookmarks/${initialBookmark.id}`,
     body: {
       title: 'Updated Title',
+      url: 'https://www.youtube.com/',
       description: 'Updated Description',
       isFavorite: true,
     },
@@ -46,7 +47,7 @@ test('UPDATE /bookmarks', async (ctx: OasisTestContext) => {
   expect(updatedBookmark).toEqual(
     expect.objectContaining({
       userId: user.id,
-      url: 'https://www.example.com/',
+      url: 'https://www.youtube.com/',
       title: 'Updated Title',
       description: 'Updated Description',
       isFavorite: true,

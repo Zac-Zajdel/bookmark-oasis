@@ -4,18 +4,27 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { queryClient } from '@/lib/utils';
 import { OasisResponse } from '@/types/apiHelpers';
 import { Bookmark } from '@prisma/client';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { ChevronLeft, Save } from 'lucide-react';
 import Link from 'next/link';
+import { useState } from 'react';
 import { toast } from 'sonner';
 
 export default function DetailsPage({ params }: { params: { id: string } }) {
+  const [title, setTitle] = useState('');
+  const [url, setUrl] = useState('');
+
   const { data: bookmark } = useQuery({
     queryKey: ['bookmark-details', params.id],
     queryFn: async (): Promise<Bookmark | undefined> => {
-      const { success, message, data }: OasisResponse<Bookmark> = await (
+      const {
+        success,
+        message,
+        data: bookmark,
+      }: OasisResponse<Bookmark> = await (
         await fetch(`/api/bookmarks/${params.id}`)
       ).json();
 
@@ -24,7 +33,34 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
         return;
       }
 
-      return data;
+      setTitle(bookmark.title);
+      setUrl(bookmark.url);
+
+      return bookmark;
+    },
+  });
+
+  const updateBookmarkMutation = useMutation({
+    mutationFn: async (updated: Partial<Bookmark>): Promise<void> => {
+      const { success, message }: OasisResponse<Bookmark> = await (
+        await fetch(`/api/bookmarks/${params.id}`, {
+          method: 'PUT',
+          body: JSON.stringify({
+            url: updated.url,
+            title: updated.title,
+            isFavorite: bookmark?.isFavorite,
+            description: bookmark?.description,
+          }),
+        })
+      ).json();
+
+      !success ? toast.error(message) : toast.success(message);
+    },
+    onSuccess: async (updatedBookmark) => {
+      queryClient.setQueryData(
+        ['bookmark-details', params.id],
+        updatedBookmark,
+      );
     },
   });
 
@@ -40,7 +76,11 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
             Back
           </Button>
         </Link>
-        <Button variant="outline">
+        <Button
+          variant="outline"
+          disabled={updateBookmarkMutation.isPending}
+          onClick={() => updateBookmarkMutation.mutate({ title, url })}
+        >
           <Save className="mr-2 size-4" />
           Save
         </Button>
@@ -65,7 +105,10 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
             <Input
               id="text"
               className="mt-2"
-              value={bookmark?.title}
+              placeholder="Bookmark Title"
+              required
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
             />
           </div>
 
@@ -74,19 +117,12 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
             <Input
               id="url"
               className="mt-2"
-              placeholder="Type your message here."
-              value={bookmark?.url || ''}
+              placeholder="Bookmark URL"
+              required
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
             />
           </div>
-          {/* <div className="mt-5 text-sm">
-            <Label htmlFor="description">Description</Label>
-            <Textarea
-              id="description"
-              className="mt-2 h-20"
-              placeholder="Type your message here."
-              value={bookmark?.description || ''}
-            />
-          </div> */}
         </div>
       </div>
     </div>

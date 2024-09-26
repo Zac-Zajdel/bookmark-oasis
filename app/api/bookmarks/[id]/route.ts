@@ -41,10 +41,12 @@ export const PUT = withAuthManager(
     params,
   }): Promise<NextResponse<OasisResponse<Bookmark>>> => {
     const schema = updateBookmarkSchema(user);
-    const { id, title, description, isFavorite } = await schema.parseAsync({
-      id: params.id,
-      ...(await req.json()),
-    });
+    const { id, url, title, description, isFavorite } = await schema.parseAsync(
+      {
+        id: params.id,
+        ...(await req.json()),
+      },
+    );
 
     const bookmark = await prisma.bookmark.update({
       where: {
@@ -52,9 +54,10 @@ export const PUT = withAuthManager(
         userId: user.id,
       },
       data: {
-        title: title,
-        description: description,
-        isFavorite: isFavorite,
+        url,
+        title,
+        isFavorite,
+        description,
       },
     });
 
