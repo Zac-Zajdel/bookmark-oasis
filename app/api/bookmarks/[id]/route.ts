@@ -2,11 +2,37 @@ import { withAuthManager } from '@/lib/authManager';
 import { prisma } from '@/lib/db';
 import {
   deleteBookmarkSchema,
+  showBookmarkSchema,
   updateBookmarkSchema,
 } from '@/lib/zod/bookmarks';
 import { OasisResponse } from '@/types/apiHelpers';
 import { Bookmark } from '@prisma/client';
 import { NextResponse } from 'next/server';
+
+export const GET = withAuthManager(
+  async ({ user, params }): Promise<NextResponse<OasisResponse<Bookmark>>> => {
+    const schema = showBookmarkSchema(user);
+    const { id } = await schema.parseAsync({
+      id: params.id,
+    });
+
+    const bookmark = await prisma.bookmark.findFirstOrThrow({
+      where: {
+        id: id,
+        userId: user.id,
+      },
+    });
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: 'Bookmark retrieved.',
+        data: bookmark,
+      },
+      { status: 200 },
+    );
+  },
+);
 
 export const PUT = withAuthManager(
   async ({
@@ -15,10 +41,12 @@ export const PUT = withAuthManager(
     params,
   }): Promise<NextResponse<OasisResponse<Bookmark>>> => {
     const schema = updateBookmarkSchema(user);
-    const { id, title, description, isFavorite } = await schema.parseAsync({
-      id: params.id,
-      ...(await req.json()),
-    });
+    const { id, url, title, description, isFavorite } = await schema.parseAsync(
+      {
+        id: params.id,
+        ...(await req.json()),
+      },
+    );
 
     const bookmark = await prisma.bookmark.update({
       where: {
@@ -26,9 +54,10 @@ export const PUT = withAuthManager(
         userId: user.id,
       },
       data: {
-        title: title,
-        description: description,
-        isFavorite: isFavorite,
+        url,
+        title,
+        isFavorite,
+        description,
       },
     });
 

@@ -32,7 +32,7 @@ export default function Navbar() {
                   href="/bookmarks"
                   prefetch={false}
                   className={cn(
-                    pathname === '/bookmarks'
+                    pathname.includes('/bookmarks')
                       ? 'border-b-2 border-b-white font-medium'
                       : 'text-muted-foreground',
                     'whitespace-nowrap px-2 pb-[0.90rem] text-sm',
@@ -44,7 +44,7 @@ export default function Navbar() {
                   href="/settings"
                   prefetch={false}
                   className={cn(
-                    pathname === '/settings'
+                    pathname.includes('/settings')
                       ? 'border-b-2 border-b-white font-medium'
                       : 'text-muted-foreground',
                     'whitespace-nowrap px-2 pb-[0.90rem] text-sm',

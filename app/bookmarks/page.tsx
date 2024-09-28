@@ -83,9 +83,10 @@ export default function Bookmarks() {
           await fetch(`/api/bookmarks/${bookmark.id}`, {
             method: 'PUT',
             body: JSON.stringify({
+              url: bookmark.url,
               title: bookmark.title,
-              description: bookmark.description,
               isFavorite: bookmark.isFavorite,
+              description: bookmark.description,
             }),
           })
         ).json();
@@ -119,7 +120,7 @@ export default function Bookmarks() {
   const totalPages = bookmarks ? Math.ceil(totalBookmarks / itemsPerPage) : 1;
 
   return (
-    <div className="mt-20 flex flex-col items-center space-y-10">
+    <div className="mt-10 flex flex-col items-center space-y-10">
       <BookmarkHeader
         onSearch={setSearch}
         onCreate={async (url) => {
@@ -160,7 +161,7 @@ export default function Bookmarks() {
           Previous
         </Button>
         <span>
-          Page {page} of {totalPages}
+          Page {page} of {totalPages || 1}
         </span>
         <Button
           variant="outline"
