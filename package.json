@@ -11,6 +11,9 @@
     "format": "prettier --write \"**/*.{css,js,json,jsx,ts,tsx}\"",
     "reset": "prisma migrate reset"
   },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+  },
   "dependencies": {
     "@auth/prisma-adapter": "^2.4.1",
     "@prisma/client": "5.19.0",
@@ -56,6 +59,7 @@
     "prettier-plugin-organize-imports": "^4.0.0",
     "prettier-plugin-tailwindcss": "^0.6.6",
     "tailwindcss": "^3.4.7",
+    "ts-node": "^10.9.2",
     "typescript": "^5",
     "vite-tsconfig-paths": "^4.3.2",
     "vitest": "^2.0.5"
