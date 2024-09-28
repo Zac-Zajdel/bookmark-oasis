@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useDebounce } from '@/hooks/useDebounce';
 import { queryClient } from '@/lib/utils';
 import { OasisResponse } from '@/types/apiHelpers';
 import { Bookmark } from '@prisma/client';
@@ -85,7 +87,10 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
         <Button
           variant="outline"
           disabled={updateBookmarkMutation.isPending}
-          onClick={() => updateBookmarkMutation.mutate({ title, url })}
+          onClick={useDebounce(
+            () => updateBookmarkMutation.mutate({ title, url }),
+            250,
+          )}
         >
           <Save className="mr-2 size-4" />
           {bookmark?.title !== title || bookmark?.url !== url
@@ -98,38 +103,70 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
         <Card className="w-80 flex-none">
           <div className="overflow-hidden p-5">
             <div className="relative mx-auto pb-[56.25%]">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={bookmark?.imageUrl || '/placeholder.svg'}
-                alt={bookmark?.title}
-                className="absolute left-0 top-0 h-full w-full rounded-md object-cover"
-              />
+              {bookmark ? (
+                <>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={bookmark?.imageUrl || '/placeholder.svg'}
+                    alt={bookmark?.title}
+                    className="absolute left-0 top-0 h-full w-full rounded-md object-cover"
+                  />
+                </>
+              ) : (
+                <Skeleton className="absolute left-0 top-0 h-full w-full rounded-md object-cover" />
+              )}
             </div>
           </div>
         </Card>
         <div className="mt-4 w-full sm:mt-0 md:ml-4">
           <div className="mt-5">
-            <Label htmlFor="text">Title</Label>
-            <Input
-              id="text"
-              className="mt-2"
-              placeholder="Bookmark Title"
-              required
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-            />
+            {bookmark ? (
+              <>
+                <Label htmlFor="text">Title</Label>
+                <Input
+                  id="text"
+                  className="mt-2"
+                  placeholder="Bookmark Title"
+                  required
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                />
+              </>
+            ) : (
+              <>
+                <div className="flex">
+                  <div className="w-full space-y-2">
+                    <Skeleton className="h-6 w-8" />
+                    <Skeleton className="h-8 w-full" />
+                  </div>
+                </div>
+              </>
+            )}
           </div>
 
           <div className="mt-5 text-sm">
-            <Label htmlFor="url">URL</Label>
-            <Input
-              id="url"
-              className="mt-2"
-              placeholder="Bookmark URL"
-              required
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-            />
+            {bookmark ? (
+              <>
+                <Label htmlFor="url">URL</Label>
+                <Input
+                  id="url"
+                  className="mt-2"
+                  placeholder="Bookmark URL"
+                  required
+                  value={url}
+                  onChange={(e) => setUrl(e.target.value)}
+                />
+              </>
+            ) : (
+              <>
+                <div className="flex">
+                  <div className="w-full space-y-2">
+                    <Skeleton className="h-6 w-8" />
+                    <Skeleton className="h-8 w-full" />
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
