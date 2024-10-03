@@ -28,7 +28,6 @@ test('POST /bookmarks', async (ctx: OasisTestContext) => {
       title: 'YouTube',
       description:
         'Enjoy the videos and music you love, upload original content, and share it all with friends, family, and the world on YouTube.',
-      imageUrl: 'https://www.youtube.com/img/desktop/yt_1200.png',
       visits: 0,
     }),
   );

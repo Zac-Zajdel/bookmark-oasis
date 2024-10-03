@@ -77,7 +77,7 @@ export const POST = withAuthManager(
         url: result.ogUrl || url,
         title: result.ogTitle || result.ogSiteName || 'Title',
         description: result.ogDescription,
-        imageUrl: parseUrl(result.ogImage?.[0]?.url),
+        imageUrl: parseUrl(result?.favicon),
       },
     });
 
