@@ -2,16 +2,23 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { truncate } from '@/lib/utils';
 import { Bookmark } from '@prisma/client';
-import { EllipsisVertical, Info, Link2Icon, Star, Trash } from 'lucide-react';
-import Link from 'next/link';
+import {
+  BookOpen,
+  Link,
+  Search,
+  SquareArrowOutUpRight,
+  Star,
+  Trash,
+} from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
@@ -34,74 +41,127 @@ export default function BookmarkCard({
   }
 
   return (
-    <Link
-      href={bookmark.url}
-      target="_blank"
-    >
-      <Card className="flex h-full w-full flex-col justify-between">
-        <CardHeader className="flex h-full flex-col items-start p-5">
-          <div className="flex w-full items-start justify-between">
-            <div className="flex-1">
-              <h1 className="line-clamp-2 h-[40px] font-semibold leading-snug tracking-tight">
-                {truncate(bookmark.title, 80)}
-              </h1>
+    <Card className="flex h-full w-full flex-col justify-between rounded-lg">
+      <CardHeader className="flex h-full flex-col items-start p-5">
+        <div className="flex w-full items-center justify-start">
+          <div className="min-w-8">
+            <div className="inline-flex size-7 items-center justify-center rounded-md border">
+              {bookmark.imageUrl ? (
+                <>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={bookmark.imageUrl}
+                    alt={bookmark.title}
+                    className="size-4"
+                  />
+                </>
+              ) : (
+                <Search className="size-3.5" />
+              )}
             </div>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="ml-2 h-6 w-6 flex-shrink-0"
-                >
-                  <EllipsisVertical className="h-[1rem] w-[1rem]" />
-                  <span className="sr-only">Toggle theme</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem
-                  onSelect={() => router.push(`/bookmarks/${bookmark.id}`)}
-                >
-                  <Info className="mr-4 size-4" />
-                  Details
-                </DropdownMenuItem>
-                <DropdownMenuItem onSelect={() => onCopyLink(bookmark.url)}>
-                  <Link2Icon className="mr-4 size-4" />
-                  Copy Link
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onSelect={() =>
-                    onFavorite({
-                      ...bookmark,
-                      isFavorite: !bookmark.isFavorite,
-                    })
-                  }
-                >
-                  <Star className="mr-4 size-4" />
+          </div>
+          <h1 className="text-md line-clamp-2 h-[40px] overflow-hidden pl-2 pt-2 font-semibold leading-snug tracking-tight">
+            {truncate(bookmark.title, 80)}
+          </h1>
+        </div>
+        <p className="line-clamp-2 text-xs text-gray-500 text-muted-foreground">
+          {truncate(bookmark.description || '', 100)}
+        </p>
+      </CardHeader>
+
+      <Separator className="opacity-75" />
+
+      <div className="flex items-center justify-between gap-4 px-4 py-2">
+        <TooltipProvider delayDuration={500}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="flex size-7 items-center justify-center"
+                onClick={() => window.open(bookmark.url, '_blank')}
+              >
+                <SquareArrowOutUpRight className="size-4 dark:text-gray-200" />
+                <span className="sr-only">Visit URL</span>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Visit URL</p>
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="flex size-7 items-center justify-center"
+                onClick={() => router.push(`/bookmarks/${bookmark.id}`)}
+              >
+                <BookOpen className="size-4 dark:text-gray-200" />
+                <span className="sr-only">Details Page Link</span>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>View Metadata</p>
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="flex size-7 items-center justify-center"
+                onClick={() =>
+                  onFavorite({
+                    ...bookmark,
+                    isFavorite: !bookmark.isFavorite,
+                  })
+                }
+              >
+                <Star className="size-4 dark:text-gray-200" />
+                <span className="sr-only">
                   {bookmark.isFavorite ? 'Remove Favorite' : 'Favorite'}
-                </DropdownMenuItem>
-                <DropdownMenuItem onSelect={() => onDelete(bookmark)}>
-                  <Trash className="mr-4 size-4" />
-                  Delete
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-          <p className="line-clamp-2 pt-2 text-sm text-gray-500 text-muted-foreground">
-            {truncate(bookmark.description || '', 60)}
-          </p>
-          <div className="flex-grow"></div>
-          <div className="w-full overflow-hidden">
-            <div className="relative mx-auto pb-[56.25%]">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={bookmark.imageUrl || '/placeholder.svg'}
-                alt={bookmark.title}
-                className="absolute left-0 top-0 h-full w-full rounded-md object-cover"
-              />
-            </div>
-          </div>
-        </CardHeader>
-      </Card>
-    </Link>
+                </span>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              {bookmark.isFavorite ? 'Remove Favorite' : 'Favorite'}
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="flex size-7 items-center justify-center"
+                onClick={() => onCopyLink(bookmark.url)}
+              >
+                <Link className="size-4 dark:text-gray-200" />
+                <span className="sr-only">Copy Link</span>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Copy Link</p>
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="flex size-7 items-center justify-center"
+                onClick={() => onDelete(bookmark)}
+              >
+                <Trash className="size-4 dark:text-gray-200" />
+                <span className="sr-only">Delete</span>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Delete</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </div>
+    </Card>
   );
 }
