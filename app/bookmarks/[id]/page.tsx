@@ -107,7 +107,7 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
                 <>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={bookmark?.imageUrl || '/placeholder.svg'}
+                    src={bookmark?.imageUrl ?? ''}
                     alt={bookmark?.title}
                     className="absolute left-0 top-0 h-full w-full rounded-md object-cover"
                   />
