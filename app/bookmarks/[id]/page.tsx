@@ -10,7 +10,7 @@ import { queryClient } from '@/lib/utils';
 import { OasisResponse } from '@/types/apiHelpers';
 import { Bookmark } from '@prisma/client';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { ChevronLeft, Save } from 'lucide-react';
+import { ChevronLeft, Save, Search } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -99,27 +99,25 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
         </Button>
       </div>
 
-      <div className="mt-10 flex flex-col items-center md:flex-row md:items-start">
-        <Card className="w-80 flex-none">
-          <div className="overflow-hidden p-5">
-            <div className="relative mx-auto pb-[56.25%]">
-              {bookmark ? (
-                <>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={bookmark?.imageUrl ?? ''}
-                    alt={bookmark?.title}
-                    className="absolute left-0 top-0 h-full w-full rounded-md object-cover"
-                  />
-                </>
-              ) : (
-                <Skeleton className="absolute left-0 top-0 h-full w-full rounded-md object-cover" />
-              )}
-            </div>
+      <div className="mt-5 flex flex-col items-center md:flex-row">
+        <Card className="mt-5 min-w-40 content-center p-16">
+          <div className="flex items-center justify-center">
+            {bookmark?.imageUrl ? (
+              <>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={bookmark.imageUrl}
+                  alt={bookmark.title}
+                  className="size-4"
+                />
+              </>
+            ) : (
+              <Search className="size-3.5" />
+            )}
           </div>
         </Card>
-        <div className="mt-4 w-full sm:mt-0 md:ml-4">
-          <div className="mt-5">
+        <div className="w-full sm:mt-0 md:ml-4">
+          <div className="mt-3">
             {bookmark ? (
               <>
                 <Label htmlFor="text">Title</Label>
