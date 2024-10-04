@@ -28,9 +28,13 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function truncate(str: string, maxLength: number) {
+export function truncate(
+  str: string,
+  maxLength: number,
+  extension: string | null = '...',
+) {
   if (str.length > maxLength) {
-    return str.substring(0, maxLength) + '...';
+    return str.substring(0, maxLength) + (extension || '');
   }
   return str;
 }
