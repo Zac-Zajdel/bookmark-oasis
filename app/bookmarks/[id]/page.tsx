@@ -1,16 +1,24 @@
 'use client';
 
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useDebounce } from '@/hooks/useDebounce';
-import { queryClient } from '@/lib/utils';
+import { queryClient, truncate } from '@/lib/utils';
 import { OasisResponse } from '@/types/apiHelpers';
 import { Bookmark } from '@prisma/client';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { ChevronLeft, Save, Search } from 'lucide-react';
+import { Save, Search } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -73,17 +81,23 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
   });
 
   return (
-    <div className="container mt-10">
-      <div className="flex justify-between">
-        <Link
-          href="/bookmarks"
-          prefetch={false}
-        >
-          <Button variant="outline">
-            <ChevronLeft className="mr-1 size-4" />
-            Back
-          </Button>
-        </Link>
+    <div className="container mt-5">
+      <div className="flex items-center justify-between">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href="/bookmarks">Home</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>
+                {truncate(bookmark?.title ?? '...', 35)}
+              </BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
         <Button
           variant="outline"
           disabled={updateBookmarkMutation.isPending}
