@@ -70,7 +70,7 @@ export const updateBookmarkSchema = (user: AuthUser) => {
       id: z.string().cuid(),
       url: z.string().url(),
       title: z.string().min(1, { message: 'Title is required' }),
-      description: z.string().optional(),
+      description: z.string().nullable().optional(),
       isFavorite: z.boolean(),
     })
     .superRefine(async (data, ctx) => {
