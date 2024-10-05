@@ -17,13 +17,13 @@ test('GET /bookmarks', async (ctx: OasisTestContext) => {
       data: [
         {
           userId: user.id,
-          url: 'https://www.youtube.com/',
-          title: 'Youtube',
+          url: 'https://github.com/',
+          title: 'Github',
         },
         {
           userId: user.id,
-          url: 'https://github.com/',
-          title: 'Github',
+          url: 'https://www.youtube.com/',
+          title: 'Youtube',
         },
       ],
     })

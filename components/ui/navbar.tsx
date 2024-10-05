@@ -33,9 +33,9 @@ export default function Navbar() {
                   prefetch={false}
                   className={cn(
                     pathname.includes('/bookmarks')
-                      ? 'border-b-2 border-b-white font-medium'
+                      ? 'border-b-2 border-b-muted-foreground dark:border-b-white'
                       : 'text-muted-foreground',
-                    'whitespace-nowrap px-2 pb-[0.90rem] text-sm',
+                    'whitespace-nowrap px-2 pb-[0.90rem] text-sm font-medium',
                   )}
                 >
                   Bookmarks
@@ -45,9 +45,9 @@ export default function Navbar() {
                   prefetch={false}
                   className={cn(
                     pathname.includes('/settings')
-                      ? 'border-b-2 border-b-white font-medium'
+                      ? 'border-b-2 border-b-muted-foreground'
                       : 'text-muted-foreground',
-                    'whitespace-nowrap px-2 pb-[0.90rem] text-sm',
+                    'whitespace-nowrap px-2 pb-[0.90rem] text-sm font-medium',
                   )}
                 >
                   Settings

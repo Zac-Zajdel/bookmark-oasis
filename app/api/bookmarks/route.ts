@@ -31,9 +31,12 @@ export const GET = withAuthManager(
           },
         }),
       },
-      orderBy: {
-        isFavorite: 'desc',
-      },
+      orderBy: [
+        {
+          isFavorite: 'desc',
+        },
+        { title: 'asc' },
+      ],
       take: limit,
       skip: (page - 1) * limit,
     });

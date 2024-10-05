@@ -83,7 +83,9 @@ export default function BookmarkActions({
               })
             }
           >
-            <Star className="size-4 dark:text-gray-200" />
+            <Star
+              className={`size-4 ${bookmark.isFavorite ? 'fill-yellow-500 text-yellow-500' : 'dark:text-gray-200'}`}
+            />
             <span className="sr-only">
               {bookmark.isFavorite ? 'Remove Favorite' : 'Favorite'}
             </span>
