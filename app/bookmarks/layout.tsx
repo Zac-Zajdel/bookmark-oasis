@@ -1,4 +1,5 @@
 import Navbar from '@/components/ui/navbar';
+import { ViewTransitions } from 'next-view-transitions';
 
 interface BookmarkLayoutProps {
   children: React.ReactNode;
@@ -6,9 +7,11 @@ interface BookmarkLayoutProps {
 
 export default function BookmarkLayout({ children }: BookmarkLayoutProps) {
   return (
-    <div className="min-h-screen">
-      <Navbar />
-      {children}
-    </div>
+    <ViewTransitions>
+      <div className="min-h-screen">
+        <Navbar />
+        {children}
+      </div>
+    </ViewTransitions>
   );
 }
