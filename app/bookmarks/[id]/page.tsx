@@ -19,7 +19,7 @@ import { OasisResponse } from '@/types/apiHelpers';
 import { Bookmark } from '@prisma/client';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Save, Search } from 'lucide-react';
-import Link from 'next/link';
+import { Link } from 'next-view-transitions';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
