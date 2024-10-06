@@ -5,6 +5,7 @@ import { Toaster } from '@/components/ui/sonner';
 import { cn } from '@/lib/utils';
 import '@/styles/globals.css';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { Analytics } from '@vercel/analytics/react';
 import { Metadata } from 'next';
 import { Inter as FontSans } from 'next/font/google';
 
@@ -22,20 +23,22 @@ export const metadata: Metadata = {
   metadataBase: new URL(META_URL),
   title: 'Bookmark Oasis',
   description:
-    'Organize, manage, and access your favorite links all in one place',
+    'Organize, manage, and access your favorite links all in one place.',
   applicationName: 'Bookmark Oasis',
   authors: [{ name: 'Zac', url: 'https://www.zaczajdel.com/' }],
   keywords: ['Tools', 'Bookmarks', 'Browser'],
   openGraph: {
     title: 'Bookmark Oasis',
     description:
-      'Organize, manage, and access your favorite links all in one place',
+      'Organize, manage, and access your favorite links all in one place.',
+    siteName: 'Bookmark Oasis',
     images: '/android-chrome-192x192.png',
+    url: 'https://www.bookmarkoasis.com/',
   },
   twitter: {
     title: 'Bookmark Oasis',
     description:
-      'Organize, manage, and access your favorite links all in one place',
+      'Organize, manage, and access your favorite links all in one place.',
     creator: '@zac_zajdel',
   },
   icons: [
@@ -48,13 +51,13 @@ export const metadata: Metadata = {
       rel: 'icon',
       type: 'image/png',
       sizes: '32x32',
-      url: '/favicon-32x32.png',
+      url: `${META_URL}/favicon-32x32.png`,
     },
     {
       rel: 'icon',
       type: 'image/png',
       sizes: '16x16',
-      url: '/favicon-16x16.png',
+      url: `${META_URL}/favicon-16x16.png`,
     },
   ],
   manifest: '/site.webmanifest',
@@ -85,6 +88,7 @@ export default function RootLayout({
               disableTransitionOnChange
             >
               <main>{children}</main>
+              <Analytics />
               <Toaster
                 richColors
                 closeButton
