@@ -7,6 +7,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import { Bookmark } from '@prisma/client';
 import {
   BookOpen,
@@ -30,12 +31,13 @@ export default function BookmarkActions({
   onFavorite,
 }: BookmarkActionsProps) {
   const router = useTransitionRouter();
+  const copy = useCopyToClipboard();
 
   function onCopyLink(url: string | undefined) {
     if (!url) return;
-
-    navigator.clipboard.writeText(url);
-    toast.success('Copied to clipboard');
+    copy(url)
+      .then(() => toast.success('Copied to clipboard'))
+      .catch(() => toast.error('Failed to copy'));
   }
 
   return (

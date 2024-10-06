@@ -1,6 +1,7 @@
+import BookmarkCard from '@/components/bookmarks/bookmark-card';
+import { BentoGrid, BentoGridItem } from '@/components/ui/bento-grid';
 import { Bookmark, Code, Folder, Tag, Trash } from 'lucide-react';
-import BookmarkCard from '../bookmarks/bookmark-card';
-import { BentoGrid, BentoGridItem } from '../ui/bento-grid';
+import { BentoApiAccess } from './bento-api-access';
 import { BentoFolders } from './bento-folders';
 
 export function BentoGridContainer() {
@@ -19,9 +20,13 @@ export function BentoGridContainer() {
     </BentoGrid>
   );
 }
+
+// TODO - Remove Afterward
 const Skeleton = () => (
   <div className="flex h-full min-h-[6rem] w-full flex-1 rounded-xl bg-gradient-to-br from-neutral-200 to-neutral-100 dark:from-neutral-900 dark:to-neutral-800"></div>
 );
+
+// TODO - Add TypeScript interface
 const items = [
   {
     title: 'Bookmarks',
@@ -52,7 +57,7 @@ const items = [
     title: 'API Access',
     description:
       'For developers to add bookmark management to apps and workflows.',
-    header: <Skeleton />,
+    header: <BentoApiAccess />,
     icon: <Code className="size-4 text-neutral-500" />,
   },
   {
