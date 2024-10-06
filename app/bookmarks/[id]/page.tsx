@@ -13,12 +13,13 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Textarea } from '@/components/ui/textarea';
 import { useDebounce } from '@/hooks/useDebounce';
 import { queryClient, truncate } from '@/lib/utils';
 import { OasisResponse } from '@/types/apiHelpers';
 import { Bookmark } from '@prisma/client';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { Save, Search } from 'lucide-react';
+import { Loader, Save } from 'lucide-react';
 import { Link } from 'next-view-transitions';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -26,6 +27,7 @@ import { toast } from 'sonner';
 export default function DetailsPage({ params }: { params: { id: string } }) {
   const [title, setTitle] = useState('');
   const [url, setUrl] = useState('');
+  const [description, setDescription] = useState('');
 
   const { data: bookmark } = useQuery({
     queryKey: ['bookmark-details', params.id],
@@ -43,8 +45,9 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
         return;
       }
 
-      setTitle(bookmark.title);
       setUrl(bookmark.url);
+      setTitle(bookmark.title);
+      setDescription(bookmark.description ?? '');
 
       return bookmark;
     },
@@ -62,8 +65,8 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
           body: JSON.stringify({
             url: updated.url,
             title: updated.title,
+            description: updated?.description,
             isFavorite: bookmark?.isFavorite,
-            description: bookmark?.description,
           }),
         })
       ).json();
@@ -102,7 +105,7 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
           variant="outline"
           disabled={updateBookmarkMutation.isPending}
           onClick={useDebounce(
-            () => updateBookmarkMutation.mutate({ title, url }),
+            () => updateBookmarkMutation.mutate({ title, url, description }),
             250,
           )}
         >
@@ -113,8 +116,8 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
         </Button>
       </div>
 
-      <div className="mt-5 flex flex-col items-center md:flex-row">
-        <Card className="mt-5 min-w-40 content-center p-16">
+      <div className="mt-2 flex flex-row items-center">
+        <Card className="mt-5 min-w-20 content-center p-8">
           <div className="flex items-center justify-center">
             {bookmark?.imageUrl ? (
               <>
@@ -126,19 +129,20 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
                 />
               </>
             ) : (
-              <Search className="size-3.5" />
+              <Loader className="size-3.5" />
             )}
           </div>
         </Card>
-        <div className="w-full sm:mt-0 md:ml-4">
+        <div className="ml-2 mt-1 w-full">
           <div className="mt-3">
             {bookmark ? (
               <>
-                <Label htmlFor="text">Title</Label>
                 <Input
                   id="text"
-                  className="mt-2"
+                  style={{ border: 'none', outline: 'none', boxShadow: 'none' }}
+                  className="border-transparent text-xl"
                   placeholder="Bookmark Title"
+                  autoComplete="off"
                   required
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
@@ -146,23 +150,22 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
               </>
             ) : (
               <>
-                <div className="flex">
+                <div className="ml-2 flex">
                   <div className="w-full space-y-2">
-                    <Skeleton className="h-6 w-8" />
-                    <Skeleton className="h-8 w-full" />
+                    <Skeleton className="mb-5 h-6 w-56" />
                   </div>
                 </div>
               </>
             )}
           </div>
 
-          <div className="mt-5 text-sm">
+          <div className="text-sm">
             {bookmark ? (
               <>
-                <Label htmlFor="url">URL</Label>
                 <Input
                   id="url"
-                  className="mt-2"
+                  style={{ border: 'none', outline: 'none', boxShadow: 'none' }}
+                  className="border-transparent text-muted-foreground"
                   placeholder="Bookmark URL"
                   required
                   value={url}
@@ -171,16 +174,41 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
               </>
             ) : (
               <>
-                <div className="flex">
+                <div className="ml-2 flex">
                   <div className="w-full space-y-2">
-                    <Skeleton className="h-6 w-8" />
-                    <Skeleton className="h-8 w-full" />
+                    <Skeleton className="h-6 w-80" />
                   </div>
                 </div>
               </>
             )}
           </div>
         </div>
+      </div>
+
+      <div className="grid w-full gap-1.5 pt-5">
+        {bookmark ? (
+          <>
+            <Label
+              htmlFor="description"
+              className="mb-1"
+            >
+              Description
+            </Label>
+            <Textarea
+              id="description"
+              placeholder="Bookmark information"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </>
+        ) : (
+          <>
+            <div className="w-full space-y-2">
+              <Skeleton className="h-5 w-20" />
+              <Skeleton className="h-14 w-full" />
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
