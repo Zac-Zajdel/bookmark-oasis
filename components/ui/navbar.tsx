@@ -27,7 +27,7 @@ export default function Navbar() {
               <h1 className="mr-4 text-lg font-bold">Bookmark Oasis</h1>
             </div>
             <div className="ml-4 flex items-center justify-between">
-              <ul className="space-x-5">
+              <div className="space-x-5">
                 <Link
                   href="/bookmarks"
                   prefetch={false}
@@ -52,7 +52,7 @@ export default function Navbar() {
                 >
                   Settings
                 </Link>
-              </ul>
+              </div>
             </div>
           </div>
           <div className="mr-4">

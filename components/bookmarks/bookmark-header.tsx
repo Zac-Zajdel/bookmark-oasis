@@ -51,7 +51,10 @@ export default function BookmarkHeader({
             Create
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[525px]">
+        <DialogContent
+          className="sm:max-w-[525px]"
+          aria-describedby={undefined}
+        >
           <DialogHeader>
             <DialogTitle>Add Bookmark</DialogTitle>
           </DialogHeader>
