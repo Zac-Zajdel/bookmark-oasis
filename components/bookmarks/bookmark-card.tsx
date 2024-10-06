@@ -7,9 +7,9 @@ import { Bookmark } from '@prisma/client';
 import { Search } from 'lucide-react';
 
 interface BookmarkCardProps {
-  bookmark: Bookmark;
-  onDelete: (bookmark: Bookmark) => void;
-  onFavorite: (bookmark: Bookmark) => void;
+  bookmark: Partial<Bookmark>;
+  onDelete: (bookmark: Partial<Bookmark>) => void;
+  onFavorite: (bookmark: Partial<Bookmark>) => void;
 }
 
 export default function BookmarkCard({

@@ -19,9 +19,9 @@ import { useTransitionRouter } from 'next-view-transitions';
 import { toast } from 'sonner';
 
 interface BookmarkActionsProps {
-  bookmark: Bookmark;
-  onDelete: (bookmark: Bookmark) => void;
-  onFavorite: (bookmark: Bookmark) => void;
+  bookmark: Partial<Bookmark>;
+  onDelete: (bookmark: Partial<Bookmark>) => void;
+  onFavorite: (bookmark: Partial<Bookmark>) => void;
 }
 
 export default function BookmarkActions({
@@ -31,7 +31,9 @@ export default function BookmarkActions({
 }: BookmarkActionsProps) {
   const router = useTransitionRouter();
 
-  function onCopyLink(url: string) {
+  function onCopyLink(url: string | undefined) {
+    if (!url) return;
+
     navigator.clipboard.writeText(url);
     toast.success('Copied to clipboard');
   }
@@ -60,7 +62,9 @@ export default function BookmarkActions({
             variant="ghost"
             size="icon"
             className="flex size-7 items-center justify-center"
-            onClick={() => router.push(`/bookmarks/${bookmark.id}`)}
+            onClick={() =>
+              bookmark.id ? router.push(`/bookmarks/${bookmark.id}`) : null
+            }
           >
             <BookOpen className="size-4 hover:text-indigo-500 dark:text-gray-200 dark:hover:text-indigo-500" />
             <span className="sr-only">Details Page Link</span>

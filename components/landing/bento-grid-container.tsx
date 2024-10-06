@@ -1,5 +1,7 @@
-import { Bookmark, Folder, Star, Tag, Trash } from 'lucide-react';
+import { Bookmark, Code, Folder, Tag, Trash } from 'lucide-react';
+import BookmarkCard from '../bookmarks/bookmark-card';
 import { BentoGrid, BentoGridItem } from '../ui/bento-grid';
+import { BentoFolders } from './bento-folders';
 
 export function BentoGridContainer() {
   return (
@@ -24,31 +26,45 @@ const items = [
   {
     title: 'Bookmarks',
     description: 'Save links to your favorite content in a central location.',
-    header: <Skeleton />,
-    icon: <Bookmark className="h-4 w-4 text-neutral-500" />,
+    header: (
+      <BookmarkCard
+        bookmark={{
+          url: 'https://www.youtube.com/',
+          title: 'Youtube',
+          description:
+            'Enjoy the videos and music you love, upload original content, and share it all with friends, family, and the world on YouTube.',
+          imageUrl:
+            'https://www.youtube.com/s/desktop/87338098/img/favicon.ico',
+        }}
+        onDelete={() => {}}
+        onFavorite={() => {}}
+      />
+    ),
+    icon: <Bookmark className="size-4 text-neutral-500" />,
   },
   {
     title: 'Folders',
     description: 'Organize your bookmarks using folders for easy retrieval.',
+    header: <BentoFolders />,
+    icon: <Folder className="size-4 text-neutral-500" />,
+  },
+  {
+    title: 'API Access',
+    description:
+      'For developers to add bookmark management to apps and workflows.',
     header: <Skeleton />,
-    icon: <Folder className="h-4 w-4 text-neutral-500" />,
+    icon: <Code className="size-4 text-neutral-500" />,
   },
   {
     title: 'Tags',
     description: 'Categorize and search your bookmark using custom tags.',
     header: <Skeleton />,
-    icon: <Tag className="h-4 w-4 text-neutral-500" />,
-  },
-  {
-    title: 'The Pursuit of Knowledge',
-    description: 'Join the quest for understanding and enlightenment.',
-    header: <Skeleton />,
-    icon: <Star className="h-4 w-4 text-neutral-500" />,
+    icon: <Tag className="size-4 text-neutral-500" />,
   },
   {
     title: 'The Joy of Creation',
     description: 'Experience the thrill of bringing ideas to life.',
     header: <Skeleton />,
-    icon: <Trash className="h-4 w-4 text-neutral-500" />,
+    icon: <Trash className="size-4 text-neutral-500" />,
   },
 ];
