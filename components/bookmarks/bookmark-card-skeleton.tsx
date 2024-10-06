@@ -15,18 +15,18 @@ export default function BookmarkCardSkeleton() {
           </div>
         </div>
         <div className="w-full">
-          <Skeleton className="mt-2 h-9" />
+          <Skeleton className="mt-2 h-8" />
         </div>
       </CardHeader>
 
       <Separator className="opacity-75" />
 
       <div className="flex items-center justify-between gap-4 px-4 py-2.5">
-        <Skeleton className="h-6 w-6" />
-        <Skeleton className="h-6 w-6" />
-        <Skeleton className="h-6 w-6" />
-        <Skeleton className="h-6 w-6" />
-        <Skeleton className="h-6 w-6" />
+        <Skeleton className="size-6" />
+        <Skeleton className="size-6" />
+        <Skeleton className="size-6" />
+        <Skeleton className="size-6" />
+        <Skeleton className="size-6" />
       </div>
     </Card>
   );
