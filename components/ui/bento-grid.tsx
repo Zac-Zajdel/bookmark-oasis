@@ -1,5 +1,5 @@
+import { BentoGridContent } from '@/components/landing/bento/bento-grid-container';
 import { cn } from '@/lib/utils';
-import { ReactNode } from 'react';
 
 export const BentoGrid = ({
   className,
@@ -26,13 +26,7 @@ export const BentoGridItem = ({
   description,
   header,
   icon,
-}: {
-  className?: string;
-  title?: string | ReactNode;
-  description?: string | ReactNode;
-  header?: ReactNode;
-  icon?: ReactNode;
-}) => {
+}: BentoGridContent) => {
   return (
     <div
       className={cn(
@@ -49,9 +43,7 @@ export const BentoGridItem = ({
           </div>
         </div>
 
-        <div className="text-xs font-medium text-muted-foreground">
-          {description}
-        </div>
+        <div className="text-sm text-muted-foreground">{description}</div>
       </div>
     </div>
   );

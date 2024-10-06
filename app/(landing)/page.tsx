@@ -1,6 +1,6 @@
 'use client';
 
-import { BentoGridContainer } from '@/components/landing/bento-grid-container';
+import { BentoGridContainer } from '@/components/landing/bento/bento-grid-container';
 import { motion } from 'framer-motion';
 
 export default function Landing() {
@@ -14,7 +14,7 @@ export default function Landing() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{
               duration: 0.2,
-              delay: 0.3,
+              delay: 0.1,
               ease: [0, 0.71, 0.2, 1.01],
             }}
           >
@@ -27,7 +27,7 @@ export default function Landing() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{
               duration: 0.5,
-              delay: 0.5,
+              delay: 0.3,
               ease: [0, 0.71, 0.2, 1.01],
             }}
           >
@@ -37,7 +37,18 @@ export default function Landing() {
       </section>
 
       <section className="mx-10 space-y-6">
-        <BentoGridContainer />
+        <motion.div
+          className="container flex max-w-[68rem] flex-col items-center gap-4"
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{
+            duration: 0.5,
+            delay: 0.5,
+            ease: [0, 0.71, 0.2, 1.01],
+          }}
+        >
+          <BentoGridContainer />
+        </motion.div>
       </section>
     </>
   );

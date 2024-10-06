@@ -30,10 +30,10 @@ export default function LandingLayout({ children }: MarketingLayoutProps) {
         <div className="flex items-center justify-between pb-5 pt-20">
           <div className="flex items-center text-base">
             <p className="text-muted-foreground">
-              Proudly built in open source by&nbsp;
+              Built in open source by&nbsp;
             </p>
             <Link
-              className="font-medium"
+              className="font-medium hover:underline"
               href="https://github.com/Zac-Zajdel"
               target="_blank"
               prefetch={false}

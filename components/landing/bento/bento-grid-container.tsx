@@ -1,9 +1,19 @@
 import BookmarkCard from '@/components/bookmarks/bookmark-card';
 import { BentoGrid, BentoGridItem } from '@/components/ui/bento-grid';
 import { Bookmark, Code, Folder, Tag, Trash } from 'lucide-react';
+import { ReactNode } from 'react';
 import { BentoApiAccess } from './bento-api-access';
 import { BentoFolders } from './bento-folders';
 import { BentoTags } from './bento-tags';
+import { BentoTask } from './bento-task';
+
+export interface BentoGridContent {
+  className?: string;
+  title?: string | ReactNode;
+  description?: string | ReactNode;
+  header?: ReactNode;
+  icon?: ReactNode;
+}
 
 export function BentoGridContainer() {
   return (
@@ -22,16 +32,10 @@ export function BentoGridContainer() {
   );
 }
 
-// TODO - Remove Afterward
-const Skeleton = () => (
-  <div className="flex h-full min-h-[6rem] w-full flex-1 rounded-xl bg-gradient-to-br from-neutral-200 to-neutral-100 dark:from-neutral-900 dark:to-neutral-800"></div>
-);
-
-// TODO - Add TypeScript interface
-const items = [
+const items: BentoGridContent[] = [
   {
     title: 'Bookmarks',
-    description: 'Save links to your favorite content in a central location.',
+    description: 'Save your favorite content in a central location.',
     header: (
       <BookmarkCard
         bookmark={{
@@ -50,14 +54,13 @@ const items = [
   },
   {
     title: 'Folders',
-    description: 'Organize your bookmarks using folders for easy retrieval.',
+    description: 'Organize bookmarks using folders for easy retrieval.',
     header: <BentoFolders />,
     icon: <Folder className="size-4 text-neutral-500" />,
   },
   {
     title: 'API Access',
-    description:
-      'For developers to add bookmark management to apps and workflows.',
+    description: 'Easy integration to your apps and workflows.',
     header: <BentoApiAccess />,
     icon: <Code className="size-4 text-neutral-500" />,
   },
@@ -68,9 +71,9 @@ const items = [
     icon: <Tag className="size-4 text-neutral-500" />,
   },
   {
-    title: 'The Joy of Creation',
-    description: 'Experience the thrill of bringing ideas to life.',
-    header: <Skeleton />,
+    title: 'Tasks',
+    description: 'Add tasks for action items.',
+    header: <BentoTask />,
     icon: <Trash className="size-4 text-neutral-500" />,
   },
 ];
