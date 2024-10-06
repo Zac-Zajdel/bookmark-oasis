@@ -44,12 +44,12 @@ export const BentoGridItem = ({
       <div className="transition duration-200 group-hover/bento:translate-x-2">
         <div className="flex items-center justify-start">
           <div className="mr-3">{icon}</div>
-          <div className="my-2 font-sans text-sm font-bold text-neutral-600 dark:text-neutral-200">
+          <div className="my-2 text-sm font-bold dark:text-neutral-200">
             {title}
           </div>
         </div>
 
-        <div className="font-sans text-xs font-normal text-neutral-600 dark:text-neutral-300">
+        <div className="text-xs font-medium text-muted-foreground">
           {description}
         </div>
       </div>

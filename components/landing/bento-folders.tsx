@@ -32,7 +32,7 @@ export function BentoFolders() {
         return (
           <div
             key={i}
-            className="group flex w-full items-center justify-start hover:cursor-pointer hover:bg-gray-800/20"
+            className="group flex w-full items-center justify-start hover:cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/20"
           >
             <div className="min-w-8">
               <div className="inline-flex size-7 items-center justify-center rounded-md border">

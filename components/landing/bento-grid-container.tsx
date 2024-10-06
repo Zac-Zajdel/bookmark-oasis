@@ -3,6 +3,7 @@ import { BentoGrid, BentoGridItem } from '@/components/ui/bento-grid';
 import { Bookmark, Code, Folder, Tag, Trash } from 'lucide-react';
 import { BentoApiAccess } from './bento-api-access';
 import { BentoFolders } from './bento-folders';
+import { BentoTags } from './bento-tags';
 
 export function BentoGridContainer() {
   return (
@@ -63,7 +64,7 @@ const items = [
   {
     title: 'Tags',
     description: 'Categorize and search your bookmark using custom tags.',
-    header: <Skeleton />,
+    header: <BentoTags />,
     icon: <Tag className="size-4 text-neutral-500" />,
   },
   {
