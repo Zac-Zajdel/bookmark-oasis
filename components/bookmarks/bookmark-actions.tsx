@@ -46,7 +46,7 @@ export default function BookmarkActions({
             className="flex size-7 items-center justify-center"
             onClick={() => window.open(bookmark.url, '_blank')}
           >
-            <SquareArrowOutUpRight className="size-4 dark:text-gray-200" />
+            <SquareArrowOutUpRight className="size-4 hover:text-blue-500 dark:text-gray-200 dark:hover:text-blue-500" />
             <span className="sr-only">Visit URL</span>
           </Button>
         </TooltipTrigger>
@@ -62,7 +62,7 @@ export default function BookmarkActions({
             className="flex size-7 items-center justify-center"
             onClick={() => router.push(`/bookmarks/${bookmark.id}`)}
           >
-            <BookOpen className="size-4 dark:text-gray-200" />
+            <BookOpen className="size-4 hover:text-indigo-500 dark:text-gray-200 dark:hover:text-indigo-500" />
             <span className="sr-only">Details Page Link</span>
           </Button>
         </TooltipTrigger>
@@ -84,7 +84,7 @@ export default function BookmarkActions({
             }
           >
             <Star
-              className={`size-4 ${bookmark.isFavorite ? 'fill-yellow-500 text-yellow-500' : 'dark:text-gray-200'}`}
+              className={`size-4 ${bookmark.isFavorite ? 'fill-yellow-500 text-yellow-500' : 'hover:text-yellow-400 dark:text-gray-200 dark:hover:text-yellow-500'}`}
             />
             <span className="sr-only">
               {bookmark.isFavorite ? 'Remove Favorite' : 'Favorite'}
@@ -103,7 +103,7 @@ export default function BookmarkActions({
             className="flex size-7 items-center justify-center"
             onClick={() => onCopyLink(bookmark.url)}
           >
-            <Link className="size-4 dark:text-gray-200" />
+            <Link className="size-4 hover:text-orange-500 dark:text-gray-200 dark:hover:text-orange-500" />
             <span className="sr-only">Copy Link</span>
           </Button>
         </TooltipTrigger>

@@ -1,19 +1,32 @@
-import { Card } from '@/components/ui/card';
+import { Card, CardHeader } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function BookmarkCardSkeleton() {
   return (
-    <Card>
-      <div className="flex h-full w-full flex-col justify-between p-4">
-        <div className="mb-4 h-[24px]">
-          <Skeleton className="h-full w-full" />
+    <Card className="flex flex-col justify-between overflow-hidden rounded-lg">
+      <CardHeader className="flex flex-col p-5">
+        <div className="flex items-center pt-1">
+          <div className="mr-4 size-7 items-center justify-center">
+            <Skeleton className="h-full w-full" />
+          </div>
+          <div className="size-36 h-full overflow-hidden">
+            <Skeleton className="h-full w-full" />
+          </div>
         </div>
-        <div className="mb-4 h-[40px]">
-          <Skeleton className="h-full w-full" />
+        <div className="w-full">
+          <Skeleton className="mt-2 h-9" />
         </div>
-        <div className="relative pb-[56.25%]">
-          <Skeleton className="absolute left-0 top-0 h-full w-full rounded-md" />
-        </div>
+      </CardHeader>
+
+      <Separator className="opacity-75" />
+
+      <div className="flex items-center justify-between gap-4 px-4 py-2.5">
+        <Skeleton className="h-6 w-6" />
+        <Skeleton className="h-6 w-6" />
+        <Skeleton className="h-6 w-6" />
+        <Skeleton className="h-6 w-6" />
+        <Skeleton className="h-6 w-6" />
       </div>
     </Card>
   );
