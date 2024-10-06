@@ -50,6 +50,7 @@ export default function LandingLayout({ children }: MarketingLayoutProps) {
               <Button
                 variant="outline"
                 size="icon"
+                aria-label="Github"
               >
                 <Github />
               </Button>

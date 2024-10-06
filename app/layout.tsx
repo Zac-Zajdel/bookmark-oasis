@@ -23,20 +23,22 @@ export const metadata: Metadata = {
   metadataBase: new URL(META_URL),
   title: 'Bookmark Oasis',
   description:
-    'Organize, manage, and access your favorite links all in one place',
+    'Organize, manage, and access your favorite links all in one place.',
   applicationName: 'Bookmark Oasis',
   authors: [{ name: 'Zac', url: 'https://www.zaczajdel.com/' }],
   keywords: ['Tools', 'Bookmarks', 'Browser'],
   openGraph: {
     title: 'Bookmark Oasis',
     description:
-      'Organize, manage, and access your favorite links all in one place',
+      'Organize, manage, and access your favorite links all in one place.',
+    siteName: 'Bookmark Oasis',
     images: '/android-chrome-192x192.png',
+    url: 'https://www.bookmarkoasis.com/',
   },
   twitter: {
     title: 'Bookmark Oasis',
     description:
-      'Organize, manage, and access your favorite links all in one place',
+      'Organize, manage, and access your favorite links all in one place.',
     creator: '@zac_zajdel',
   },
   icons: [
