@@ -1,10 +1,56 @@
 import { hashApiToken } from '@/lib/api/apiTokens/utils';
 import { withAuthManager } from '@/lib/authManager';
 import { prisma } from '@/lib/db';
-import { createApiTokenSchema } from '@/lib/zod/apiTokens';
+import { createApiTokenSchema, getApiTokenSchema } from '@/lib/zod/apiTokens';
 import { OasisResponse } from '@/types/apiHelpers';
+import { ApiToken } from '@prisma/client';
 import { randomBytes } from 'crypto';
 import { NextResponse } from 'next/server';
+
+export const GET = withAuthManager(
+  async ({
+    user,
+    searchParams,
+  }): Promise<
+    NextResponse<OasisResponse<{ apiTokens: ApiToken[]; total: number }>>
+  > => {
+    const schema = getApiTokenSchema();
+    const { page, limit } = await schema.parse({
+      page: searchParams.get('page'),
+      limit: searchParams.get('limit'),
+      search: searchParams.get('search') ?? '',
+    });
+
+    const apiTokens = await prisma.apiToken.findMany({
+      where: {
+        userId: user.id,
+      },
+      orderBy: {
+        name: 'desc',
+      },
+      take: limit,
+      skip: (page - 1) * limit,
+    });
+
+    const total = await prisma.apiToken.count({
+      where: {
+        userId: user.id,
+      },
+    });
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: 'API Tokens gathered successfully.',
+        data: {
+          apiTokens,
+          total,
+        },
+      },
+      { status: 200 },
+    );
+  },
+);
 
 export const POST = withAuthManager(
   async ({ req, user }): Promise<NextResponse<OasisResponse<string>>> => {
