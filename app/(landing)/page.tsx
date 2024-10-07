@@ -1,8 +1,7 @@
 'use client';
 
-import FeatureCard from '@/components/landing/feature-card';
+import { BentoGridContainer } from '@/components/landing/bento/bento-grid-container';
 import { motion } from 'framer-motion';
-import { Bookmark, Code, Folder, ListTodo, Tag, Users } from 'lucide-react';
 
 export default function Landing() {
   return (
@@ -15,7 +14,7 @@ export default function Landing() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{
               duration: 0.2,
-              delay: 0.3,
+              delay: 0.1,
               ease: [0, 0.71, 0.2, 1.01],
             }}
           >
@@ -28,7 +27,7 @@ export default function Landing() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{
               duration: 0.5,
-              delay: 0.5,
+              delay: 0.3,
               ease: [0, 0.71, 0.2, 1.01],
             }}
           >
@@ -37,8 +36,6 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* <section>INSERT PHOTO OF THE APP DASHBOARD</section> */}
-
       <section className="mx-10 space-y-6">
         <motion.div
           className="container flex max-w-[68rem] flex-col items-center gap-4"
@@ -46,42 +43,11 @@ export default function Landing() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{
             duration: 0.5,
-            delay: 0.7,
+            delay: 0.5,
             ease: [0, 0.71, 0.2, 1.01],
           }}
         >
-          <ul className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-6 text-sm sm:mt-20 sm:grid-cols-2 md:gap-y-10 lg:max-w-none lg:grid-cols-3">
-            <FeatureCard
-              Icon={Bookmark}
-              title="Bookmarks"
-              description="Save links to your favorite content in a central location."
-            />
-            <FeatureCard
-              Icon={Folder}
-              title="Folders"
-              description="Organize your bookmarks using folders for easy retrieval."
-            />
-            <FeatureCard
-              Icon={Tag}
-              title="Tags"
-              description="Categorize and search your bookmark using custom tags."
-            />
-            <FeatureCard
-              Icon={ListTodo}
-              title="Tasks"
-              description="Create tasks for your bookmarks to ensure task management."
-            />
-            <FeatureCard
-              Icon={Code}
-              title="API Access"
-              description="For developers to add bookmark management to apps and workflows."
-            />
-            <FeatureCard
-              Icon={Users}
-              title="Sharing"
-              description="Share your favorite and most valuable resources with others."
-            />
-          </ul>
+          <BentoGridContainer />
         </motion.div>
       </section>
     </>

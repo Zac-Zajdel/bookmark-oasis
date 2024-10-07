@@ -77,7 +77,7 @@ export default function Bookmarks() {
   });
 
   const updateBookmarkMutation = useMutation({
-    mutationFn: async (bookmark: Bookmark): Promise<void> => {
+    mutationFn: async (bookmark: Partial<Bookmark>): Promise<void> => {
       const { success, message }: OasisResponse<{ bookmark: Bookmark }> =
         await (
           await fetch(`/api/bookmarks/${bookmark.id}`, {
@@ -101,7 +101,7 @@ export default function Bookmarks() {
   });
 
   const deleteBookmarkMutation = useMutation({
-    mutationFn: async (bookmark: Bookmark): Promise<void> => {
+    mutationFn: async (bookmark: Partial<Bookmark>): Promise<void> => {
       const { success, message } = await (
         await fetch(`/api/bookmarks/${bookmark.id}`, {
           method: 'DELETE',
