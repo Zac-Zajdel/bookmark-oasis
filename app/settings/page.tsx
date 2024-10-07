@@ -3,13 +3,17 @@
 import { columns } from '@/components/apiTokens/columns';
 import { DataTable } from '@/components/apiTokens/data-table';
 import { Button } from '@/components/ui/button';
+import { useDataTable } from '@/hooks/useDataTable';
 import { OasisError } from '@/lib/oasisError';
 import { OasisResponse } from '@/types/apiHelpers';
 import { ApiToken } from '@prisma/client';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 import { toast } from 'sonner';
 
 export default function Settings() {
+  const [apiTokens, setApiTokens] = useState<ApiToken[]>([]);
+
   const createTokenMutation = useMutation({
     mutationFn: async (formData: { name: string }) => {
       const { success, message, data }: OasisResponse<string> = await (
@@ -30,15 +34,17 @@ export default function Settings() {
     },
   });
 
-  const { isLoading, data: apiTokens } = useQuery({
-    queryKey: ['apiTokens'],
+  const { table, pageIndex } = useDataTable<ApiToken>(apiTokens, columns);
+
+  const { isLoading } = useQuery({
+    queryKey: ['apiTokens', pageIndex + 1],
     queryFn: async (): Promise<ApiToken[]> => {
       const {
         success,
         message,
         data,
       }: OasisResponse<{ apiTokens: ApiToken[]; total: number }> = await (
-        await fetch(`/api/tokens?page=1&limit=10`)
+        await fetch(`/api/tokens?page=${pageIndex + 1}&limit=10`)
       ).json();
 
       if (!success) {
@@ -46,6 +52,7 @@ export default function Settings() {
         return [];
       }
 
+      setApiTokens(data.apiTokens);
       return data.apiTokens;
     },
   });
@@ -67,12 +74,11 @@ export default function Settings() {
       </div>
 
       <div className="mt-10 flex justify-center">
-        {apiTokens && (
-          <DataTable
-            columns={columns}
-            data={apiTokens}
-          />
-        )}
+        <DataTable
+          data={apiTokens}
+          columns={columns}
+          table={table}
+        />
       </div>
     </div>
   );
