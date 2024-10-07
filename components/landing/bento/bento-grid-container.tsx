@@ -1,6 +1,6 @@
 import BookmarkCard from '@/components/bookmarks/bookmark-card';
 import { BentoGrid, BentoGridItem } from '@/components/ui/bento-grid';
-import { Bookmark, Code, Folder, Tag, Trash } from 'lucide-react';
+import { Bookmark, Code, Folder, ListChecks, Tag } from 'lucide-react';
 import { ReactNode } from 'react';
 import { BentoApiAccess } from './bento-api-access';
 import { BentoFolders } from './bento-folders';
@@ -35,7 +35,7 @@ export function BentoGridContainer() {
 const items: BentoGridContent[] = [
   {
     title: 'Bookmarks',
-    description: 'Save your favorite content in a central location.',
+    description: 'Save your favorite websites for later.',
     header: (
       <BookmarkCard
         bookmark={{
@@ -54,13 +54,13 @@ const items: BentoGridContent[] = [
   },
   {
     title: 'Folders',
-    description: 'Organize bookmarks using folders for easy retrieval.',
+    description: 'Organize your content with folders.',
     header: <BentoFolders />,
     icon: <Folder className="size-4 text-neutral-500" />,
   },
   {
     title: 'API Access',
-    description: 'Easy integration to your apps and workflows.',
+    description: 'Easy integration for any workflow.',
     header: <BentoApiAccess />,
     icon: <Code className="size-4 text-neutral-500" />,
   },
@@ -72,8 +72,8 @@ const items: BentoGridContent[] = [
   },
   {
     title: 'Tasks',
-    description: 'Add tasks for action items.',
+    description: 'Add tasks for future action items.',
     header: <BentoTask />,
-    icon: <Trash className="size-4 text-neutral-500" />,
+    icon: <ListChecks className="size-4 text-neutral-500" />,
   },
 ];

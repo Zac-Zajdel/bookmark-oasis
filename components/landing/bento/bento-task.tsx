@@ -4,8 +4,8 @@ export function BentoTask() {
   return (
     <div>
       <h1 className="mb-3 font-semibold">Spanish 101</h1>
-      <p className="mb-4 text-sm text-muted-foreground">
-        Engage in conversations such as questions, and introductions.
+      <p className="mb-4 text-xs text-muted-foreground">
+        Learn common spanish sayings such as questions and introductions.
       </p>
       <div className="flex justify-between pb-3">
         <span className="text-sm text-muted-foreground">Tags:</span>
