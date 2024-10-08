@@ -5,6 +5,7 @@ import { DataTable } from '@/components/tables/data-table';
 import { DataTableToolbar } from '@/components/tables/data-table-toolbar';
 import { Button } from '@/components/ui/button';
 import { useDataTable } from '@/hooks/useDataTable';
+import { useTableSortingParams } from '@/hooks/useTableSortingParams';
 import { OasisError } from '@/lib/oasisError';
 import { OasisResponse } from '@/types/apiHelpers';
 import { ApiToken } from '@prisma/client';
@@ -14,24 +15,35 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 
 export default function Settings() {
-  const [apiTokens, setApiTokens] = useState<ApiToken[]>([]);
   const [total, setTotal] = useState(0);
+  const [apiTokens, setApiTokens] = useState<ApiToken[]>([]);
 
-  const { table, pageIndex } = useDataTable<ApiToken>(
+  const { table, sorting, pageIndex } = useDataTable<ApiToken>(
     apiTokens,
     columns,
     total,
   );
+  const { column, order } = useTableSortingParams(sorting);
 
   const { isLoading } = useQuery({
-    queryKey: ['apiTokens', pageIndex + 1],
+    queryKey: ['apiTokens', column, order, pageIndex + 1],
     queryFn: async (): Promise<ApiToken[]> => {
+      const queryParams = new URLSearchParams({
+        page: String(pageIndex + 1),
+        limit: '10',
+      });
+
+      if (column && order) {
+        queryParams.append('column', column);
+        queryParams.append('order', order);
+      }
+
       const {
         success,
         message,
         data,
       }: OasisResponse<{ apiTokens: ApiToken[]; total: number }> = await (
-        await fetch(`/api/tokens?page=${pageIndex + 1}&limit=10`)
+        await fetch(`/api/tokens?${queryParams.toString()}`)
       ).json();
 
       if (!success) {
@@ -39,10 +51,9 @@ export default function Settings() {
         return [];
       }
 
-      setApiTokens(data.apiTokens);
       setTotal(data.total);
+      setApiTokens(data.apiTokens);
 
-      // todo - investigate this...
       return data.apiTokens;
     },
   });
@@ -84,7 +95,7 @@ export default function Settings() {
       </div>
 
       <div className="mb-12 divide-y divide-border rounded-md">
-        <div className="space-y-2">
+        <div className="space-y-1">
           <DataTableToolbar
             placeholder="Search Tokens..."
             table={table}

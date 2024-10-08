@@ -15,10 +15,11 @@ export const GET = withAuthManager(
     NextResponse<OasisResponse<{ apiTokens: ApiToken[]; total: number }>>
   > => {
     const schema = getApiTokenSchema();
-    const { page, limit } = await schema.parse({
+    const { page, limit, column, order } = await schema.parse({
       page: searchParams.get('page'),
       limit: searchParams.get('limit'),
-      search: searchParams.get('search') ?? '',
+      column: searchParams.get('columns'),
+      order: searchParams.get('order'),
     });
 
     const apiTokens = await prisma.apiToken.findMany({
@@ -26,7 +27,7 @@ export const GET = withAuthManager(
         userId: user.id,
       },
       orderBy: {
-        name: 'desc',
+        [column || 'name']: order || 'asc',
       },
       take: limit,
       skip: (page - 1) * limit,
