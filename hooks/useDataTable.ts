@@ -14,6 +14,7 @@ import { useState } from 'react';
 export function useDataTable<TData>(
   data: TData[],
   columns: ColumnDef<TData>[],
+  total: number,
 ) {
   const [rowSelection, setRowSelection] = useState({});
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -39,8 +40,9 @@ export function useDataTable<TData>(
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
-    autoResetPageIndex: false,
+    autoResetPageIndex: false, // todo - true will reset pagination but we need to take care of pageIndex
     manualPagination: true,
+    rowCount: total,
   });
 
   return {

@@ -1,5 +1,6 @@
 'use client';
 
+import { DataTableColumnHeader } from '@/components/tables/data-table-column-header';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -11,14 +12,25 @@ import { ApiToken } from '@prisma/client';
 import { ColumnDef } from '@tanstack/react-table';
 import { MoreHorizontal, Trash2 } from 'lucide-react';
 
+// TODO - Should I memoize this?
 export const columns: ColumnDef<ApiToken>[] = [
   {
-    header: 'Name',
     accessorKey: 'name',
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        title="Name"
+      />
+    ),
   },
   {
-    header: 'Last Accessed',
     accessorKey: 'lastUsed',
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        title="Last Accessed"
+      />
+    ),
     cell: ({ row }) => {
       if (row.original.lastUsed) {
         const date = new Date(`${row.original.lastUsed}`);
@@ -34,7 +46,13 @@ export const columns: ColumnDef<ApiToken>[] = [
     },
   },
   {
-    header: 'Actions',
+    accessorKey: 'Actions',
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        title="Actions"
+      />
+    ),
     cell: () => {
       return (
         <div className="flex justify-center">
@@ -58,5 +76,6 @@ export const columns: ColumnDef<ApiToken>[] = [
         </div>
       );
     },
+    enableSorting: false,
   },
 ];
