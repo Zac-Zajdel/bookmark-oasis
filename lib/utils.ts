@@ -48,3 +48,12 @@ export function truncate(
   }
   return str;
 }
+
+export function sleep(milliseconds: number): Promise<void> {
+  console.log(`Sleeping for ${milliseconds} milliseconds...`);
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, milliseconds);
+  });
+}

@@ -1,17 +1,10 @@
 'use client';
 
 import { DataTableColumnHeader } from '@/components/tables/data-table-column-header';
-import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { formatDate } from '@/lib/utils';
 import { ApiToken } from '@prisma/client';
 import { ColumnDef } from '@tanstack/react-table';
-import { MoreHorizontal, Trash2 } from 'lucide-react';
+import { ApiTokenTableActions } from './api-token-table-actions';
 
 // TODO - Should I memoize this?
 export const columns: ColumnDef<ApiToken>[] = [
@@ -64,28 +57,8 @@ export const columns: ColumnDef<ApiToken>[] = [
   {
     meta: 'Actions',
     id: 'actions',
-    cell: () => {
-      return (
-        <div className="flex items-center justify-end pr-4">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                className="size-8 p-0"
-              >
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="size-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem>
-                <Trash2 className="mr-2 size-3" />
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      );
+    cell: ({ row }) => {
+      return <ApiTokenTableActions row={row} />;
     },
     enableSorting: false,
   },

@@ -25,6 +25,7 @@ export default function Settings() {
   );
   const { column, order } = useTableSortingParams(sorting);
 
+  // TODO - isLoading can be used for a skeleton screen....
   const { isLoading } = useQuery({
     queryKey: ['apiTokens', column, order, pageIndex + 1],
     queryFn: async (): Promise<ApiToken[]> => {
