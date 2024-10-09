@@ -17,6 +17,7 @@ import { toast } from 'sonner';
 export default function Settings() {
   const [total, setTotal] = useState(0);
   const [apiTokens, setApiTokens] = useState<ApiToken[]>([]);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   const { table, sorting, pageIndex } = useDataTable<ApiToken>(
     apiTokens,
@@ -54,6 +55,7 @@ export default function Settings() {
 
       setTotal(data.total);
       setApiTokens(data.apiTokens);
+      setIsInitialLoad(false);
 
       return data.apiTokens;
     },
@@ -104,6 +106,7 @@ export default function Settings() {
           <DataTable
             table={table}
             columns={columns}
+            isInitialLoad={isInitialLoad}
           />
         </div>
       </div>

@@ -21,7 +21,7 @@ test('GET /tokens', async (ctx: OasisTestContext) => {
         userId: user.id,
       },
       orderBy: {
-        name: 'desc',
+        name: 'asc',
       },
       take: 10,
       skip: 0,

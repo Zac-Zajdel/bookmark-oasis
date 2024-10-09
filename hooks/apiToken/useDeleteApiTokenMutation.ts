@@ -6,8 +6,7 @@ import { toast } from 'sonner';
 export function useDeleteApiTokenMutation() {
   return useMutation({
     mutationFn: async (id: string) => {
-      // TODO - Create API route
-      const { success, message }: OasisResponse<string> = await (
+      const { success, message }: OasisResponse = await (
         await fetch(`/api/tokens/${id}`, {
           method: 'DELETE',
         })

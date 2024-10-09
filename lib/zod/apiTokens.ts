@@ -1,3 +1,5 @@
+import { prisma } from '@/lib/db';
+import { AuthUser } from '@/types/auth';
 import { z } from 'zod';
 
 export const getApiTokenSchema = () => {
@@ -19,4 +21,26 @@ export const createApiTokenSchema = () => {
   return z.object({
     name: z.string().min(1, { message: 'Name is required' }),
   });
+};
+
+export const deleteApiTokenSchema = (user: AuthUser) => {
+  return z
+    .object({
+      id: z.string().cuid(),
+    })
+    .superRefine(async (data, ctx) => {
+      const tokenExists = await prisma.apiToken.findFirst({
+        where: {
+          userId: user.id,
+          id: data.id,
+        },
+      });
+
+      if (!tokenExists) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'This API Token could not be found.',
+        });
+      }
+    });
 };

@@ -78,6 +78,8 @@ export function ApiTokenTableActions({ row }: { row: Row<ApiToken> }) {
                   setIsLoading(true);
                   await deleteTokenMutation.mutateAsync(row.original.id);
                   setIsLoading(false);
+
+                  setShowDeleteAlert(false);
                 }}
               >
                 {isLoading ? (
