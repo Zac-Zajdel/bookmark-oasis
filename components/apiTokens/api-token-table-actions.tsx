@@ -26,31 +26,50 @@ import { useState } from 'react';
 
 export function ApiTokenTableActions({ row }: { row: Row<ApiToken> }) {
   const [isLoading, setIsLoading] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
 
   const deleteTokenMutation = useDeleteApiTokenMutation();
 
-  return (
-    <>
-      <div className="flex items-center justify-end pr-4">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              className="size-7 rounded-md border p-0"
-            >
-              <span className="sr-only">Open menu</span>
-              <EllipsisVertical className="size-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onSelect={() => setShowDeleteAlert(true)}>
-              <Trash2 className="mr-3 size-3.5 text-red-500" />
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+  const handleDeleteClick = async (event: React.MouseEvent) => {
+    event.preventDefault();
 
+    setIsLoading(true);
+    await deleteTokenMutation.mutateAsync(row.original.id);
+    setIsLoading(false);
+
+    setShowDeleteAlert(false);
+  };
+
+  const openDeleteDialog = () => {
+    setIsDropdownOpen(false);
+    setShowDeleteAlert(true);
+  };
+
+  return (
+    <div className="flex items-center justify-end pr-4">
+      <DropdownMenu
+        open={isDropdownOpen}
+        onOpenChange={setIsDropdownOpen}
+      >
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="ghost"
+            className="size-7 rounded-md border p-0"
+          >
+            <span className="sr-only">Open menu</span>
+            <EllipsisVertical className="size-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onSelect={openDeleteDialog}>
+            <Trash2 className="mr-3 size-3.5 text-red-500" />
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      {showDeleteAlert && (
         <AlertDialog
           open={showDeleteAlert}
           onOpenChange={setShowDeleteAlert}
@@ -66,21 +85,15 @@ export function ApiTokenTableActions({ row }: { row: Row<ApiToken> }) {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogCancel onClick={() => setShowDeleteAlert(false)}>
+                Cancel
+              </AlertDialogCancel>
               <AlertDialogAction
                 className={cn(
                   'text-primary',
                   buttonVariants({ variant: 'outline' }),
                 )}
-                onClick={async (event) => {
-                  event.preventDefault();
-
-                  setIsLoading(true);
-                  await deleteTokenMutation.mutateAsync(row.original.id);
-                  setIsLoading(false);
-
-                  setShowDeleteAlert(false);
-                }}
+                onClick={handleDeleteClick}
               >
                 {isLoading ? (
                   <Loader className="mr-2 h-4 w-4 animate-spin" />
@@ -92,7 +105,7 @@ export function ApiTokenTableActions({ row }: { row: Row<ApiToken> }) {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
-      </div>
-    </>
+      )}
+    </div>
   );
 }

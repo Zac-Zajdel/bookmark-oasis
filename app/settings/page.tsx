@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { useDataTable } from '@/hooks/useDataTable';
 import { useTableSortingParams } from '@/hooks/useTableSortingParams';
 import { OasisError } from '@/lib/oasisError';
+import { queryClient } from '@/lib/utils';
 import { OasisResponse } from '@/types/apiHelpers';
 import { ApiToken } from '@prisma/client';
 import { useMutation, useQuery } from '@tanstack/react-query';
@@ -19,15 +20,20 @@ export default function Settings() {
   const [apiTokens, setApiTokens] = useState<ApiToken[]>([]);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
-  const { table, sorting, pageIndex, pageSize } = useDataTable<ApiToken>(
-    apiTokens,
-    columns,
-    total,
-  );
+  const { table, sorting, pageIndex, pageSize, globalFilter } =
+    useDataTable<ApiToken>(apiTokens, columns, total);
+
   const { column, order } = useTableSortingParams(sorting);
 
   useQuery({
-    queryKey: ['apiTokens', column, order, pageSize, pageIndex + 1],
+    queryKey: [
+      'apiTokens',
+      column,
+      order,
+      pageSize,
+      globalFilter,
+      pageIndex + 1,
+    ],
     queryFn: async (): Promise<ApiToken[]> => {
       const queryParams = new URLSearchParams({
         page: String(pageIndex + 1),
@@ -37,6 +43,10 @@ export default function Settings() {
       if (column && order) {
         queryParams.append('column', column);
         queryParams.append('order', order);
+      }
+
+      if (globalFilter?.trim()?.length) {
+        queryParams.append('search', globalFilter);
       }
 
       const {
@@ -78,6 +88,11 @@ export default function Settings() {
         toast.success(data);
       }
     },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ['apiTokens'],
+      });
+    },
   });
 
   return (
@@ -99,7 +114,7 @@ export default function Settings() {
       <div className="mb-12 divide-y divide-border rounded-md">
         <div className="space-y-1">
           <DataTableToolbar
-            placeholder="Search Tokens..."
+            placeholder="Search by name..."
             table={table}
           />
           <DataTable
