@@ -4,9 +4,9 @@ import { DataTableColumnHeader } from '@/components/tables/data-table-column-hea
 import { formatDate } from '@/lib/utils';
 import { ApiToken } from '@prisma/client';
 import { ColumnDef } from '@tanstack/react-table';
-import { ApiTokenTableActions } from './api-token-table-actions';
+import { TokenTableActions } from './token-table-actions';
 
-export const columns: ColumnDef<ApiToken>[] = [
+export const tokenTableColumns: ColumnDef<ApiToken>[] = [
   {
     accessorKey: 'name',
     header: ({ column }) => (
@@ -57,7 +57,7 @@ export const columns: ColumnDef<ApiToken>[] = [
     meta: 'Actions',
     id: 'actions',
     cell: ({ row }) => {
-      return <ApiTokenTableActions row={row} />;
+      return <TokenTableActions row={row} />;
     },
     enableSorting: false,
   },

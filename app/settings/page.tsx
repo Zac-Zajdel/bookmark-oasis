@@ -1,17 +1,14 @@
 'use client';
 
-import { columns } from '@/components/apiTokens/columns';
+import { CreateTokenAction } from '@/components/apiTokens/create-token-action';
+import { tokenTableColumns } from '@/components/apiTokens/token-table-columns';
 import { DataTable } from '@/components/tables/data-table';
 import { DataTableToolbar } from '@/components/tables/data-table-toolbar';
-import { Button } from '@/components/ui/button';
 import { useDataTable } from '@/hooks/useDataTable';
 import { useTableSortingParams } from '@/hooks/useTableSortingParams';
-import { OasisError } from '@/lib/oasisError';
-import { queryClient } from '@/lib/utils';
 import { OasisResponse } from '@/types/apiHelpers';
 import { ApiToken } from '@prisma/client';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { KeyRound } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -21,7 +18,7 @@ export default function Settings() {
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   const { table, sorting, pageIndex, pageSize, globalFilter } =
-    useDataTable<ApiToken>(apiTokens, columns, total);
+    useDataTable<ApiToken>(apiTokens, tokenTableColumns, total);
 
   const { column, order } = useTableSortingParams(sorting);
 
@@ -70,45 +67,10 @@ export default function Settings() {
     },
   });
 
-  const createTokenMutation = useMutation({
-    mutationFn: async (formData: { name: string }) => {
-      const { success, message, data }: OasisResponse<string> = await (
-        await fetch('/api/tokens', {
-          method: 'POST',
-          body: JSON.stringify({
-            name: formData.name,
-          }),
-        })
-      ).json();
-
-      if (!success) {
-        throw new OasisError(message, 404);
-      } else {
-        toast.success(message);
-        toast.success(data);
-      }
-    },
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: ['apiTokens'],
-      });
-    },
-  });
-
   return (
     <div className="container mt-10">
       <div className="flex justify-end">
-        <Button
-          disabled={createTokenMutation.isPending}
-          onClick={() => {
-            createTokenMutation.mutate({
-              name: Math.random().toString(36).slice(2, 7),
-            });
-          }}
-        >
-          <KeyRound className="mr-3 size-4" />
-          Create API Token
-        </Button>
+        <CreateTokenAction />
       </div>
 
       <div className="mb-12 divide-y divide-border rounded-md">
@@ -119,7 +81,7 @@ export default function Settings() {
           />
           <DataTable
             table={table}
-            columns={columns}
+            columns={tokenTableColumns}
             isInitialLoad={isInitialLoad}
           />
         </div>

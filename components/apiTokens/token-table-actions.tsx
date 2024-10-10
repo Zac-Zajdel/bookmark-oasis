@@ -24,7 +24,7 @@ import { Row } from '@tanstack/react-table';
 import { EllipsisVertical, Loader, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
-export function ApiTokenTableActions({ row }: { row: Row<ApiToken> }) {
+export function TokenTableActions({ row }: { row: Row<ApiToken> }) {
   const [isLoading, setIsLoading] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
