@@ -40,7 +40,6 @@ export function useDataTable<TData>(
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
-    autoResetPageIndex: false, // TODO - I think I need this for the searching when on page 1+
     manualPagination: true,
     rowCount: total,
   });

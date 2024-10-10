@@ -32,6 +32,11 @@ export default function Settings() {
       pageIndex + 1,
     ],
     queryFn: async (): Promise<ApiToken[]> => {
+      // Reset page index when adjusting filters
+      if (globalFilter?.trim()?.length) {
+        table.setPageIndex(0);
+      }
+
       const queryParams = new URLSearchParams({
         page: String(pageIndex + 1),
         limit: String(pageSize),
