@@ -69,16 +69,16 @@ export default function Settings() {
 
   return (
     <div className="container mt-10">
-      <div className="flex justify-end">
+      <div className="flex items-center justify-between pb-10">
+        <DataTableToolbar
+          placeholder="Search by name..."
+          table={table}
+        />
         <CreateTokenAction />
       </div>
 
       <div className="mb-12 divide-y divide-border rounded-md">
         <div className="space-y-1">
-          <DataTableToolbar
-            placeholder="Search by name..."
-            table={table}
-          />
           <DataTable
             table={table}
             columns={tokenTableColumns}

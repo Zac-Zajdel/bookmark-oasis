@@ -8,15 +8,17 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import { OasisError } from '@/lib/oasisError';
 import { queryClient } from '@/lib/utils';
 import { OasisResponse } from '@/types/apiHelpers';
 import { useMutation } from '@tanstack/react-query';
-import { KeyRound, LoaderCircle } from 'lucide-react';
+import { CopyIcon, KeyRound, LoaderCircle } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
 export function CreateTokenAction() {
+  const copy = useCopyToClipboard();
   const [tokenName, setTokenName] = useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -38,9 +40,34 @@ export function CreateTokenAction() {
       if (!success) {
         throw new OasisError(message, 404);
       } else {
-        // TODO - Improve this experience by putting this inside a AlertDialog component for easy copy using clipboard.
-        toast.success(message);
-        toast.success(data);
+        toast.success(
+          <div>
+            <div className="pb-5">{message}</div>
+            <div className="flex items-center justify-start">
+              <Button
+                variant="ghost"
+                size={'sm'}
+                className="cursor-pointer hover:bg-green-900/10"
+                onClick={() =>
+                  copy(data)
+                    .then(() => toast.success('Copied to clipboard'))
+                    .catch(() => toast.error('Failed to copy'))
+                }
+                style={{
+                  color: 'var(--success-text)',
+                  border: '1px solid var(--success-text)',
+                }}
+              >
+                <CopyIcon className="h-4 w-4" />
+              </Button>
+
+              <p className="ml-4">{data}</p>
+            </div>
+          </div>,
+          {
+            duration: 10000,
+          },
+        );
 
         setTokenName('');
         setDialogOpen(false);

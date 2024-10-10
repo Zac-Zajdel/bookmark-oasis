@@ -25,7 +25,7 @@ export function DataTableToolbar<TData>({
   }, [debouncedSearch, table]);
 
   return (
-    <div className="flex items-center justify-between pb-3">
+    <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center space-x-2">
         <Input
           placeholder={placeholder ?? 'Filter...'}
@@ -33,7 +33,7 @@ export function DataTableToolbar<TData>({
           onChange={(event) => {
             setSearch(event.target.value);
           }}
-          className="h-8 w-[150px] lg:w-[250px]"
+          className="w-56 md:w-72"
         />
         {isFiltered && (
           <Button
