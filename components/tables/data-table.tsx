@@ -1,5 +1,6 @@
 'use client';
 
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   Table,
   TableBody,
@@ -30,8 +31,43 @@ export function DataTable<TData>({
     <div>
       <div className="rounded-md border">
         {isInitialLoad ? (
-          <div className="flex h-24 items-center justify-center">
-            SKELETON SCREEN PLACEMENT
+          <div className="flex items-center justify-center">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>
+                    <Skeleton className="h-5 w-40" />
+                  </TableHead>
+                  <TableHead>
+                    <Skeleton className="h-5 w-40" />
+                  </TableHead>
+                  <TableHead>
+                    <Skeleton className="h-5 w-40" />
+                  </TableHead>
+                  <TableHead>
+                    <Skeleton className="h-5 w-40" />
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {Array.from({ length: 10 }).map((_, index) => (
+                  <TableRow key={index}>
+                    <TableCell>
+                      <Skeleton className="m-1 -ml-3 h-5 w-56" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="m-1 -ml-3 h-5 w-56" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="m-1 -ml-3 h-5 w-56" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="m-1 -ml-3 h-5 w-56" />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </div>
         ) : (
           <Table>

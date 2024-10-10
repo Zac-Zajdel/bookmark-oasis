@@ -19,20 +19,19 @@ export default function Settings() {
   const [apiTokens, setApiTokens] = useState<ApiToken[]>([]);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
-  const { table, sorting, pageIndex } = useDataTable<ApiToken>(
+  const { table, sorting, pageIndex, pageSize } = useDataTable<ApiToken>(
     apiTokens,
     columns,
     total,
   );
   const { column, order } = useTableSortingParams(sorting);
 
-  // TODO - isLoading can be used for a skeleton screen....
-  const { isLoading } = useQuery({
-    queryKey: ['apiTokens', column, order, pageIndex + 1],
+  useQuery({
+    queryKey: ['apiTokens', column, order, pageSize, pageIndex + 1],
     queryFn: async (): Promise<ApiToken[]> => {
       const queryParams = new URLSearchParams({
         page: String(pageIndex + 1),
-        limit: '10',
+        limit: String(pageSize),
       });
 
       if (column && order) {

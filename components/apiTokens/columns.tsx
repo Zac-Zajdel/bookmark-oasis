@@ -6,7 +6,6 @@ import { ApiToken } from '@prisma/client';
 import { ColumnDef } from '@tanstack/react-table';
 import { ApiTokenTableActions } from './api-token-table-actions';
 
-// TODO - Should I memoize this?
 export const columns: ColumnDef<ApiToken>[] = [
   {
     accessorKey: 'name',
@@ -17,7 +16,7 @@ export const columns: ColumnDef<ApiToken>[] = [
       />
     ),
     cell: ({ row }) => {
-      return <div className="w-32">{row.getValue('name')}</div>;
+      return <div className="w-36">{row.getValue('name')}</div>;
     },
   },
   {

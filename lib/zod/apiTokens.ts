@@ -9,7 +9,7 @@ export const getApiTokenSchema = () => {
       .transform((val) => parseInt(val))
       .refine((val) => val >= 1, { message: 'page cannot be less than 1' }),
     limit: z
-      .string()
+      .enum(['10', '20', '30', '40', '50'])
       .transform((val) => parseInt(val))
       .refine((val) => val >= 10, { message: 'limit cannot be less than 10' }),
     column: z.enum(['name', 'lastUsed', 'createdAt']).nullable().optional(),
