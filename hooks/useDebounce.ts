@@ -1,34 +1,22 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useState } from 'react';
 
 /**
- * useDebounce - Custom hook to debounce a function call
- * @param func - The function to debounce
+ * useDebounce - Custom hook to debounce a value
+ * @param value - The value to debounce
  * @param delay - Delay in milliseconds
  */
-export function useDebounce<T extends (...args: any[]) => any>(
-  func: T,
-  delay: number,
-) {
-  const functionTimeoutHandler = useRef<number | null>(null);
+export function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState(value);
 
-  const debouncedFunction = (...args: Parameters<T>) => {
-    if (functionTimeoutHandler.current) {
-      clearTimeout(functionTimeoutHandler.current);
-    }
-
-    functionTimeoutHandler.current = window.setTimeout(() => {
-      func(...args);
-    }, delay);
-  };
-
-  // Clean up the timeout when the component unmounts or when `delay`/`func` changes
   useEffect(() => {
-    return () => {
-      if (functionTimeoutHandler.current) {
-        clearTimeout(functionTimeoutHandler.current);
-      }
-    };
-  }, [func, delay]);
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
 
-  return debouncedFunction;
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
 }

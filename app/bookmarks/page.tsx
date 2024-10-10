@@ -70,7 +70,7 @@ export default function Bookmarks() {
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: ['bookmarks', debouncedSearch, page, itemsPerPage],
+        queryKey: ['bookmarks'],
       });
       setDialogOpen(false);
     },
@@ -95,7 +95,7 @@ export default function Bookmarks() {
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: ['bookmarks', debouncedSearch, page, itemsPerPage],
+        queryKey: ['bookmarks'],
       });
     },
   });
@@ -112,7 +112,7 @@ export default function Bookmarks() {
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: ['bookmarks', debouncedSearch, page, itemsPerPage],
+        queryKey: ['bookmarks'],
       });
     },
   });
