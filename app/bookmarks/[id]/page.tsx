@@ -14,7 +14,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Textarea } from '@/components/ui/textarea';
-import { useDebounce } from '@/hooks/useDebounce';
 import { queryClient, truncate } from '@/lib/utils';
 import { OasisResponse } from '@/types/apiHelpers';
 import { Bookmark } from '@prisma/client';
@@ -104,10 +103,9 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
         <Button
           variant="outline"
           disabled={updateBookmarkMutation.isPending}
-          onClick={useDebounce(
-            () => updateBookmarkMutation.mutate({ title, url, description }),
-            250,
-          )}
+          onClick={() =>
+            updateBookmarkMutation.mutate({ title, url, description })
+          }
         >
           <Save className="mr-2 size-4" />
           {bookmark?.title !== title || bookmark?.url !== url
