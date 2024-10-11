@@ -46,8 +46,6 @@ const items: BentoGridContent[] = [
           imageUrl:
             'https://www.youtube.com/s/desktop/87338098/img/favicon.ico',
         }}
-        onDelete={() => {}}
-        onFavorite={() => {}}
       />
     ),
     icon: <Bookmark className="size-4 text-neutral-500" />,
