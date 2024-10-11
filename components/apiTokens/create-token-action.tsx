@@ -8,11 +8,9 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { useCreateTokenMutation } from '@/hooks/api/apiTokens/useCreateApiTokenMutation';
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
-import { OasisError } from '@/lib/oasisError';
 import { queryClient } from '@/lib/utils';
-import { OasisResponse } from '@/types/apiHelpers';
-import { useMutation } from '@tanstack/react-query';
 import { CopyIcon, KeyRound, LoaderCircle } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -22,24 +20,21 @@ export function CreateTokenAction() {
   const [tokenName, setTokenName] = useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const createTokenMutation = useMutation({
-    mutationFn: async (name: string) => {
-      if (!name.length) {
-        return toast.error('You must supply a name.');
-      }
+  const createTokenMutation = useCreateTokenMutation();
 
-      const { success, message, data }: OasisResponse<string> = await (
-        await fetch('/api/tokens', {
-          method: 'POST',
-          body: JSON.stringify({
-            name,
-          }),
-        })
-      ).json();
+  const generateToken = async () => {
+    if (!tokenName.length) {
+      return toast.error('You must supply a name.');
+    }
 
-      if (!success) {
-        throw new OasisError(message, 404);
-      } else {
+    createTokenMutation.mutate(tokenName, {
+      onSuccess: async ({
+        data,
+        message,
+      }: {
+        data: string;
+        message: string;
+      }) => {
         toast.success(
           <div>
             <div className="pb-5">{message}</div>
@@ -71,14 +66,13 @@ export function CreateTokenAction() {
 
         setTokenName('');
         setDialogOpen(false);
-      }
-    },
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: ['apiTokens'],
-      });
-    },
-  });
+
+        await queryClient.invalidateQueries({
+          queryKey: ['apiTokens'],
+        });
+      },
+    });
+  };
 
   return (
     <Dialog
@@ -107,7 +101,7 @@ export function CreateTokenAction() {
         </div>
         <DialogFooter>
           <Button
-            onClick={() => createTokenMutation.mutate(tokenName)}
+            onClick={generateToken}
             disabled={createTokenMutation.isPending}
           >
             {createTokenMutation.isPending ? (

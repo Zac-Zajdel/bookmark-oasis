@@ -12,7 +12,11 @@ export function useDeleteApiTokenMutation() {
         })
       ).json();
 
-      !success ? toast.error(message) : toast.success(message);
+      if (!success) {
+        throw toast.error(message);
+      } else {
+        toast.success(message);
+      }
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
