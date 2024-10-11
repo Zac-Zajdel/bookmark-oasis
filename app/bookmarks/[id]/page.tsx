@@ -14,11 +14,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Textarea } from '@/components/ui/textarea';
-import { useDebounce } from '@/hooks/useDebounce';
-import { queryClient, truncate } from '@/lib/utils';
+import { useUpdateBookmarkMutation } from '@/hooks/api/bookmarks/useUpdateBookmarkMutation';
+import { truncate } from '@/lib/utils';
 import { OasisResponse } from '@/types/apiHelpers';
 import { Bookmark } from '@prisma/client';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { Loader, Save } from 'lucide-react';
 import { Link } from 'next-view-transitions';
 import { useState } from 'react';
@@ -29,6 +29,7 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
   const [url, setUrl] = useState('');
   const [description, setDescription] = useState('');
 
+  // TODO - Adjust
   const { data: bookmark } = useQuery({
     queryKey: ['bookmark-details', params.id],
     queryFn: async (): Promise<Bookmark | undefined> => {
@@ -53,35 +54,16 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
     },
   });
 
-  const updateBookmarkMutation = useMutation({
-    mutationFn: async (updated: Partial<Bookmark>): Promise<Bookmark> => {
-      const {
-        success,
-        message,
-        data: updatedBookmark,
-      }: OasisResponse<Bookmark> = await (
-        await fetch(`/api/bookmarks/${params.id}`, {
-          method: 'PUT',
-          body: JSON.stringify({
-            url: updated.url,
-            title: updated.title,
-            description: updated?.description,
-            isFavorite: bookmark?.isFavorite,
-          }),
-        })
-      ).json();
-
-      !success ? toast.error(message) : toast.success(message);
-
-      return updatedBookmark;
-    },
-    onSuccess: async (updatedBookmark) => {
-      queryClient.setQueryData(
-        ['bookmark-details', params.id],
-        updatedBookmark,
-      );
-    },
-  });
+  const updateBookmarkMutation = useUpdateBookmarkMutation();
+  const updateBookmark = () => {
+    updateBookmarkMutation.mutate({
+      id: bookmark?.id,
+      isFavorite: bookmark?.isFavorite,
+      title,
+      url,
+      description,
+    });
+  };
 
   return (
     <div className="container mt-5">
@@ -104,10 +86,7 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
         <Button
           variant="outline"
           disabled={updateBookmarkMutation.isPending}
-          onClick={useDebounce(
-            () => updateBookmarkMutation.mutate({ title, url, description }),
-            250,
-          )}
+          onClick={updateBookmark}
         >
           <Save className="mr-2 size-4" />
           {bookmark?.title !== title || bookmark?.url !== url
