@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/db';
 import { AuthUser } from '@/types/auth';
+import { User } from 'next-auth';
 import { z } from 'zod';
 
 export const getApiTokenSchema = () => {
@@ -18,10 +19,26 @@ export const getApiTokenSchema = () => {
   });
 };
 
-export const createApiTokenSchema = () => {
-  return z.object({
-    name: z.string().min(1, { message: 'Name is required' }),
-  });
+export const createApiTokenSchema = (user: User) => {
+  return z
+    .object({
+      name: z.string().min(1, { message: 'Name is required' }),
+    })
+    .superRefine(async (data, ctx) => {
+      const hasSameTokenName = await prisma.apiToken.findFirst({
+        where: {
+          userId: user.id,
+          name: data.name,
+        },
+      });
+
+      if (hasSameTokenName) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'API Token names must be unique.',
+        });
+      }
+    });
 };
 
 export const deleteApiTokenSchema = (user: AuthUser) => {

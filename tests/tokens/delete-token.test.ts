@@ -6,7 +6,7 @@ import { randomBytes } from 'crypto';
 import { expect, test } from 'vitest';
 
 test('DELETE /tokens', async (ctx: OasisTestContext) => {
-  const { user } = await getSetupData();
+  const { user } = getSetupData();
   const { http } = await new IntegrationHarness(ctx).init();
 
   const hex = randomBytes(32).toString('hex');
@@ -15,7 +15,7 @@ test('DELETE /tokens', async (ctx: OasisTestContext) => {
     data: {
       name: `Hello World - ${hex}`,
       userId: user.id,
-      token: await hashApiToken(hex),
+      token: hashApiToken(hex),
     },
   });
 

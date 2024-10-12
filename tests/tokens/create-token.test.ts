@@ -2,11 +2,14 @@ import { hashApiToken } from '@/lib/api/apiTokens/utils';
 import { prisma } from '@/lib/db';
 import { IntegrationHarness } from '@/tests/utils/integration';
 import { OasisTestContext, getSetupData } from '@/tests/utils/setup';
+import { randomBytes } from 'crypto';
 import { expect, test } from 'vitest';
 
 test('POST /tokens', async (ctx: OasisTestContext) => {
-  const { user } = await getSetupData();
+  const { user } = getSetupData();
   const { http } = await new IntegrationHarness(ctx).init();
+
+  const name = `API Test Token - ${randomBytes(10).toString('hex')}`;
 
   const {
     status,
@@ -14,7 +17,7 @@ test('POST /tokens', async (ctx: OasisTestContext) => {
   } = await http.post<string>({
     path: '/tokens',
     body: {
-      name: 'Custom API Token',
+      name: name,
     },
   });
 
@@ -34,8 +37,8 @@ test('POST /tokens', async (ctx: OasisTestContext) => {
   expect(generatedApiToken).toEqual(
     expect.objectContaining({
       userId: user.id,
-      name: 'Custom API Token',
-      token: await hashApiToken(token),
+      name: name,
+      token: hashApiToken(token),
       lastUsed: null,
     }),
   );

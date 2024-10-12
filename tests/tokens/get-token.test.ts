@@ -5,7 +5,7 @@ import { ApiToken } from '@prisma/client';
 import { expect, test } from 'vitest';
 
 test('GET /tokens', async (ctx: OasisTestContext) => {
-  const { user } = await getSetupData();
+  const { user } = getSetupData();
   const { http } = await new IntegrationHarness(ctx).init();
 
   const {

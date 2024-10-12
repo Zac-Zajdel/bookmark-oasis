@@ -8,7 +8,7 @@ beforeAll(async () => {
 });
 
 test('DELETE /bookmarks', async (ctx: OasisTestContext) => {
-  const { user } = await getSetupData();
+  const { user } = getSetupData();
   const { http } = await new IntegrationHarness(ctx).init();
 
   const bookmark = await prisma.bookmark.create({
