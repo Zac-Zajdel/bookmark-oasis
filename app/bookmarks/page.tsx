@@ -4,11 +4,8 @@ import BookmarkCard from '@/components/bookmarks/bookmark-card';
 import BookmarkCardSkeleton from '@/components/bookmarks/bookmark-card-skeleton';
 import BookmarkHeader from '@/components/bookmarks/bookmark-header';
 import { Button } from '@/components/ui/button';
-import { OasisResponse } from '@/types/apiHelpers';
-import { Bookmark } from '@prisma/client';
-import { useQuery } from '@tanstack/react-query';
+import { useBookmarksQuery } from '@/hooks/api/bookmarks/useBookmarksQuery';
 import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
 
 export default function Bookmarks() {
   const [search, setSearch] = useState('');
@@ -27,32 +24,14 @@ export default function Bookmarks() {
 
   const [page, setPage] = useState(1);
   const [itemsPerPage] = useState(10);
-  const [totalBookmarks, setTotalBookmarks] = useState(0);
 
-  // TODO - Adjust
-  const { isLoading, data: bookmarks } = useQuery({
-    queryKey: ['bookmarks', debouncedSearch, page, itemsPerPage],
-    queryFn: async (): Promise<Bookmark[]> => {
-      const {
-        success,
-        message,
-        data,
-      }: OasisResponse<{ bookmarks: Bookmark[]; total: number }> = await (
-        await fetch(
-          `/api/bookmarks?search=${debouncedSearch}&page=${page}&limit=${itemsPerPage}`,
-        )
-      ).json();
+  const { bookmarks, total, isLoading } = useBookmarksQuery(
+    debouncedSearch,
+    page,
+    itemsPerPage,
+  );
 
-      if (!success) {
-        throw toast.error(message);
-      }
-
-      setTotalBookmarks(data.total);
-      return data.bookmarks;
-    },
-  });
-
-  const totalPages = bookmarks ? Math.ceil(totalBookmarks / itemsPerPage) : 1;
+  const totalPages = bookmarks ? Math.ceil(total / itemsPerPage) : 1;
 
   return (
     <div className="mt-10 flex flex-col items-center space-y-10">

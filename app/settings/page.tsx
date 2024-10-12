@@ -20,7 +20,7 @@ export default function Settings() {
 
   const { column, order } = useTableSortingParams(sorting);
 
-  const { data } = useApiTokensQuery({
+  const { data: tokens } = useApiTokensQuery({
     table,
     column,
     order,
@@ -30,12 +30,12 @@ export default function Settings() {
   });
 
   useEffect(() => {
-    if (data) {
-      setTotal(data.total);
-      setApiTokens(data.data);
+    if (tokens) {
+      setTotal(tokens.total);
+      setApiTokens(tokens.data);
       setIsInitialLoad(false);
     }
-  }, [data]);
+  }, [tokens]);
 
   return (
     <div className="container mt-10">

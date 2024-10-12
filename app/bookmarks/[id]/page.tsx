@@ -14,45 +14,27 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Textarea } from '@/components/ui/textarea';
+import { useBookmarkQuery } from '@/hooks/api/bookmarks/useBookmarkQuery';
 import { useUpdateBookmarkMutation } from '@/hooks/api/bookmarks/useUpdateBookmarkMutation';
 import { truncate } from '@/lib/utils';
-import { OasisResponse } from '@/types/apiHelpers';
-import { Bookmark } from '@prisma/client';
-import { useQuery } from '@tanstack/react-query';
 import { Loader, Save } from 'lucide-react';
 import { Link } from 'next-view-transitions';
-import { useState } from 'react';
-import { toast } from 'sonner';
+import { useEffect, useState } from 'react';
 
 export default function DetailsPage({ params }: { params: { id: string } }) {
   const [title, setTitle] = useState('');
   const [url, setUrl] = useState('');
   const [description, setDescription] = useState('');
 
-  // TODO - Adjust
-  const { data: bookmark } = useQuery({
-    queryKey: ['bookmark-details', params.id],
-    queryFn: async (): Promise<Bookmark | undefined> => {
-      const {
-        success,
-        message,
-        data: bookmark,
-      }: OasisResponse<Bookmark> = await (
-        await fetch(`/api/bookmarks/${params.id}`)
-      ).json();
+  const { data: bookmark } = useBookmarkQuery(params.id);
 
-      if (!success) {
-        toast.error(message);
-        return;
-      }
-
+  useEffect(() => {
+    if (bookmark) {
       setUrl(bookmark.url);
       setTitle(bookmark.title);
       setDescription(bookmark.description ?? '');
-
-      return bookmark;
-    },
-  });
+    }
+  }, [bookmark]);
 
   const updateBookmarkMutation = useUpdateBookmarkMutation();
   const updateBookmark = () => {
