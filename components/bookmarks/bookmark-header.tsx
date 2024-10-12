@@ -8,29 +8,37 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { useCreateBookmarkMutation } from '@/hooks/api/bookmarks/useCreateBookmarkMutation';
+import { queryClient } from '@/lib/utils';
 import { Bookmark, LoaderCircle } from 'lucide-react';
 import { useState } from 'react';
 
 export default function BookmarkHeader({
   onSearch,
-  onCreate,
-  isPending,
-  dialogOpen,
-  setDialogOpen,
 }: {
   onSearch: (search: string) => void;
-  onCreate: (bookmarkUrl: string) => void;
-  isPending: boolean;
-  dialogOpen: boolean;
-  setDialogOpen: (open: boolean) => void;
 }) {
   const [search, setSearch] = useState('');
   const [bookmarkUrl, setBookmarkUrl] = useState('');
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const createBookmarkMutation = useCreateBookmarkMutation();
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setSearch(value);
     onSearch(value);
+  };
+
+  const onCreate = () => {
+    createBookmarkMutation.mutate(bookmarkUrl, {
+      onSuccess: async () => {
+        await queryClient.invalidateQueries({
+          queryKey: ['bookmarks'],
+        });
+        setDialogOpen(false);
+      },
+    });
   };
 
   return (
@@ -67,10 +75,10 @@ export default function BookmarkHeader({
           </div>
           <DialogFooter>
             <Button
-              onClick={() => onCreate(bookmarkUrl)}
-              disabled={isPending}
+              onClick={onCreate}
+              disabled={createBookmarkMutation.isPending}
             >
-              {isPending ? (
+              {createBookmarkMutation.isPending ? (
                 <LoaderCircle className="mr-2 size-4 animate-spin" />
               ) : (
                 <Bookmark className="mr-2 size-4" />

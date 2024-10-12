@@ -3,20 +3,27 @@
 import BookmarkActions from '@/components/bookmarks/bookmark-actions';
 import { Card, CardHeader } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { useDeleteBookmarkMutation } from '@/hooks/api/bookmarks/useDeleteBookmarkMutation';
+import { useUpdateBookmarkMutation } from '@/hooks/api/bookmarks/useUpdateBookmarkMutation';
 import { Bookmark } from '@prisma/client';
 import { Search } from 'lucide-react';
 
 interface BookmarkCardProps {
   bookmark: Partial<Bookmark>;
-  onDelete: (bookmark: Partial<Bookmark>) => void;
-  onFavorite: (bookmark: Partial<Bookmark>) => void;
 }
 
-export default function BookmarkCard({
-  bookmark,
-  onDelete,
-  onFavorite,
-}: BookmarkCardProps) {
+export default function BookmarkCard({ bookmark }: BookmarkCardProps) {
+  const updateBookmarkMutation = useUpdateBookmarkMutation();
+  const deleteBookmarkMutation = useDeleteBookmarkMutation();
+
+  const onFavorite = (bookmark: Partial<Bookmark>) => {
+    updateBookmarkMutation.mutate(bookmark);
+  };
+
+  const onDelete = (bookmark: Partial<Bookmark>) => {
+    deleteBookmarkMutation.mutate(bookmark);
+  };
+
   return (
     <Card className="flex h-full w-full flex-col justify-between rounded-lg">
       <CardHeader className="flex h-full flex-col items-start p-5">

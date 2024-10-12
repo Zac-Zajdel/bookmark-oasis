@@ -17,7 +17,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useDeleteApiTokenMutation } from '@/hooks/apiToken/useDeleteApiTokenMutation';
+import { useDeleteApiTokenMutation } from '@/hooks/api/apiTokens/useDeleteApiTokenMutation';
 import { cn } from '@/lib/utils';
 import { ApiToken } from '@prisma/client';
 import { Row } from '@tanstack/react-table';
