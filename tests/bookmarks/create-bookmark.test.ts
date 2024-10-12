@@ -5,7 +5,7 @@ import { Bookmark } from '@prisma/client';
 import { afterAll, expect, test } from 'vitest';
 
 test('POST /bookmarks', async (ctx: OasisTestContext) => {
-  const { user } = await getSetupData();
+  const { user } = getSetupData();
   const { http } = await new IntegrationHarness(ctx).init();
 
   const {

@@ -9,7 +9,7 @@ beforeAll(async () => {
 });
 
 test('UPDATE /bookmarks', async (ctx: OasisTestContext) => {
-  const { user } = await getSetupData();
+  const { user } = getSetupData();
   const { http } = await new IntegrationHarness(ctx).init();
 
   const initialBookmark = await prisma.bookmark.create({
