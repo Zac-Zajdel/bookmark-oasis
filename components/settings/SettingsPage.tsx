@@ -11,10 +11,10 @@ import { ApiToken } from '@prisma/client';
 import { Suspense, useEffect, useState } from 'react';
 
 // Make a server component if possible.
-// import dynamic from 'next/dynamic';
-// const EmojiPicker = dynamic(() => import('@/components/emoji-picker'), {
-//   ssr: true,
-// });
+import dynamic from 'next/dynamic';
+const EmojiPicker = dynamic(() => import('@/components/emoji-picker'), {
+  ssr: false,
+});
 
 export default function SettingsPage() {
   const [total, setTotal] = useState(0);
@@ -62,7 +62,7 @@ export default function SettingsPage() {
       <div className="mb-10 w-[50%]">
         {showEmojiPicker && (
           <Suspense fallback={<div>Loading Emoji Picker...</div>}>
-            {/* <EmojiPicker /> */}
+            <EmojiPicker />
           </Suspense>
         )}
       </div>

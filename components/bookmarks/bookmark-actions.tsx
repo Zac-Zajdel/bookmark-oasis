@@ -16,7 +16,7 @@ import {
   Star,
   Trash,
 } from 'lucide-react';
-import { useTransitionRouter } from 'next-view-transitions';
+import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
 interface BookmarkActionsProps {
@@ -30,7 +30,7 @@ export default function BookmarkActions({
   onDelete,
   onFavorite,
 }: BookmarkActionsProps) {
-  const router = useTransitionRouter();
+  const router = useRouter();
   const copy = useCopyToClipboard();
 
   function onCopyLink(url: string | undefined) {

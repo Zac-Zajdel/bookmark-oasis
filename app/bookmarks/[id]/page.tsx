@@ -18,7 +18,7 @@ import { useBookmarkQuery } from '@/hooks/api/bookmarks/useBookmarkQuery';
 import { useUpdateBookmarkMutation } from '@/hooks/api/bookmarks/useUpdateBookmarkMutation';
 import { truncate } from '@/lib/utils';
 import { Loader, Save } from 'lucide-react';
-import { Link } from 'next-view-transitions';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 export default function DetailsPage({ params }: { params: { id: string } }) {
