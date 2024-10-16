@@ -1,6 +1,7 @@
 import * as LucideIcons from 'lucide-react';
 import { icons } from 'lucide-react';
 import React, { useCallback, useMemo, useState } from 'react';
+import { Virtuoso } from 'react-virtuoso';
 
 type LucideIcon = keyof typeof icons;
 
@@ -56,14 +57,29 @@ export default function EmojiPicker() {
       </div>
 
       <div className="grid grid-cols-12 gap-2">
-        {memoizedIconsArray.map((iconName) => (
+        <Virtuoso
+          style={{ height: '1000px' }}
+          totalCount={memoizedIconsArray.length}
+          itemContent={(index) => {
+            const iconName = memoizedIconsArray[index];
+            return (
+              <IconButton
+                key={iconName}
+                iconName={iconName}
+                onClick={handleIconClick}
+                isSelected={selectedIcon === iconName}
+              />
+            );
+          }}
+        />
+        {/* {memoizedIconsArray.map((iconName) => (
           <IconButton
             key={iconName}
             iconName={iconName}
             onClick={handleIconClick}
             isSelected={selectedIcon === iconName}
           />
-        ))}
+        ))} */}
       </div>
     </>
   );
