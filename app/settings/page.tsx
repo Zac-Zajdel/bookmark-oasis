@@ -2,6 +2,7 @@
 
 import { CreateTokenAction } from '@/components/apiTokens/create-token-action';
 import { tokenTableColumns } from '@/components/apiTokens/token-table-columns';
+import EmojiPicker from '@/components/emoji-picker';
 import { DataTable } from '@/components/tables/data-table';
 import { DataTableToolbar } from '@/components/tables/data-table-toolbar';
 import { useApiTokensQuery } from '@/hooks/api/apiTokens/useApiTokensQuery';
@@ -46,6 +47,8 @@ export default function Settings() {
         />
         <CreateTokenAction />
       </div>
+
+      <EmojiPicker />
 
       <div className="mb-12 divide-y divide-border rounded-md">
         <div className="space-y-1">
