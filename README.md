@@ -66,6 +66,12 @@ and open http://localhost:3000/ to see the landing page.
 ├── middleware.ts                   # Middleware for Next.js routes
 ```
 
+## Analyzing Bundle Size
+
+```bash
+ANALYZE=true yarn build
+```
+
 ## 🤝 Contribution
 
 To contribute, please follow these steps:

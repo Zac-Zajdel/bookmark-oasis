@@ -2,6 +2,7 @@
 
 import { CreateTokenAction } from '@/components/apiTokens/create-token-action';
 import { tokenTableColumns } from '@/components/apiTokens/token-table-columns';
+// import { DynamicIcon } from '@/components/icon-show';
 import { DataTable } from '@/components/tables/data-table';
 import { DataTableToolbar } from '@/components/tables/data-table-toolbar';
 import { useApiTokensQuery } from '@/hooks/api/apiTokens/useApiTokensQuery';
@@ -10,12 +11,10 @@ import { useTableSortingParams } from '@/hooks/useTableSortingParams';
 import { ApiToken } from '@prisma/client';
 import { Suspense, useEffect, useState } from 'react';
 
-import IconShow from '@/components/icon-show';
+// Make a server component if possible.
 import dynamic from 'next/dynamic';
-
-// import EmojiPicker from '@/components/emoji-picker';
 const EmojiPicker = dynamic(() => import('@/components/emoji-picker'), {
-  ssr: false,
+  ssr: true,
 });
 
 export default function Settings() {
@@ -52,10 +51,9 @@ export default function Settings() {
 
   return (
     <div className="container mt-10">
+      {/* MAKE THIS INTO A SERVER COMPONENT IF POSSIBLE To reduce  */}
       {/* This is how I can render it using dynamic imports */}
-      <div>
-        <IconShow name="code" />
-      </div>
+      <div>{/* <DynamicIcon name="Activity" /> */}</div>
 
       <div className="flex items-center justify-between pb-10">
         <DataTableToolbar
@@ -66,11 +64,10 @@ export default function Settings() {
       </div>
 
       <button onClick={handleButtonClick}>Show Emoji Picker</button>
-
       <div className="mb-10 w-[50%]">
         {showEmojiPicker && (
           <Suspense fallback={<div>Loading Emoji Picker...</div>}>
-            <EmojiPicker />
+            {/* <EmojiPicker /> */}
           </Suspense>
         )}
       </div>
