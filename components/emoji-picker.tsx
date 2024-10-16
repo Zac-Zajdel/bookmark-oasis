@@ -1,11 +1,10 @@
 import * as LucideIcons from 'lucide-react';
-import { icons } from 'lucide-react';
 import React, { useCallback, useMemo, useState } from 'react';
-import { Virtuoso } from 'react-virtuoso';
+import { VirtuosoGrid } from 'react-virtuoso';
 
-type LucideIcon = keyof typeof icons;
+type LucideIcon = keyof typeof LucideIcons.icons;
 
-const iconsArray = Object.keys(icons) as LucideIcon[];
+const iconsArray = Object.keys(LucideIcons.icons) as LucideIcon[];
 
 const IconButton = React.memo(function IconButton({
   iconName,
@@ -30,16 +29,40 @@ const IconButton = React.memo(function IconButton({
   );
 });
 
-export default function EmojiPicker() {
+export default function EmojiPicker(): JSX.Element {
   const [selectedIcon, setSelectedIcon] = useState<LucideIcon | null>(null);
 
-  // Memoize the click handler with useCallback to avoid unnecessary re-renders
   const handleIconClick = useCallback((iconName: LucideIcon) => {
     setSelectedIcon(iconName);
   }, []);
 
-  // Memoizing the iconsArray as it will not change during the component's lifecycle
   const memoizedIconsArray = useMemo(() => iconsArray, []);
+
+  const Item = React.forwardRef<HTMLDivElement, { children?: React.ReactNode }>(
+    ({ children, ...props }, ref) => (
+      <div
+        ref={ref}
+        {...props}
+        className="p-1"
+      >
+        {children}
+      </div>
+    ),
+  );
+  Item.displayName = 'VirtuosoItem';
+
+  const List = React.forwardRef<HTMLDivElement, { children?: React.ReactNode }>(
+    ({ children, ...props }, ref) => (
+      <div
+        ref={ref}
+        {...props}
+        className="grid grid-cols-12 justify-items-center"
+      >
+        {children}
+      </div>
+    ),
+  );
+  List.displayName = 'VirtuosoList';
 
   return (
     <>
@@ -56,30 +79,22 @@ export default function EmojiPicker() {
         )}
       </div>
 
-      <div className="grid grid-cols-12 gap-2">
-        <Virtuoso
-          style={{ height: '1000px' }}
-          totalCount={memoizedIconsArray.length}
-          itemContent={(index) => {
-            const iconName = memoizedIconsArray[index];
-            return (
-              <IconButton
-                key={iconName}
-                iconName={iconName}
-                onClick={handleIconClick}
-                isSelected={selectedIcon === iconName}
-              />
-            );
+      <div className="h-[200px]">
+        <VirtuosoGrid
+          data={memoizedIconsArray}
+          components={{
+            Item,
+            List,
           }}
+          itemContent={(index: number, iconName: LucideIcon) => (
+            <IconButton
+              key={index}
+              iconName={iconName}
+              onClick={handleIconClick}
+              isSelected={selectedIcon === iconName}
+            />
+          )}
         />
-        {/* {memoizedIconsArray.map((iconName) => (
-          <IconButton
-            key={iconName}
-            iconName={iconName}
-            onClick={handleIconClick}
-            isSelected={selectedIcon === iconName}
-          />
-        ))} */}
       </div>
     </>
   );
