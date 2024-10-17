@@ -54,9 +54,9 @@ export function BookmarkIcon({
             />
           </Button>
 
-          <div className="absolute z-10 w-[20%] rounded-lg bg-muted">
+          <div className="absolute z-10 w-[20%] rounded-lg bg-background shadow-lg">
             {showIconPicker && (
-              <div className="rounded-lg p-2">
+              <div className="rounded-lg border p-2">
                 <IconPicker onSelectIcon={selectIcon} />
               </div>
             )}

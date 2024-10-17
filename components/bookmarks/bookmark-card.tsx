@@ -29,7 +29,7 @@ export default function BookmarkCard({ bookmark }: BookmarkCardProps) {
       <CardHeader className="flex h-full flex-col items-start p-5">
         <div className="flex w-full items-center justify-start">
           <div className="min-w-8">
-            <div className="inline-flex size-7 items-center justify-center rounded-md border">
+            <div className="inline-flex size-7 items-center justify-center rounded-md border shadow-sm">
               {bookmark.imageUrl ? (
                 <>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -40,7 +40,6 @@ export default function BookmarkCard({ bookmark }: BookmarkCardProps) {
                   />
                 </>
               ) : (
-                // <Search className="size-3.5" />
                 <DynamicIcon
                   name={bookmark.iconName ?? 'Search'}
                   className="size-3.5"

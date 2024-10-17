@@ -1,3 +1,4 @@
+import { Input } from '@/components/ui/input';
 import * as LucideIcons from 'lucide-react';
 import React, {
   forwardRef,
@@ -7,6 +8,7 @@ import React, {
   useState,
 } from 'react';
 import { VirtuosoGrid } from 'react-virtuoso';
+import { Separator } from '../ui/separator';
 
 type LucideIcon = keyof typeof LucideIcons.icons;
 
@@ -40,6 +42,7 @@ export default function IconPicker({
 }: {
   onSelectIcon: (icon: string) => void;
 }) {
+  const [searchQuery, setSearchQuery] = useState('');
   const [selectedIcon, setSelectedIcon] = useState<LucideIcon | null>(null);
 
   const handleIconClick = useCallback(
@@ -50,7 +53,11 @@ export default function IconPicker({
     [onSelectIcon],
   );
 
-  const memoizedIconsArray = useMemo(() => iconsArray, []);
+  const filteredIcons = useMemo(() => {
+    return iconsArray.filter((iconName) =>
+      iconName.toLowerCase().includes(searchQuery.toLowerCase()),
+    );
+  }, [searchQuery]);
 
   const Item = React.forwardRef<HTMLDivElement, { children?: ReactNode }>(
     ({ children, ...props }, ref) => (
@@ -80,9 +87,19 @@ export default function IconPicker({
 
   return (
     <>
+      <Input
+        type="text"
+        placeholder="Search icons..."
+        className="mb-2 w-full rounded-md border border-gray-500/50 p-2"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+      />
+
+      <Separator className="mb-2" />
+
       <div className="h-[200px]">
         <VirtuosoGrid
-          data={memoizedIconsArray}
+          data={filteredIcons}
           style={{ scrollbarWidth: 'none' }}
           components={{
             Item,
