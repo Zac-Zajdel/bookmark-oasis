@@ -1,12 +1,12 @@
 'use client';
 
 import BookmarkActions from '@/components/bookmarks/bookmark-actions';
+import { DynamicIcon } from '@/components/icons/dynamic-icon';
 import { Card, CardHeader } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { useDeleteBookmarkMutation } from '@/hooks/api/bookmarks/useDeleteBookmarkMutation';
 import { useUpdateBookmarkMutation } from '@/hooks/api/bookmarks/useUpdateBookmarkMutation';
 import { Bookmark } from '@prisma/client';
-import { Search } from 'lucide-react';
 
 interface BookmarkCardProps {
   bookmark: Partial<Bookmark>;
@@ -29,7 +29,7 @@ export default function BookmarkCard({ bookmark }: BookmarkCardProps) {
       <CardHeader className="flex h-full flex-col items-start p-5">
         <div className="flex w-full items-center justify-start">
           <div className="min-w-8">
-            <div className="inline-flex size-7 items-center justify-center rounded-md border">
+            <div className="inline-flex size-7 items-center justify-center rounded-md border shadow-sm">
               {bookmark.imageUrl ? (
                 <>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -40,7 +40,10 @@ export default function BookmarkCard({ bookmark }: BookmarkCardProps) {
                   />
                 </>
               ) : (
-                <Search className="size-3.5" />
+                <DynamicIcon
+                  name={bookmark.iconName ?? 'Search'}
+                  className="size-3.5"
+                />
               )}
             </div>
           </div>

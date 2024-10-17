@@ -1,5 +1,6 @@
 'use client';
 
+import { BookmarkIcon } from '@/components/bookmarks/bookmark-icon';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -17,34 +18,42 @@ import { Textarea } from '@/components/ui/textarea';
 import { useBookmarkQuery } from '@/hooks/api/bookmarks/useBookmarkQuery';
 import { useUpdateBookmarkMutation } from '@/hooks/api/bookmarks/useUpdateBookmarkMutation';
 import { truncate } from '@/lib/utils';
-import { Loader, Save } from 'lucide-react';
-import { Link } from 'next-view-transitions';
+import { Save } from 'lucide-react';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 export default function DetailsPage({ params }: { params: { id: string } }) {
-  const [title, setTitle] = useState('');
   const [url, setUrl] = useState('');
+  const [title, setTitle] = useState('');
+  const [iconName, setIconName] = useState('');
   const [description, setDescription] = useState('');
 
-  const { data: bookmark } = useBookmarkQuery(params.id);
+  const { isLoading, data: bookmark } = useBookmarkQuery(params.id);
 
   useEffect(() => {
     if (bookmark) {
       setUrl(bookmark.url);
       setTitle(bookmark.title);
+      setIconName(bookmark.iconName ?? '');
       setDescription(bookmark.description ?? '');
     }
   }, [bookmark]);
 
   const updateBookmarkMutation = useUpdateBookmarkMutation();
-  const updateBookmark = () => {
+  const updateBookmark = (icon?: string) => {
     updateBookmarkMutation.mutate({
       id: bookmark?.id,
       isFavorite: bookmark?.isFavorite,
       title,
       url,
       description,
+      iconName: icon || bookmark?.iconName,
     });
+  };
+
+  const onSelectIcon = (icon: string) => {
+    updateBookmark(icon);
+    setIconName(icon);
   };
 
   return (
@@ -68,7 +77,7 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
         <Button
           variant="outline"
           disabled={updateBookmarkMutation.isPending}
-          onClick={updateBookmark}
+          onClick={() => updateBookmark()}
         >
           <Save className="mr-2 size-4" />
           {bookmark?.title !== title || bookmark?.url !== url
@@ -80,18 +89,12 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
       <div className="mt-2 flex flex-row items-center">
         <Card className="mt-5 min-w-20 content-center p-8">
           <div className="flex items-center justify-center">
-            {bookmark?.imageUrl ? (
-              <>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={bookmark.imageUrl}
-                  alt={bookmark.title}
-                  className="size-4"
-                />
-              </>
-            ) : (
-              <Loader className="size-3.5" />
-            )}
+            <BookmarkIcon
+              bookmark={bookmark}
+              iconName={iconName}
+              isLoading={isLoading}
+              onSelectIcon={onSelectIcon}
+            />
           </div>
         </Card>
         <div className="ml-2 mt-1 w-full">

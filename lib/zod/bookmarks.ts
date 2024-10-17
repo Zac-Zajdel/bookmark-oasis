@@ -72,6 +72,7 @@ export const updateBookmarkSchema = (user: AuthUser) => {
       title: z.string().min(1, { message: 'Title is required' }),
       description: z.string().nullable().optional(),
       isFavorite: z.boolean(),
+      iconName: z.string().nullable().optional(),
     })
     .superRefine(async (data, ctx) => {
       const bookmarkExists = await prisma.bookmark.findFirst({
