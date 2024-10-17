@@ -16,6 +16,7 @@ export const useUpdateBookmarkMutation = () => {
               title: bookmark.title,
               isFavorite: bookmark.isFavorite,
               description: bookmark.description,
+              iconName: bookmark.iconName,
             }),
           })
         ).json();

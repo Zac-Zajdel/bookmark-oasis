@@ -31,6 +31,7 @@ test('UPDATE /bookmarks', async (ctx: OasisTestContext) => {
       url: 'https://www.youtube.com/',
       description: 'Updated Description',
       isFavorite: true,
+      iconName: 'Search',
     },
   });
 
@@ -51,6 +52,7 @@ test('UPDATE /bookmarks', async (ctx: OasisTestContext) => {
       title: 'Updated Title',
       description: 'Updated Description',
       isFavorite: true,
+      iconName: 'Search',
       visits: 0,
     }),
   );

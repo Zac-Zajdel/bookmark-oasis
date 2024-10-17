@@ -8,13 +8,7 @@ import { useApiTokensQuery } from '@/hooks/api/apiTokens/useApiTokensQuery';
 import { useDataTable } from '@/hooks/useDataTable';
 import { useTableSortingParams } from '@/hooks/useTableSortingParams';
 import { ApiToken } from '@prisma/client';
-import { Suspense, useEffect, useState } from 'react';
-
-// Make a server component if possible.
-import dynamic from 'next/dynamic';
-const IconPicker = dynamic(() => import('@/components/icon-picker'), {
-  ssr: false,
-});
+import { useEffect, useState } from 'react';
 
 export default function Settings() {
   const [total, setTotal] = useState(0);
@@ -43,11 +37,6 @@ export default function Settings() {
     }
   }, [tokens]);
 
-  const [showIconPicker, setShowIconPicker] = useState(false);
-  const handleButtonClick = () => {
-    setShowIconPicker(true);
-  };
-
   return (
     <div className="container mt-10">
       <div className="flex items-center justify-between pb-10">
@@ -56,15 +45,6 @@ export default function Settings() {
           table={table}
         />
         <CreateTokenAction />
-      </div>
-
-      <button onClick={handleButtonClick}>Show Emoji Picker</button>
-      <div className="mb-10 w-[20%]">
-        {showIconPicker && (
-          <Suspense fallback={<div>Loading Emoji Picker...</div>}>
-            <IconPicker />
-          </Suspense>
-        )}
       </div>
 
       <div className="mb-12 divide-y divide-border rounded-md">

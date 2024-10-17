@@ -31,34 +31,36 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
   const [title, setTitle] = useState('');
   const [url, setUrl] = useState('');
   const [description, setDescription] = useState('');
+  const [iconName, setIconName] = useState('');
+  const [showIconPicker, setShowIconPicker] = useState(false);
 
-  const { data: bookmark } = useBookmarkQuery(params.id);
+  const { isLoading, data: bookmark } = useBookmarkQuery(params.id);
 
   useEffect(() => {
     if (bookmark) {
       setUrl(bookmark.url);
       setTitle(bookmark.title);
       setDescription(bookmark.description ?? '');
+      setIconName(bookmark.iconName ?? '');
     }
   }, [bookmark]);
 
   const updateBookmarkMutation = useUpdateBookmarkMutation();
-  const updateBookmark = () => {
+  const updateBookmark = (icon?: string) => {
     updateBookmarkMutation.mutate({
       id: bookmark?.id,
       isFavorite: bookmark?.isFavorite,
       title,
       url,
       description,
+      iconName: icon || bookmark?.iconName,
     });
   };
 
-  const [bookmarkIcon, setBookmarkIcon] = useState('Search');
-  const [showIconPicker, setShowIconPicker] = useState(false);
   const selectNewIcon = () => setShowIconPicker(!showIconPicker);
-
   const onSelectIcon = (icon: string) => {
-    setBookmarkIcon(icon);
+    updateBookmark(icon);
+    setIconName(icon);
     setShowIconPicker(false);
   };
 
@@ -83,7 +85,7 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
         <Button
           variant="outline"
           disabled={updateBookmarkMutation.isPending}
-          onClick={updateBookmark}
+          onClick={() => updateBookmark}
         >
           <Save className="mr-2 size-4" />
           {bookmark?.title !== title || bookmark?.url !== url
@@ -95,7 +97,6 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
       <div className="mt-2 flex flex-row items-center">
         <Card className="mt-5 min-w-20 content-center p-8">
           <div className="flex items-center justify-center">
-            {/* Make this into its own component */}
             {bookmark?.imageUrl ? (
               <>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -113,12 +114,12 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
                   onClick={selectNewIcon}
                 >
                   <DynamicIcon
-                    name={bookmarkIcon}
+                    name={isLoading ? 'Loading' : iconName || 'Search'}
                     className="size-5"
                   />
                 </Button>
 
-                <div className="absolute z-10 w-[30%] rounded-lg bg-muted">
+                <div className="absolute z-10 w-[20%] rounded-lg bg-muted">
                   {showIconPicker && (
                     <div className="rounded-lg p-2">
                       <IconPicker onSelectIcon={onSelectIcon} />

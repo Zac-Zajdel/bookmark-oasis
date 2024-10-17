@@ -6,7 +6,7 @@ import { Separator } from '@/components/ui/separator';
 import { useDeleteBookmarkMutation } from '@/hooks/api/bookmarks/useDeleteBookmarkMutation';
 import { useUpdateBookmarkMutation } from '@/hooks/api/bookmarks/useUpdateBookmarkMutation';
 import { Bookmark } from '@prisma/client';
-import { Search } from 'lucide-react';
+import { DynamicIcon } from '../dynamic-icon';
 
 interface BookmarkCardProps {
   bookmark: Partial<Bookmark>;
@@ -40,7 +40,11 @@ export default function BookmarkCard({ bookmark }: BookmarkCardProps) {
                   />
                 </>
               ) : (
-                <Search className="size-3.5" />
+                // <Search className="size-3.5" />
+                <DynamicIcon
+                  name={bookmark.iconName ?? 'Search'}
+                  className="size-3.5"
+                />
               )}
             </div>
           </div>
