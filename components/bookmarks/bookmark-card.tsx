@@ -1,12 +1,12 @@
 'use client';
 
 import BookmarkActions from '@/components/bookmarks/bookmark-actions';
+import { DynamicIcon } from '@/components/icons/dynamic-icon';
 import { Card, CardHeader } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { useDeleteBookmarkMutation } from '@/hooks/api/bookmarks/useDeleteBookmarkMutation';
 import { useUpdateBookmarkMutation } from '@/hooks/api/bookmarks/useUpdateBookmarkMutation';
 import { Bookmark } from '@prisma/client';
-import { DynamicIcon } from '../dynamic-icon';
 
 interface BookmarkCardProps {
   bookmark: Partial<Bookmark>;

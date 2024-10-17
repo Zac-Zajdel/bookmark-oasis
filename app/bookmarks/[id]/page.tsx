@@ -1,6 +1,6 @@
 'use client';
 
-import { DynamicIcon } from '@/components/dynamic-icon';
+import { BookmarkIcon } from '@/components/bookmarks/bookmark-icon';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -22,17 +22,11 @@ import { Save } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
-import dynamic from 'next/dynamic';
-const IconPicker = dynamic(() => import('@/components/icon-picker'), {
-  ssr: false,
-});
-
 export default function DetailsPage({ params }: { params: { id: string } }) {
-  const [title, setTitle] = useState('');
   const [url, setUrl] = useState('');
-  const [description, setDescription] = useState('');
+  const [title, setTitle] = useState('');
   const [iconName, setIconName] = useState('');
-  const [showIconPicker, setShowIconPicker] = useState(false);
+  const [description, setDescription] = useState('');
 
   const { isLoading, data: bookmark } = useBookmarkQuery(params.id);
 
@@ -40,8 +34,8 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
     if (bookmark) {
       setUrl(bookmark.url);
       setTitle(bookmark.title);
-      setDescription(bookmark.description ?? '');
       setIconName(bookmark.iconName ?? '');
+      setDescription(bookmark.description ?? '');
     }
   }, [bookmark]);
 
@@ -57,11 +51,9 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
     });
   };
 
-  const selectNewIcon = () => setShowIconPicker(!showIconPicker);
   const onSelectIcon = (icon: string) => {
     updateBookmark(icon);
     setIconName(icon);
-    setShowIconPicker(false);
   };
 
   return (
@@ -85,7 +77,7 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
         <Button
           variant="outline"
           disabled={updateBookmarkMutation.isPending}
-          onClick={() => updateBookmark}
+          onClick={() => updateBookmark()}
         >
           <Save className="mr-2 size-4" />
           {bookmark?.title !== title || bookmark?.url !== url
@@ -97,37 +89,12 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
       <div className="mt-2 flex flex-row items-center">
         <Card className="mt-5 min-w-20 content-center p-8">
           <div className="flex items-center justify-center">
-            {bookmark?.imageUrl ? (
-              <>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={bookmark.imageUrl}
-                  alt={bookmark.title}
-                  className="size-4"
-                />
-              </>
-            ) : (
-              <div>
-                <Button
-                  variant="ghost"
-                  className="relative"
-                  onClick={selectNewIcon}
-                >
-                  <DynamicIcon
-                    name={isLoading ? 'Loading' : iconName || 'Search'}
-                    className="size-5"
-                  />
-                </Button>
-
-                <div className="absolute z-10 w-[20%] rounded-lg bg-muted">
-                  {showIconPicker && (
-                    <div className="rounded-lg p-2">
-                      <IconPicker onSelectIcon={onSelectIcon} />
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
+            <BookmarkIcon
+              bookmark={bookmark}
+              iconName={iconName}
+              isLoading={isLoading}
+              onSelectIcon={onSelectIcon}
+            />
           </div>
         </Card>
         <div className="ml-2 mt-1 w-full">
