@@ -1,5 +1,6 @@
 'use client';
 
+import { DynamicIcon } from '@/components/dynamic-icon';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -17,9 +18,14 @@ import { Textarea } from '@/components/ui/textarea';
 import { useBookmarkQuery } from '@/hooks/api/bookmarks/useBookmarkQuery';
 import { useUpdateBookmarkMutation } from '@/hooks/api/bookmarks/useUpdateBookmarkMutation';
 import { truncate } from '@/lib/utils';
-import { Loader, Save } from 'lucide-react';
+import { Save } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+
+import dynamic from 'next/dynamic';
+const IconPicker = dynamic(() => import('@/components/icon-picker'), {
+  ssr: false,
+});
 
 export default function DetailsPage({ params }: { params: { id: string } }) {
   const [title, setTitle] = useState('');
@@ -45,6 +51,15 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
       url,
       description,
     });
+  };
+
+  const [bookmarkIcon, setBookmarkIcon] = useState('Search');
+  const [showIconPicker, setShowIconPicker] = useState(false);
+  const selectNewIcon = () => setShowIconPicker(!showIconPicker);
+
+  const onSelectIcon = (icon: string) => {
+    setBookmarkIcon(icon);
+    setShowIconPicker(false);
   };
 
   return (
@@ -80,6 +95,7 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
       <div className="mt-2 flex flex-row items-center">
         <Card className="mt-5 min-w-20 content-center p-8">
           <div className="flex items-center justify-center">
+            {/* Make this into its own component */}
             {bookmark?.imageUrl ? (
               <>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -90,7 +106,26 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
                 />
               </>
             ) : (
-              <Loader className="size-3.5" />
+              <div>
+                <Button
+                  variant="ghost"
+                  className="relative"
+                  onClick={selectNewIcon}
+                >
+                  <DynamicIcon
+                    name={bookmarkIcon}
+                    className="size-5"
+                  />
+                </Button>
+
+                <div className="absolute z-10 w-[30%] rounded-lg bg-muted">
+                  {showIconPicker && (
+                    <div className="rounded-lg p-2">
+                      <IconPicker onSelectIcon={onSelectIcon} />
+                    </div>
+                  )}
+                </div>
+              </div>
             )}
           </div>
         </Card>

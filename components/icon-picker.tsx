@@ -1,5 +1,11 @@
 import * as LucideIcons from 'lucide-react';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, {
+  forwardRef,
+  ReactNode,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react';
 import { VirtuosoGrid } from 'react-virtuoso';
 
 type LucideIcon = keyof typeof LucideIcons.icons;
@@ -19,26 +25,34 @@ const IconButton = React.memo(function IconButton({
 
   return (
     <div
-      className={`cursor-pointer justify-self-center rounded-md border p-2 ${
+      className={`cursor-pointer justify-self-center rounded-md border border-gray-500/50 p-1 hover:bg-muted-foreground/20 ${
         isSelected ? 'bg-muted-foreground/20' : ''
       }`}
       onClick={() => onClick(iconName)}
     >
-      <IconComponent size={24} />
+      <IconComponent size={16} />
     </div>
   );
 });
 
-export default function EmojiPicker(): JSX.Element {
+export default function IconPicker({
+  onSelectIcon,
+}: {
+  onSelectIcon: (icon: string) => void;
+}) {
   const [selectedIcon, setSelectedIcon] = useState<LucideIcon | null>(null);
 
-  const handleIconClick = useCallback((iconName: LucideIcon) => {
-    setSelectedIcon(iconName);
-  }, []);
+  const handleIconClick = useCallback(
+    (iconName: LucideIcon) => {
+      setSelectedIcon(iconName);
+      onSelectIcon(iconName);
+    },
+    [onSelectIcon],
+  );
 
   const memoizedIconsArray = useMemo(() => iconsArray, []);
 
-  const Item = React.forwardRef<HTMLDivElement, { children?: React.ReactNode }>(
+  const Item = React.forwardRef<HTMLDivElement, { children?: ReactNode }>(
     ({ children, ...props }, ref) => (
       <div
         ref={ref}
@@ -51,12 +65,12 @@ export default function EmojiPicker(): JSX.Element {
   );
   Item.displayName = 'VirtuosoItem';
 
-  const List = React.forwardRef<HTMLDivElement, { children?: React.ReactNode }>(
+  const List = forwardRef<HTMLDivElement, { children?: ReactNode }>(
     ({ children, ...props }, ref) => (
       <div
         ref={ref}
         {...props}
-        className="grid grid-cols-12 justify-items-center"
+        className="grid grid-cols-6 justify-items-center"
       >
         {children}
       </div>
@@ -66,22 +80,10 @@ export default function EmojiPicker(): JSX.Element {
 
   return (
     <>
-      <div className="mb-5 flex items-center justify-center">
-        {selectedIcon ? (
-          <>
-            <div className="pr-4">
-              {React.createElement(LucideIcons[selectedIcon], { size: 32 })}
-            </div>
-            <p>{selectedIcon}</p>
-          </>
-        ) : (
-          <p>No icon selected</p>
-        )}
-      </div>
-
       <div className="h-[200px]">
         <VirtuosoGrid
           data={memoizedIconsArray}
+          style={{ scrollbarWidth: 'none' }}
           components={{
             Item,
             List,
