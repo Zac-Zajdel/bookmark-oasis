@@ -72,6 +72,17 @@ export const withAuthManager =
       const searchParams = req.nextUrl.searchParams;
       return await handler({ req, user, searchParams, params });
     } catch (error) {
+      if ((error as any)?.result?.error === '403 Forbidden') {
+        return NextResponse.json(
+          {
+            success: false,
+            message:
+              'This website has restricted access to its metadata. Please create your bookmark manually.',
+          },
+          { status: 403 },
+        );
+      }
+
       if (error instanceof z.ZodError) {
         const message = error.errors?.[0]?.message || 'Invalid data provided';
 
