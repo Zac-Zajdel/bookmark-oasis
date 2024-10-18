@@ -4,6 +4,7 @@ import { OasisTestContext, getSetupData } from '@/tests/utils/setup';
 import { Bookmark } from '@prisma/client';
 import { afterAll, expect, test } from 'vitest';
 
+// TODO - Rename this to automatic and create one for manual
 test('POST /bookmarks', async (ctx: OasisTestContext) => {
   const { user } = getSetupData();
   const { http } = await new IntegrationHarness(ctx).init();
