@@ -72,14 +72,22 @@ export const POST = withAuthManager(
     const schema = createBookmarkSchema(user);
     const { url } = await schema.parseAsync(await req.json());
 
-    const { result } = await ogs({ url });
+    const { result } = await ogs({
+      url: url,
+      fetchOptions: {
+        headers: {
+          'user-agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36',
+        },
+      },
+    });
 
     const createdBookmark = await prisma.bookmark.create({
       data: {
         userId: user.id,
-        url: result.ogUrl || url,
+        url: url,
         title: result.ogTitle || result.ogSiteName || 'Title',
-        description: result.ogDescription,
+        description: result.ogDescription || result.twitterDescription || '',
         imageUrl: parseUrl(result?.favicon),
       },
     });
