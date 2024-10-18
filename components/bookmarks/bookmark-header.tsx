@@ -12,6 +12,7 @@ import { useCreateBookmarkMutation } from '@/hooks/api/bookmarks/useCreateBookma
 import { queryClient } from '@/lib/utils';
 import { Bookmark, LoaderCircle } from 'lucide-react';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 export default function BookmarkHeader({
   onSearch,
@@ -33,10 +34,15 @@ export default function BookmarkHeader({
   const onCreate = () => {
     createBookmarkMutation.mutate(bookmarkUrl, {
       onSuccess: async () => {
+        // TODO - Maybe create an actionable toast to allow the user to choose if they want to go to the details page?
         await queryClient.invalidateQueries({
           queryKey: ['bookmarks'],
         });
         setDialogOpen(false);
+      },
+      onError(error) {
+        toast.error(error.message);
+        // TODO - switch to manual adding.
       },
     });
   };
@@ -64,6 +70,7 @@ export default function BookmarkHeader({
           aria-describedby={undefined}
         >
           <DialogHeader>
+            {/* TODO - Implement selection like navbar to switch between automatic and manual. Make into component for reusability  */}
             <DialogTitle>Add Bookmark</DialogTitle>
           </DialogHeader>
           <div className="py-2">

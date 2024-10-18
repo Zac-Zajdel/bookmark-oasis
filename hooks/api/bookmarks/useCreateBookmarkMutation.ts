@@ -14,9 +14,13 @@ export const useCreateBookmarkMutation = () => {
               url: bookmarkUrl,
             }),
           })
-        ).json();
+        )?.json();
 
-      !success ? toast.error(message) : toast.success(message);
+      if (!success) {
+        throw new Error(message);
+      }
+
+      toast.success(message);
     },
   });
 };

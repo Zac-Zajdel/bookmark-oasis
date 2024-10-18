@@ -72,6 +72,8 @@ export const POST = withAuthManager(
     const schema = createBookmarkSchema(user);
     const { url } = await schema.parseAsync(await req.json());
 
+    // TODO - add manual creation of bookmark logic.
+
     const { result } = await ogs({
       url: url,
       fetchOptions: {
