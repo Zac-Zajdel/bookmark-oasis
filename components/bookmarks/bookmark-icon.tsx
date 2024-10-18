@@ -38,7 +38,7 @@ export function BookmarkIcon({
           <img
             src={bookmark.imageUrl}
             alt={bookmark.title}
-            className="size-4"
+            className="mx-4 size-5"
           />
         </>
       ) : (
@@ -54,7 +54,7 @@ export function BookmarkIcon({
             />
           </Button>
 
-          <div className="absolute z-10 w-[20%] rounded-lg bg-background shadow-lg">
+          <div className="absolute z-10 min-w-60 max-w-60 rounded-lg bg-background shadow-lg">
             {showIconPicker && (
               <div className="rounded-lg border p-2">
                 <IconPicker onSelectIcon={selectIcon} />

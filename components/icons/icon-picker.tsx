@@ -1,4 +1,11 @@
 import { Input } from '@/components/ui/input';
+import { Separator } from '@/components/ui/separator';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import * as LucideIcons from 'lucide-react';
 import React, {
   forwardRef,
@@ -8,7 +15,6 @@ import React, {
   useState,
 } from 'react';
 import { VirtuosoGrid } from 'react-virtuoso';
-import { Separator } from '../ui/separator';
 
 type LucideIcon = keyof typeof LucideIcons.icons;
 
@@ -26,14 +32,23 @@ const IconButton = React.memo(function IconButton({
   const IconComponent = LucideIcons[iconName];
 
   return (
-    <div
-      className={`cursor-pointer justify-self-center rounded-md border border-gray-500/50 p-1 hover:bg-muted-foreground/20 ${
-        isSelected ? 'bg-muted-foreground/20' : ''
-      }`}
-      onClick={() => onClick(iconName)}
-    >
-      <IconComponent size={16} />
-    </div>
+    <TooltipProvider delayDuration={500}>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div
+            className={`cursor-pointer justify-self-center rounded-md border border-gray-500/50 p-1 hover:bg-muted-foreground/20 ${
+              isSelected ? 'bg-muted-foreground/20' : ''
+            }`}
+            onClick={() => onClick(iconName)}
+          >
+            <IconComponent size={16} />
+          </div>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>{iconName}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 });
 
@@ -92,6 +107,7 @@ export default function IconPicker({
         placeholder="Search icons..."
         className="mb-2 w-full rounded-md border border-gray-500/50 p-2"
         value={searchQuery}
+        autoFocus
         onChange={(e) => setSearchQuery(e.target.value)}
       />
 

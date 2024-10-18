@@ -87,7 +87,7 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
       </div>
 
       <div className="mt-2 flex flex-row items-center">
-        <Card className="mt-5 min-w-20 content-center p-8">
+        <Card className="mt-5 min-h-24 min-w-24 content-center p-8">
           <div className="flex items-center justify-center">
             <BookmarkIcon
               bookmark={bookmark}
