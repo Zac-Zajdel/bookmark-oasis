@@ -46,6 +46,14 @@ export const createBookmarkSchema = (user: AuthUser) => {
   return z
     .object({
       url: z.string().url(),
+      title: z.string().optional(),
+      description: z.string().nullable().optional(),
+      iconName: z.string().nullable().optional(),
+      isManual: z.boolean().optional(),
+    })
+    .refine((data) => !data.isManual || (data.isManual && data.title), {
+      message: 'Title is required',
+      path: ['title'],
     })
     .superRefine(async (data, ctx) => {
       const urlExists = await prisma.bookmark.findFirst({
@@ -73,6 +81,9 @@ export const updateBookmarkSchema = (user: AuthUser) => {
       description: z.string().nullable().optional(),
       isFavorite: z.boolean(),
       iconName: z.string().nullable().optional(),
+      // TODO - What happens if it isn't something valid?
+      // TODO - valid without having to update this every single time there is a release of new icons?
+      // TODO - Maybe make a scripts folder with a command that updates a types file containing these?
     })
     .superRefine(async (data, ctx) => {
       const bookmarkExists = await prisma.bookmark.findFirst({

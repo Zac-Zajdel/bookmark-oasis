@@ -70,29 +70,41 @@ export const GET = withAuthManager(
 export const POST = withAuthManager(
   async ({ req, user }): Promise<NextResponse<OasisResponse<Bookmark>>> => {
     const schema = createBookmarkSchema(user);
-    const { url } = await schema.parseAsync(await req.json());
+    const { url, title, description, iconName, isManual } =
+      await schema.parseAsync(await req.json());
 
-    // TODO - add manual creation of bookmark logic.
-
-    const { result } = await ogs({
-      url: url,
-      fetchOptions: {
-        headers: {
-          'user-agent':
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36',
+    let createdBookmark;
+    if (isManual) {
+      createdBookmark = await prisma.bookmark.create({
+        data: {
+          url,
+          userId: user.id,
+          title: title || 'must be required',
+          description: description,
+          iconName: iconName,
         },
-      },
-    });
-
-    const createdBookmark = await prisma.bookmark.create({
-      data: {
-        userId: user.id,
+      });
+    } else {
+      const { result } = await ogs({
         url: url,
-        title: result.ogTitle || result.ogSiteName || 'Title',
-        description: result.ogDescription || result.twitterDescription || '',
-        imageUrl: parseUrl(result?.favicon),
-      },
-    });
+        fetchOptions: {
+          headers: {
+            'user-agent':
+              'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36',
+          },
+        },
+      });
+
+      createdBookmark = await prisma.bookmark.create({
+        data: {
+          url,
+          userId: user.id,
+          title: result.ogTitle || result.ogSiteName || 'Title',
+          description: result.ogDescription || result.twitterDescription || '',
+          imageUrl: parseUrl(result?.favicon),
+        },
+      });
+    }
 
     return NextResponse.json(
       {

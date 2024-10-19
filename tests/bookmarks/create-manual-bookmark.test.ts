@@ -4,8 +4,7 @@ import { OasisTestContext, getSetupData } from '@/tests/utils/setup';
 import { Bookmark } from '@prisma/client';
 import { afterAll, expect, test } from 'vitest';
 
-// TODO - Rename this to automatic and create one for manual
-test('POST /bookmarks', async (ctx: OasisTestContext) => {
+test('POST MANUAL /bookmarks', async (ctx: OasisTestContext) => {
   const { user } = getSetupData();
   const { http } = await new IntegrationHarness(ctx).init();
 
@@ -16,6 +15,10 @@ test('POST /bookmarks', async (ctx: OasisTestContext) => {
     path: '/bookmarks',
     body: {
       url: 'https://www.youtube.com/',
+      title: 'Youtube',
+      description: 'Watch Videos',
+      iconName: 'Video',
+      isManual: true,
     },
   });
 
@@ -26,9 +29,9 @@ test('POST /bookmarks', async (ctx: OasisTestContext) => {
     expect.objectContaining({
       userId: user.id,
       url: 'https://www.youtube.com/',
-      title: 'YouTube',
-      description:
-        'Enjoy the videos and music you love, upload original content, and share it all with friends, family, and the world on YouTube.',
+      title: 'Youtube',
+      description: 'Watch Videos',
+      iconName: 'Video',
       visits: 0,
     }),
   );
