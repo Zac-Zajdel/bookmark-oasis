@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useCreateBookmarkMutation } from '@/hooks/api/bookmarks/useCreateBookmarkMutation';
 import { cn, queryClient } from '@/lib/utils';
+import { CreateBookmarkParams } from '@/types/bookmarks';
 import { Bookmark } from '@prisma/client';
 import { Bookmark as BookmarkIcon, LoaderCircle } from 'lucide-react';
 import Link from 'next/link';
@@ -26,9 +27,9 @@ export default function BookmarkHeader({
   const [isManual, setIsManual] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const [bookmarkUrl, setBookmarkUrl] = useState('');
-  const [bookmarkTitle, setBookmarkTitle] = useState('');
-  const [bookmarkDescription, setBookmarkDescription] = useState('');
+  const [url, setUrl] = useState('');
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
   const createBookmarkMutation = useCreateBookmarkMutation();
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,7 +39,19 @@ export default function BookmarkHeader({
   };
 
   const onCreate = () => {
-    createBookmarkMutation.mutate(bookmarkUrl, {
+    let hookContent: CreateBookmarkParams = {
+      url,
+    };
+    if (isManual) {
+      hookContent = {
+        ...hookContent,
+        title,
+        description,
+        isManual: true,
+      };
+    }
+
+    createBookmarkMutation.mutate(hookContent, {
       onSuccess: async ({
         bookmark,
         message,
@@ -74,6 +87,14 @@ export default function BookmarkHeader({
     });
   };
 
+  const onDialogChange = () => {
+    setDialogOpen(!dialogOpen);
+    setIsManual(false);
+    setUrl('');
+    setTitle('');
+    setDescription('');
+  };
+
   return (
     <div className="container flex items-center justify-between space-x-4">
       <Input
@@ -84,7 +105,7 @@ export default function BookmarkHeader({
       />
       <Dialog
         open={dialogOpen}
-        onOpenChange={setDialogOpen}
+        onOpenChange={onDialogChange}
       >
         <DialogTrigger asChild>
           <Button>
@@ -129,10 +150,11 @@ export default function BookmarkHeader({
                 <Label htmlFor="title">Title</Label>
                 <Input
                   id="title"
-                  className="mt-1"
                   autoFocus
-                  onChange={(event) => setBookmarkTitle(event?.target.value)}
+                  className="mt-1"
+                  value={title}
                   placeholder="Bookmark Title . . ."
+                  onChange={(event) => setTitle(event?.target.value)}
                 />
               </div>
               <div>
@@ -141,9 +163,9 @@ export default function BookmarkHeader({
                   id="url"
                   type="url"
                   className="mt-1"
-                  value={bookmarkUrl}
-                  onChange={(event) => setBookmarkUrl(event?.target.value)}
+                  value={url}
                   placeholder="Bookmark URL . . ."
+                  onChange={(event) => setUrl(event?.target.value)}
                 />
               </div>
               <div>
@@ -151,8 +173,9 @@ export default function BookmarkHeader({
                 <Textarea
                   id="description"
                   className="mt-1"
+                  value={description}
                   placeholder="Bookmark Description . . ."
-                  onChange={(e) => setBookmarkDescription(e.target.value)}
+                  onChange={(e) => setDescription(e.target.value)}
                 />
               </div>
             </>
@@ -164,11 +187,11 @@ export default function BookmarkHeader({
               <Input
                 type="url"
                 id="title"
-                className="mt-1"
                 autoFocus
-                value={bookmarkUrl}
-                onChange={(event) => setBookmarkUrl(event?.target.value)}
+                className="mt-1"
+                value={url}
                 placeholder="Bookmark URL . . ."
+                onChange={(event) => setUrl(event?.target.value)}
               />
             </div>
           )}

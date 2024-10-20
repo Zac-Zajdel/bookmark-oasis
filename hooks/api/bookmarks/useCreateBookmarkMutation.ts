@@ -1,10 +1,29 @@
 import { OasisResponse } from '@/types/apiHelpers';
+import { CreateBookmarkParams } from '@/types/bookmarks';
 import { Bookmark } from '@prisma/client';
 import { useMutation } from '@tanstack/react-query';
 
 export const useCreateBookmarkMutation = () => {
   return useMutation({
-    mutationFn: async (bookmarkUrl: string) => {
+    mutationFn: async ({
+      url,
+      title,
+      description,
+      isManual,
+    }: CreateBookmarkParams) => {
+      let parameters: CreateBookmarkParams = {
+        url,
+      };
+
+      if (isManual) {
+        parameters = {
+          ...parameters,
+          title,
+          description,
+          isManual: true,
+        };
+      }
+
       const {
         success,
         message,
@@ -12,9 +31,7 @@ export const useCreateBookmarkMutation = () => {
       }: OasisResponse<Bookmark> = await (
         await fetch('/api/bookmarks', {
           method: 'POST',
-          body: JSON.stringify({
-            url: bookmarkUrl,
-          }),
+          body: JSON.stringify(parameters),
         })
       )?.json();
 
