@@ -29,10 +29,10 @@ export function CreateTokenAction() {
 
     createTokenMutation.mutate(tokenName, {
       onSuccess: async ({
-        data,
+        token,
         message,
       }: {
-        data: string;
+        token: string;
         message: string;
       }) => {
         toast.success(
@@ -44,7 +44,7 @@ export function CreateTokenAction() {
                 size={'sm'}
                 className="cursor-pointer hover:bg-green-900/10"
                 onClick={() =>
-                  copy(data)
+                  copy(token)
                     .then(() => toast.success('Copied to clipboard'))
                     .catch(() => toast.error('Failed to copy'))
                 }
@@ -56,7 +56,7 @@ export function CreateTokenAction() {
                 <CopyIcon className="h-4 w-4" />
               </Button>
 
-              <p className="ml-4">{data}</p>
+              <p className="ml-4">{token}</p>
             </div>
           </div>,
           {

@@ -5,7 +5,11 @@ import { toast } from 'sonner';
 export const useCreateTokenMutation = () => {
   return useMutation({
     mutationFn: async (name: string) => {
-      const { success, message, data }: OasisResponse<string> = await (
+      const {
+        success,
+        message,
+        data: token,
+      }: OasisResponse<string> = await (
         await fetch('/api/tokens', {
           method: 'POST',
           body: JSON.stringify({
@@ -17,7 +21,7 @@ export const useCreateTokenMutation = () => {
       if (!success) throw toast.error(message);
 
       return {
-        data,
+        token,
         message,
       };
     },

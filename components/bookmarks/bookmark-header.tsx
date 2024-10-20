@@ -10,7 +10,9 @@ import {
 import { Input } from '@/components/ui/input';
 import { useCreateBookmarkMutation } from '@/hooks/api/bookmarks/useCreateBookmarkMutation';
 import { queryClient } from '@/lib/utils';
-import { Bookmark, LoaderCircle } from 'lucide-react';
+import { Bookmark } from '@prisma/client';
+import { Bookmark as BookmarkIcon, LoaderCircle } from 'lucide-react';
+import Link from 'next/link';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -33,11 +35,32 @@ export default function BookmarkHeader({
 
   const onCreate = () => {
     createBookmarkMutation.mutate(bookmarkUrl, {
-      onSuccess: async () => {
-        // TODO - Maybe create an actionable toast to allow the user to choose if they want to go to the details page?
+      onSuccess: async ({
+        bookmark,
+        message,
+      }: {
+        bookmark: Bookmark;
+        message: string;
+      }) => {
+        toast.success(
+          <div>
+            <div className="pb-3">{message}</div>
+            <Link
+              href={`/bookmarks/${bookmark.id}`}
+              className="hover:underline"
+            >
+              View Bookmark
+            </Link>
+          </div>,
+          {
+            duration: 5000,
+          },
+        );
+
         await queryClient.invalidateQueries({
           queryKey: ['bookmarks'],
         });
+
         setDialogOpen(false);
       },
       onError(error) {
@@ -61,7 +84,7 @@ export default function BookmarkHeader({
       >
         <DialogTrigger asChild>
           <Button>
-            <Bookmark className="mr-2 size-4" />
+            <BookmarkIcon className="mr-2 size-4" />
             Create
           </Button>
         </DialogTrigger>
@@ -88,7 +111,7 @@ export default function BookmarkHeader({
               {createBookmarkMutation.isPending ? (
                 <LoaderCircle className="mr-2 size-4 animate-spin" />
               ) : (
-                <Bookmark className="mr-2 size-4" />
+                <BookmarkIcon className="mr-2 size-4" />
               )}
               Add Bookmark
             </Button>

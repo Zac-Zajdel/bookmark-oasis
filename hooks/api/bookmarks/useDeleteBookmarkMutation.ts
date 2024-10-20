@@ -1,4 +1,5 @@
 import { queryClient } from '@/lib/utils';
+import { OasisResponse } from '@/types/apiHelpers';
 import { Bookmark } from '@prisma/client';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
@@ -6,7 +7,7 @@ import { toast } from 'sonner';
 export const useDeleteBookmarkMutation = () => {
   return useMutation({
     mutationFn: async (bookmark: Partial<Bookmark>): Promise<void> => {
-      const { success, message } = await (
+      const { success, message }: OasisResponse = await (
         await fetch(`/api/bookmarks/${bookmark.id}`, {
           method: 'DELETE',
         })
