@@ -81,8 +81,10 @@ export default function BookmarkHeader({
         setDialogOpen(false);
       },
       onError(error) {
-        toast.error(error.message);
-        setIsManual(true);
+        toast.error(error.message, {
+          duration: 3000,
+        });
+        if (error.message !== 'Invalid url') setIsManual(true);
       },
     });
   };
@@ -152,8 +154,8 @@ export default function BookmarkHeader({
                   id="title"
                   autoFocus
                   className="mt-1"
-                  value={title}
                   placeholder="Bookmark Title . . ."
+                  value={title}
                   onChange={(event) => setTitle(event?.target.value)}
                 />
               </div>
@@ -173,8 +175,8 @@ export default function BookmarkHeader({
                 <Textarea
                   id="description"
                   className="mt-1"
-                  value={description}
                   placeholder="Bookmark Description . . ."
+                  value={description}
                   onChange={(e) => setDescription(e.target.value)}
                 />
               </div>
@@ -185,12 +187,12 @@ export default function BookmarkHeader({
             <div>
               <Label htmlFor="url">URL</Label>
               <Input
+                id="url"
                 type="url"
-                id="title"
                 autoFocus
                 className="mt-1"
-                value={url}
                 placeholder="Bookmark URL . . ."
+                value={url}
                 onChange={(event) => setUrl(event?.target.value)}
               />
             </div>
