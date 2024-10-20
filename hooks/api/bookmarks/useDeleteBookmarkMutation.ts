@@ -6,19 +6,24 @@ import { toast } from 'sonner';
 
 export const useDeleteBookmarkMutation = () => {
   return useMutation({
-    mutationFn: async (bookmark: Partial<Bookmark>): Promise<void> => {
+    mutationFn: async (bookmark: Partial<Bookmark>): Promise<string> => {
       const { success, message }: OasisResponse = await (
         await fetch(`/api/bookmarks/${bookmark.id}`, {
           method: 'DELETE',
         })
       ).json();
 
-      !success ? toast.error(message) : toast.success(message);
+      if (!success) throw new Error(message);
+
+      return message;
     },
-    onSuccess: async () => {
+    onSuccess: async (message: string) => {
+      toast.success(message);
+
       await queryClient.invalidateQueries({
         queryKey: ['bookmarks'],
       });
     },
+    onError: (error) => toast.error(error.message),
   });
 };

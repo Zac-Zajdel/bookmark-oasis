@@ -1,7 +1,6 @@
 import { OasisResponse } from '@/types/apiHelpers';
 import { Bookmark } from '@prisma/client';
 import { useQuery } from '@tanstack/react-query';
-import { toast } from 'sonner';
 
 export const useBookmarkQuery = (id: string) => {
   return useQuery({
@@ -15,9 +14,7 @@ export const useBookmarkQuery = (id: string) => {
         await fetch(`/api/bookmarks/${id}`)
       ).json();
 
-      if (!success) {
-        throw toast.error(message);
-      }
+      if (!success) throw new Error(message);
 
       return bookmark;
     },

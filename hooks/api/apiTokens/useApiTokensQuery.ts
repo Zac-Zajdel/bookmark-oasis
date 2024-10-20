@@ -2,7 +2,6 @@ import { OasisResponse } from '@/types/apiHelpers';
 import { ApiToken } from '@prisma/client';
 import { useQuery } from '@tanstack/react-query';
 import { Table } from '@tanstack/react-table';
-import { toast } from 'sonner';
 
 interface UseApiTokensQueryParams {
   table: Table<ApiToken>;
@@ -58,9 +57,7 @@ export const useApiTokensQuery = ({
         await fetch(`/api/tokens?${queryParams.toString()}`)
       ).json();
 
-      if (!success) {
-        throw toast.error(message);
-      }
+      if (!success) throw new Error(message);
 
       return {
         data: data.apiTokens,

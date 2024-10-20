@@ -71,6 +71,7 @@ export function CreateTokenAction() {
           queryKey: ['apiTokens'],
         });
       },
+      onError: (error) => toast.error(error.message),
     });
   };
 
