@@ -81,9 +81,7 @@ export default function BookmarkHeader({
         setDialogOpen(false);
       },
       onError(error) {
-        toast.error(error.message, {
-          duration: 3000,
-        });
+        toast.error(error.message);
         if (error.message !== 'Invalid url') setIsManual(true);
       },
     });

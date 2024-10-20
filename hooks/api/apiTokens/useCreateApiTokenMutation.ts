@@ -1,10 +1,11 @@
 import { OasisResponse } from '@/types/apiHelpers';
 import { useMutation } from '@tanstack/react-query';
-import { toast } from 'sonner';
 
 export const useCreateTokenMutation = () => {
   return useMutation({
-    mutationFn: async (name: string) => {
+    mutationFn: async (
+      name: string,
+    ): Promise<{ token: string; message: string }> => {
       const {
         success,
         message,
@@ -18,7 +19,7 @@ export const useCreateTokenMutation = () => {
         })
       ).json();
 
-      if (!success) throw toast.error(message);
+      if (!success) throw new Error(message);
 
       return {
         token,

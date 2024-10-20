@@ -5,23 +5,24 @@ import { toast } from 'sonner';
 
 export function useDeleteApiTokenMutation() {
   return useMutation({
-    mutationFn: async (id: string) => {
+    mutationFn: async (id: string): Promise<string> => {
       const { success, message }: OasisResponse = await (
         await fetch(`/api/tokens/${id}`, {
           method: 'DELETE',
         })
       ).json();
 
-      if (!success) {
-        throw toast.error(message);
-      } else {
-        toast.success(message);
-      }
+      if (!success) throw new Error(message);
+
+      return message;
     },
-    onSuccess: async () => {
+    onSuccess: async (message: string) => {
+      toast.success(message);
+
       await queryClient.invalidateQueries({
         queryKey: ['apiTokens'],
       });
     },
+    onError: (error) => toast.error(error.message),
   });
 }

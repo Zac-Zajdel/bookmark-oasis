@@ -10,7 +10,10 @@ export const useCreateBookmarkMutation = () => {
       title,
       description,
       isManual,
-    }: CreateBookmarkParams) => {
+    }: CreateBookmarkParams): Promise<{
+      bookmark: Bookmark;
+      message: string;
+    }> => {
       let parameters: CreateBookmarkParams = {
         url,
       };
@@ -35,9 +38,7 @@ export const useCreateBookmarkMutation = () => {
         })
       )?.json();
 
-      if (!success) {
-        throw new Error(message);
-      }
+      if (!success) throw new Error(message);
 
       return {
         bookmark,

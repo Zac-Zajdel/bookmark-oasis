@@ -1,7 +1,6 @@
 import { OasisResponse } from '@/types/apiHelpers';
 import { Bookmark } from '@prisma/client';
 import { useQuery } from '@tanstack/react-query';
-import { toast } from 'sonner';
 
 export const useBookmarksQuery = (
   debouncedSearch: string,
@@ -21,9 +20,7 @@ export const useBookmarksQuery = (
         )
       ).json();
 
-      if (!success) {
-        throw toast.error(message);
-      }
+      if (!success) throw new Error(message);
 
       return {
         bookmarks: data.bookmarks,
