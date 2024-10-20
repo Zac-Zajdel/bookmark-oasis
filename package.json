@@ -9,7 +9,8 @@
     "lint": "next lint",
     "test": "vitest run",
     "format": "prettier --write \"**/*.{css,js,json,jsx,ts,tsx}\"",
-    "reset": "prisma migrate reset"
+    "reset": "prisma migrate reset",
+    "lucide": "ts-node scripts/generateLucideEnum.ts"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
