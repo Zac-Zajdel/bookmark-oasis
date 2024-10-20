@@ -6,8 +6,8 @@ import { toast } from 'sonner';
 
 export const useUpdateBookmarkMutation = () => {
   return useMutation({
-    mutationFn: async (bookmark: Partial<Bookmark>): Promise<void> => {
-      const { success, message }: OasisResponse<Bookmark> = await (
+    mutationFn: async (bookmark: Partial<Bookmark>) => {
+      const { success, message, data }: OasisResponse<Bookmark> = await (
         await fetch(`/api/bookmarks/${bookmark.id}`, {
           method: 'PUT',
           body: JSON.stringify({
@@ -21,6 +21,11 @@ export const useUpdateBookmarkMutation = () => {
       ).json();
 
       !success ? toast.error(message) : toast.success(message);
+
+      return {
+        bookmark: data,
+        message,
+      };
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({

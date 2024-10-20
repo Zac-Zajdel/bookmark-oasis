@@ -4,12 +4,13 @@ import {
   DialogContent,
   DialogFooter,
   DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { useCreateBookmarkMutation } from '@/hooks/api/bookmarks/useCreateBookmarkMutation';
-import { queryClient } from '@/lib/utils';
+import { cn, queryClient } from '@/lib/utils';
 import { Bookmark } from '@prisma/client';
 import { Bookmark as BookmarkIcon, LoaderCircle } from 'lucide-react';
 import Link from 'next/link';
@@ -22,9 +23,12 @@ export default function BookmarkHeader({
   onSearch: (search: string) => void;
 }) {
   const [search, setSearch] = useState('');
-  const [bookmarkUrl, setBookmarkUrl] = useState('');
+  const [isManual, setIsManual] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
 
+  const [bookmarkUrl, setBookmarkUrl] = useState('');
+  const [bookmarkTitle, setBookmarkTitle] = useState('');
+  const [bookmarkDescription, setBookmarkDescription] = useState('');
   const createBookmarkMutation = useCreateBookmarkMutation();
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,7 +69,7 @@ export default function BookmarkHeader({
       },
       onError(error) {
         toast.error(error.message);
-        // TODO - switch to manual adding.
+        setIsManual(true);
       },
     });
   };
@@ -93,16 +97,82 @@ export default function BookmarkHeader({
           aria-describedby={undefined}
         >
           <DialogHeader>
-            {/* TODO - Implement selection like navbar to switch between automatic and manual. Make into component for reusability  */}
-            <DialogTitle>Add Bookmark</DialogTitle>
+            <div className="-mt-2 space-x-3 text-sm">
+              <button
+                className={cn(
+                  !isManual
+                    ? 'border-b border-b-muted-foreground dark:border-b-white'
+                    : 'text-muted-foreground',
+                  'whitespace-nowrap px-1 pb-0.5 font-medium',
+                )}
+                onClick={() => setIsManual(false)}
+              >
+                Automatic
+              </button>
+              <button
+                className={cn(
+                  isManual
+                    ? 'border-b border-b-muted-foreground'
+                    : 'text-muted-foreground',
+                  'whitespace-nowrap px-1 pb-0.5 font-medium',
+                )}
+                onClick={() => setIsManual(true)}
+              >
+                Manual
+              </button>
+            </div>
           </DialogHeader>
-          <div className="py-2">
-            <Input
-              type="url"
-              onChange={(event) => setBookmarkUrl(event?.target.value)}
-              placeholder="Bookmark URL . . ."
-            />
-          </div>
+
+          {isManual && (
+            <>
+              <div className="my-1">
+                <Label htmlFor="title">Title</Label>
+                <Input
+                  id="title"
+                  className="mt-1"
+                  autoFocus
+                  onChange={(event) => setBookmarkTitle(event?.target.value)}
+                  placeholder="Bookmark Title . . ."
+                />
+              </div>
+              <div>
+                <Label htmlFor="url">URL</Label>
+                <Input
+                  id="url"
+                  type="url"
+                  className="mt-1"
+                  value={bookmarkUrl}
+                  onChange={(event) => setBookmarkUrl(event?.target.value)}
+                  placeholder="Bookmark URL . . ."
+                />
+              </div>
+              <div>
+                <Label htmlFor="description">Description</Label>
+                <Textarea
+                  id="description"
+                  className="mt-1"
+                  placeholder="Bookmark Description . . ."
+                  onChange={(e) => setBookmarkDescription(e.target.value)}
+                />
+              </div>
+            </>
+          )}
+
+          {!isManual && (
+            <div>
+              <Label htmlFor="url">URL</Label>
+              <Input
+                type="url"
+                id="title"
+                className="mt-1"
+                autoFocus
+                value={bookmarkUrl}
+                onChange={(event) => setBookmarkUrl(event?.target.value)}
+                placeholder="Bookmark URL . . ."
+              />
+            </div>
+          )}
+
           <DialogFooter>
             <Button
               onClick={onCreate}
