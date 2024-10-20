@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/db';
 import { AuthUser } from '@/types/auth';
+import { lucideIcons } from '@/types/lucideIcons';
 import { z } from 'zod';
 
 export const getBookmarkSchema = () => {
@@ -46,6 +47,14 @@ export const createBookmarkSchema = (user: AuthUser) => {
   return z
     .object({
       url: z.string().url(),
+      title: z.string().optional(),
+      description: z.string().nullable().optional(),
+      iconName: z.enum(lucideIcons).nullable().optional(),
+      isManual: z.boolean().optional(),
+    })
+    .refine((data) => !data.isManual || (data.isManual && data.title), {
+      message: 'Title is required',
+      path: ['title'],
     })
     .superRefine(async (data, ctx) => {
       const urlExists = await prisma.bookmark.findFirst({
@@ -72,7 +81,7 @@ export const updateBookmarkSchema = (user: AuthUser) => {
       title: z.string().min(1, { message: 'Title is required' }),
       description: z.string().nullable().optional(),
       isFavorite: z.boolean(),
-      iconName: z.string().nullable().optional(),
+      iconName: z.enum(lucideIcons).nullable().optional(),
     })
     .superRefine(async (data, ctx) => {
       const bookmarkExists = await prisma.bookmark.findFirst({

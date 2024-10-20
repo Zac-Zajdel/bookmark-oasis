@@ -67,7 +67,7 @@ async function seedExternalApiToken(user: User): Promise<void> {
   await prisma.apiToken.create({
     data: {
       userId: user.id,
-      name: 'Custom API Token',
+      name: `API Token - ${randomBytes(5).toString('hex').toString()}`,
       token: hashedApiToken,
     },
   });
