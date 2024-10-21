@@ -13,7 +13,7 @@ import { useCreateBookmarkMutation } from '@/hooks/api/bookmarks/useCreateBookma
 import { cn, queryClient } from '@/lib/utils';
 import { CreateBookmarkParams } from '@/types/bookmarks';
 import { Bookmark } from '@prisma/client';
-import { Bookmark as BookmarkIcon, LoaderCircle } from 'lucide-react';
+import { Bookmark as BookmarkIcon, LoaderCircle, X } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -97,12 +97,26 @@ export default function BookmarkHeader({
 
   return (
     <div className="container flex items-center justify-between space-x-4">
-      <Input
-        className="w-72"
-        value={search}
-        onChange={handleSearchChange}
-        placeholder="Search Bookmarks"
-      />
+      <div className="flex flex-1 items-center space-x-2">
+        <Input
+          className="w-48 sm:w-72"
+          value={search}
+          onChange={handleSearchChange}
+          placeholder="Search Bookmarks..."
+        />
+        {search.length > 0 && (
+          <Button
+            variant="ghost"
+            onClick={() => {
+              setSearch('');
+              onSearch('');
+            }}
+            className="h-8 px-2 lg:px-3"
+          >
+            <X className="size-4" />
+          </Button>
+        )}
+      </div>
       <Dialog
         open={dialogOpen}
         onOpenChange={onDialogChange}

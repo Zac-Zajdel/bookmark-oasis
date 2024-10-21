@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useDebounce } from '@/hooks/useDebounce';
 import { Table } from '@tanstack/react-table';
+import { X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 interface DataTableToolbarProps<TData> {
@@ -33,7 +34,7 @@ export function DataTableToolbar<TData>({
           onChange={(event) => {
             setSearch(event.target.value);
           }}
-          className="w-56 md:w-72"
+          className="w-48 sm:w-72"
         />
         {isFiltered && (
           <Button
@@ -44,7 +45,7 @@ export function DataTableToolbar<TData>({
             }}
             className="h-8 px-2 lg:px-3"
           >
-            Reset
+            <X className="size-4" />
           </Button>
         )}
       </div>
