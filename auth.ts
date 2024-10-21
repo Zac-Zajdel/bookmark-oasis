@@ -4,11 +4,6 @@ import NextAuth from 'next-auth';
 import { AdapterUser } from 'next-auth/adapters';
 import Google from 'next-auth/providers/google';
 
-// Get base URL for different environments (e.g., Vercel preview, production, or local)
-const baseUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),
   session: { strategy: 'jwt' },
@@ -24,7 +19,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           response_type: 'code',
         },
       },
-      redirectProxyUrl: `${baseUrl}/api/auth/callback/google`,
     }),
   ],
   pages: {
