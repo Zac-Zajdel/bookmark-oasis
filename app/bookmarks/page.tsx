@@ -39,7 +39,7 @@ export default function Bookmarks() {
     <div className="mt-10 flex flex-col items-center space-y-10">
       <BookmarkHeader onSearch={setSearch} />
 
-      {!isLoading && bookmarks.length > 0 && (
+      {((!isLoading && bookmarks.length) || isLoading) && (
         <div className="container">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
             {isLoading
@@ -56,7 +56,7 @@ export default function Bookmarks() {
         </div>
       )}
 
-      {bookmarks.length === 0 ? (
+      {!isLoading && bookmarks.length === 0 ? (
         <div className="container">
           <EmptyPlaceholder>
             <div className="flex h-20 w-20 items-center justify-center rounded-full bg-muted">
