@@ -83,7 +83,7 @@ export function CreateTokenAction() {
       <DialogTrigger asChild>
         <Button>
           <KeyRound className="mr-3 size-4" />
-          Create API Token
+          Create
         </Button>
       </DialogTrigger>
       <DialogContent

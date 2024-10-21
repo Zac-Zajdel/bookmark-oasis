@@ -41,7 +41,7 @@ export default function Settings() {
     <div className="container mt-10">
       <div className="flex items-center justify-between pb-10">
         <DataTableToolbar
-          placeholder="Search by name..."
+          placeholder="Search Tokens..."
           table={table}
         />
         <CreateTokenAction />
