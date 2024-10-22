@@ -5,22 +5,28 @@ import { DynamicIcon } from '@/components/icons/dynamic-icon';
 import { Card, CardHeader } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { useDeleteBookmarkMutation } from '@/hooks/api/bookmarks/useDeleteBookmarkMutation';
-import { useUpdateBookmarkMutation } from '@/hooks/api/bookmarks/useUpdateBookmarkMutation';
+import { usePatchBookmarkMutation } from '@/hooks/api/bookmarks/usePatchBookmarkMutation';
 import { Bookmark } from '@prisma/client';
 
-interface BookmarkCardProps {
-  bookmark: Partial<Bookmark>;
-}
-
-export default function BookmarkCard({ bookmark }: BookmarkCardProps) {
-  const updateBookmarkMutation = useUpdateBookmarkMutation();
+export default function BookmarkCard({ bookmark }: { bookmark: Bookmark }) {
+  const patchBookmarkMutation = usePatchBookmarkMutation();
   const deleteBookmarkMutation = useDeleteBookmarkMutation();
 
-  const onFavorite = (bookmark: Partial<Bookmark>) => {
-    updateBookmarkMutation.mutate(bookmark);
+  const onFavorite = (bookmark: Bookmark) => {
+    patchBookmarkMutation.mutate({
+      id: bookmark.id,
+      isFavorite: !!bookmark.isFavorite,
+    });
   };
 
-  const onDelete = (bookmark: Partial<Bookmark>) => {
+  const onVisit = (bookmark: Bookmark) => {
+    patchBookmarkMutation.mutate({
+      id: bookmark.id,
+      visits: bookmark.visits + 1,
+    });
+  };
+
+  const onDelete = (bookmark: Bookmark) => {
     deleteBookmarkMutation.mutate(bookmark);
   };
 
@@ -63,6 +69,7 @@ export default function BookmarkCard({ bookmark }: BookmarkCardProps) {
           bookmark={bookmark}
           onFavorite={onFavorite}
           onDelete={onDelete}
+          onVisit={onVisit}
         />
       </div>
     </Card>

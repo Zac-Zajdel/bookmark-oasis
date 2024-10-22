@@ -100,6 +100,34 @@ export const updateBookmarkSchema = (user: AuthUser) => {
     });
 };
 
+export const patchBookmarkSchema = (user: AuthUser) => {
+  return z
+    .object({
+      id: z.string().cuid(),
+      url: z.string().url().optional(),
+      title: z.string().min(1, { message: 'Title is required' }).optional(),
+      description: z.string().nullable().optional(),
+      isFavorite: z.boolean().optional(),
+      visits: z.number().optional(),
+      iconName: z.enum(lucideIcons).nullable().optional(),
+    })
+    .superRefine(async (data, ctx) => {
+      const bookmarkExists = await prisma.bookmark.findFirst({
+        where: {
+          userId: user.id,
+          id: data.id,
+        },
+      });
+
+      if (!bookmarkExists) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'This bookmark could not be found.',
+        });
+      }
+    });
+};
+
 export const deleteBookmarkSchema = (user: AuthUser) => {
   return z
     .object({

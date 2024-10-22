@@ -2,6 +2,7 @@ import { withAuthManager } from '@/lib/authManager';
 import { prisma } from '@/lib/db';
 import {
   deleteBookmarkSchema,
+  patchBookmarkSchema,
   showBookmarkSchema,
   updateBookmarkSchema,
 } from '@/lib/zod/bookmarks';
@@ -66,6 +67,56 @@ export const PUT = withAuthManager(
         success: true,
         message: 'Bookmark updated successfully.',
         data: bookmark,
+      },
+      { status: 200 },
+    );
+  },
+);
+
+export const PATCH = withAuthManager(
+  async ({
+    user,
+    req,
+    params,
+  }): Promise<NextResponse<OasisResponse<Bookmark>>> => {
+    const schema = patchBookmarkSchema(user);
+
+    const { url, title, description, isFavorite, iconName, visits } =
+      await schema.parseAsync({
+        id: params.id,
+        ...(await req.json()),
+      });
+
+    const existingBookmark = (await prisma.bookmark.findUnique({
+      where: {
+        id: params.id,
+        userId: user.id,
+      },
+    })) as Bookmark;
+
+    const patchedBookmark = await prisma.bookmark.update({
+      where: {
+        id: params.id,
+        userId: user.id,
+      },
+      data: {
+        url: url ?? existingBookmark.url,
+        title: title ?? existingBookmark.title,
+        isFavorite:
+          typeof isFavorite === 'boolean'
+            ? isFavorite
+            : existingBookmark.isFavorite,
+        description: description ?? existingBookmark.description,
+        iconName: iconName ?? existingBookmark.iconName,
+        visits: visits ?? existingBookmark.visits,
+      },
+    });
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: 'Bookmark updated successfully.',
+        data: patchedBookmark,
       },
       { status: 200 },
     );
