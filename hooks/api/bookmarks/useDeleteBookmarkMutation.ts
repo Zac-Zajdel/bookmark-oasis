@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 
 export const useDeleteBookmarkMutation = () => {
   return useMutation({
-    mutationFn: async (bookmark: Partial<Bookmark>): Promise<string> => {
+    mutationFn: async (bookmark: Bookmark): Promise<string> => {
       const { success, message }: OasisResponse = await (
         await fetch(`/api/bookmarks/${bookmark.id}`, {
           method: 'DELETE',

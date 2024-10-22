@@ -39,12 +39,19 @@ const items: BentoGridContent[] = [
     header: (
       <BookmarkCard
         bookmark={{
+          id: '8675309',
+          userId: '97348734',
           url: 'https://www.youtube.com/',
           title: 'Youtube',
           description:
             'Enjoy the videos and music you love, upload original content, and share it all with friends, family, and the world on YouTube.',
           imageUrl:
             'https://www.youtube.com/s/desktop/87338098/img/favicon.ico',
+          visits: 1000000,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          isFavorite: false,
+          iconName: 'Youtube',
         }}
       />
     ),

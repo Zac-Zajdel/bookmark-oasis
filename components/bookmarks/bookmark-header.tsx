@@ -74,11 +74,11 @@ export default function BookmarkHeader({
           },
         );
 
+        setDialogOpen(false);
+
         await queryClient.invalidateQueries({
           queryKey: ['bookmarks'],
         });
-
-        setDialogOpen(false);
       },
       onError(error) {
         toast.error(error.message);

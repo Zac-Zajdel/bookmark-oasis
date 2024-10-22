@@ -20,15 +20,17 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
 interface BookmarkActionsProps {
-  bookmark: Partial<Bookmark>;
-  onDelete: (bookmark: Partial<Bookmark>) => void;
-  onFavorite: (bookmark: Partial<Bookmark>) => void;
+  bookmark: Bookmark;
+  onDelete: (bookmark: Bookmark) => void;
+  onFavorite: (bookmark: Bookmark) => void;
+  onVisit: (bookmark: Bookmark) => void;
 }
 
 export default function BookmarkActions({
   bookmark,
   onDelete,
   onFavorite,
+  onVisit,
 }: BookmarkActionsProps) {
   const router = useRouter();
   const copy = useCopyToClipboard();
@@ -40,6 +42,11 @@ export default function BookmarkActions({
       .catch(() => toast.error('Failed to copy'));
   }
 
+  function visitLink() {
+    window.open(bookmark.url, '_blank');
+    onVisit(bookmark);
+  }
+
   return (
     <TooltipProvider delayDuration={500}>
       <Tooltip>
@@ -48,7 +55,7 @@ export default function BookmarkActions({
             variant="ghost"
             size="icon"
             className="flex size-7 items-center justify-center"
-            onClick={() => window.open(bookmark.url, '_blank')}
+            onClick={visitLink}
           >
             <SquareArrowOutUpRight className="size-4 hover:text-blue-500 dark:text-gray-200 dark:hover:text-blue-500" />
             <span className="sr-only">Visit URL</span>

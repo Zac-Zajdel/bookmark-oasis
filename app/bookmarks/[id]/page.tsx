@@ -41,14 +41,15 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
 
   const updateBookmarkMutation = useUpdateBookmarkMutation();
   const updateBookmark = (icon?: string) => {
-    updateBookmarkMutation.mutate({
-      id: bookmark?.id,
-      isFavorite: bookmark?.isFavorite,
-      title,
-      url,
-      description,
-      iconName: icon || bookmark?.iconName,
-    });
+    if (bookmark) {
+      updateBookmarkMutation.mutate({
+        ...bookmark,
+        title,
+        url,
+        description,
+        iconName: icon || bookmark.iconName,
+      });
+    }
   };
 
   const onSelectIcon = (icon: string) => {

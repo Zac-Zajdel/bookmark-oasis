@@ -5,7 +5,7 @@ import { OasisTestContext, getSetupData } from '@/tests/utils/setup';
 import { randomBytes } from 'crypto';
 import { expect, test } from 'vitest';
 
-test('DELETE /tokens', async (ctx: OasisTestContext) => {
+test('DELETE /tokens/{id}', async (ctx: OasisTestContext) => {
   const { user } = getSetupData();
   const { http } = await new IntegrationHarness(ctx).init();
 

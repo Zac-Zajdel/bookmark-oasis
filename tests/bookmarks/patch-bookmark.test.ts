@@ -8,7 +8,7 @@ beforeAll(async () => {
   await prisma.bookmark.deleteMany({});
 });
 
-test('UPDATE /bookmarks/{id}', async (ctx: OasisTestContext) => {
+test('PATCH /bookmarks/{id}', async (ctx: OasisTestContext) => {
   const { user } = getSetupData();
   const { http } = await new IntegrationHarness(ctx).init();
 
@@ -18,20 +18,19 @@ test('UPDATE /bookmarks/{id}', async (ctx: OasisTestContext) => {
       url: 'https://www.example.com/',
       title: 'Example Title',
       description: 'Example Description',
+      isFavorite: true,
+      visits: 0,
     },
   });
 
   const {
     status,
     data: { success, message },
-  } = await http.put<Bookmark>({
+  } = await http.patch<Bookmark>({
     path: `/bookmarks/${initialBookmark.id}`,
     body: {
-      title: 'Updated Title',
-      url: 'https://www.youtube.com/',
-      description: 'Updated Description',
-      isFavorite: true,
-      iconName: 'Search',
+      description: 'UPDATE AGAIN',
+      visits: 50,
     },
   });
 
@@ -48,12 +47,11 @@ test('UPDATE /bookmarks/{id}', async (ctx: OasisTestContext) => {
   expect(updatedBookmark).toEqual(
     expect.objectContaining({
       userId: user.id,
-      url: 'https://www.youtube.com/',
-      title: 'Updated Title',
-      description: 'Updated Description',
+      url: 'https://www.example.com/',
+      title: 'Example Title',
+      description: 'UPDATE AGAIN',
       isFavorite: true,
-      iconName: 'Search',
-      visits: 0,
+      visits: 50,
     }),
   );
 });

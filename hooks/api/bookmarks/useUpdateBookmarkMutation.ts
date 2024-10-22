@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 export const useUpdateBookmarkMutation = () => {
   return useMutation({
     mutationFn: async (
-      bookmark: Partial<Bookmark>,
+      bookmark: Bookmark,
     ): Promise<{ bookmark: Bookmark; message: string }> => {
       const { success, message, data }: OasisResponse<Bookmark> = await (
         await fetch(`/api/bookmarks/${bookmark.id}`, {
