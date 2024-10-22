@@ -41,6 +41,18 @@ export default function Navbar() {
                   Bookmarks
                 </Link>
                 <Link
+                  href="/folders"
+                  prefetch={false}
+                  className={cn(
+                    pathname.includes('/folders')
+                      ? 'border-b-2 border-b-muted-foreground dark:border-b-white'
+                      : 'text-muted-foreground',
+                    'whitespace-nowrap px-2 pb-[0.90rem] text-sm font-medium',
+                  )}
+                >
+                  Folders
+                </Link>
+                <Link
                   href="/settings"
                   prefetch={false}
                   className={cn(
