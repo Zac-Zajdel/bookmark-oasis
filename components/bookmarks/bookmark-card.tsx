@@ -31,7 +31,7 @@ export default function BookmarkCard({ bookmark }: { bookmark: Bookmark }) {
   };
 
   return (
-    <Card className="flex h-full w-full flex-col justify-between rounded-lg">
+    <Card className="flex h-full w-full flex-col justify-between rounded-lg bg-secondary/20 dark:bg-background">
       <CardHeader className="flex h-full flex-col items-start p-5">
         <div className="flex w-full items-center justify-start">
           <div className="min-w-8">

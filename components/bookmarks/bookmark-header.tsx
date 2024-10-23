@@ -96,14 +96,15 @@ export default function BookmarkHeader({
   };
 
   return (
-    <div className="container flex items-center justify-between space-x-4">
+    <div className="flex items-center justify-between space-x-4">
       <div className="flex flex-1 items-center space-x-2">
-        <Input
+        {/* TODO - This should exist on the main page which also simplifies this.... */}
+        {/* <Input
           className="w-48 sm:w-72"
           value={search}
           onChange={handleSearchChange}
           placeholder="Search Bookmarks..."
-        />
+        /> */}
         {search.length > 0 && (
           <Button
             variant="ghost"
