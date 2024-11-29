@@ -44,7 +44,7 @@
     "next-auth": "^5.0.0-beta.19",
     "next-themes": "^0.3.0",
     "open-graph-scraper": "^6.8.2",
-    "prisma": "5.20.0",
+    "prisma": "6.0.0",
     "react": "^18",
     "react-dom": "^18",
     "react-virtuoso": "^4.12.0",
