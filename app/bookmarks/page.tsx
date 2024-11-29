@@ -2,13 +2,13 @@
 
 import BookmarkCard from '@/components/bookmarks/bookmark-card';
 import BookmarkCardSkeleton from '@/components/bookmarks/bookmark-card-skeleton';
-import BookmarkHeader from '@/components/bookmarks/bookmark-header';
-import FolderPreview from '@/components/folders/folder-preview';
+import BookmarkCreate from '@/components/bookmarks/bookmark-create';
 import { Button } from '@/components/ui/button';
 import { EmptyPlaceholder } from '@/components/ui/empty-placeholder';
-import { PageHeader } from '@/components/ui/page-header';
+import { Input } from '@/components/ui/input';
+import { SectionHeader } from '@/components/ui/section-header';
 import { useBookmarksQuery } from '@/hooks/api/bookmarks/useBookmarksQuery';
-import { Bookmark } from 'lucide-react';
+import { Bookmark, ChevronLeft, ChevronRightIcon, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export default function Bookmarks() {
@@ -39,28 +39,50 @@ export default function Bookmarks() {
 
   return (
     <div className="container mt-10 flex flex-col">
-      <PageHeader
-        title="Folders"
-        description="Group and organize your bookmarks"
-      >
-        {/* TODO - Create your own */}
-        <BookmarkHeader onSearch={setSearch} />
-      </PageHeader>
-
-      <div className="mb-8 mt-5">
-        <FolderPreview />
-      </div>
-
-      <PageHeader
+      <SectionHeader
         title="Bookmarks"
-        description="Content that does not exist within a folder"
-        className="my-5"
+        description="Important and frequently visited websites."
       >
-        <BookmarkHeader onSearch={setSearch} />
-      </PageHeader>
+        <BookmarkCreate />
+      </SectionHeader>
 
-      {/* TODO - Add Search Bar Here */}
-      {/* <div className="mb-5"></div> */}
+      <div className="flex items-center justify-between pb-3">
+        <div className="flex items-center space-x-2">
+          <Input
+            className="w-56 sm:w-80"
+            value={search}
+            onChange={(event) => setSearch(event?.target.value)}
+            placeholder="Search Bookmarks..."
+          />
+          {search.length > 0 && (
+            <Button
+              variant="ghost"
+              onClick={() => setSearch('')}
+              className="h-8 px-2"
+            >
+              <X className="size-4" />
+            </Button>
+          )}
+        </div>
+        <div className="flex items-center space-x-2">
+          <Button
+            variant="outline"
+            className="h-8 w-8 p-0"
+            disabled={page === 1}
+            onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+          >
+            <ChevronLeft className="size-4" />
+          </Button>
+          <Button
+            variant="outline"
+            className="h-8 w-8 p-0"
+            disabled={page === totalPages || totalPages === 0}
+            onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+          >
+            <ChevronRightIcon className="size-4" />
+          </Button>
+        </div>
+      </div>
 
       {((!isLoading && bookmarks.length) || isLoading) && (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
@@ -77,7 +99,7 @@ export default function Bookmarks() {
         </div>
       )}
 
-      {!isLoading && bookmarks.length === 0 ? (
+      {!isLoading && bookmarks.length === 0 && (
         <EmptyPlaceholder>
           <div className="flex h-20 w-20 items-center justify-center rounded-full bg-muted">
             <Bookmark className="size-6" />
@@ -87,26 +109,6 @@ export default function Bookmarks() {
             Organize, manage, and access your favorite links all in one place.
           </EmptyPlaceholder.Description>
         </EmptyPlaceholder>
-      ) : (
-        <div className="container flex w-full max-w-xs items-center justify-between py-8 text-sm">
-          <Button
-            variant="outline"
-            disabled={page === 1}
-            onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-          >
-            Previous
-          </Button>
-          <span>
-            Page {page} of {totalPages || 1}
-          </span>
-          <Button
-            variant="outline"
-            disabled={page === totalPages}
-            onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
-          >
-            Next
-          </Button>
-        </div>
       )}
     </div>
   );
