@@ -96,9 +96,9 @@ export function TokenTableActions({ row }: { row: Row<ApiToken> }) {
                 onClick={handleDeleteClick}
               >
                 {isLoading ? (
-                  <Loader className="mr-2 h-4 w-4 animate-spin" />
+                  <Loader className="mr-2 size-4 animate-spin" />
                 ) : (
-                  <Trash2 className="mr-2 h-4 w-4 text-red-500" />
+                  <Trash2 className="mr-2 size-4 text-red-500" />
                 )}
                 <span>Delete</span>
               </AlertDialogAction>

@@ -4,6 +4,7 @@ import { CreateTokenAction } from '@/components/apiTokens/create-token-action';
 import { tokenTableColumns } from '@/components/apiTokens/token-table-columns';
 import { DataTable } from '@/components/tables/data-table';
 import { DataTableToolbar } from '@/components/tables/data-table-toolbar';
+import { SectionHeader } from '@/components/ui/section-header';
 import { useApiTokensQuery } from '@/hooks/api/apiTokens/useApiTokensQuery';
 import { useDataTable } from '@/hooks/useDataTable';
 import { useTableSortingParams } from '@/hooks/useTableSortingParams';
@@ -39,12 +40,18 @@ export default function Settings() {
 
   return (
     <div className="container mt-10">
-      <div className="flex items-center justify-between pb-10">
+      <SectionHeader
+        title="API Tokens"
+        description="Query and obtain your data programmatically."
+      >
+        <CreateTokenAction />
+      </SectionHeader>
+
+      <div className="pb-3">
         <DataTableToolbar
           placeholder="Search Tokens..."
           table={table}
         />
-        <CreateTokenAction />
       </div>
 
       <div className="mb-12 divide-y divide-border rounded-md">
