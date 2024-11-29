@@ -16,7 +16,7 @@ export function SectionHeader({
   return (
     <div className={cn('mb-8 flex items-center justify-between', className)}>
       <div className="flex-col">
-        <h1 className="font-heading pb-1 text-xl">{title}</h1>
+        <h1 className="font-heading text-xl">{title}</h1>
         {description && (
           <p className="text-sm text-muted-foreground">{description}</p>
         )}

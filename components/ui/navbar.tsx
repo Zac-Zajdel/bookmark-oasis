@@ -24,7 +24,13 @@ export default function Navbar() {
         <div className="relative flex h-12 items-center justify-between">
           <div className="flex flex-1 items-center sm:items-center sm:justify-start">
             <div className="hidden flex-shrink-0 items-center sm:block">
-              <h1 className="mr-4 text-lg font-bold">Bookmark Oasis</h1>
+              <Link
+                href="/dashboard"
+                prefetch={false}
+                className="mr-4 text-lg font-bold"
+              >
+                Bookmark Oasis
+              </Link>
             </div>
             <div className="ml-4 flex items-center justify-between">
               <div className="space-x-5">
