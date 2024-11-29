@@ -8,7 +8,13 @@ import { EmptyPlaceholder } from '@/components/ui/empty-placeholder';
 import { Input } from '@/components/ui/input';
 import { SectionHeader } from '@/components/ui/section-header';
 import { useBookmarksQuery } from '@/hooks/api/bookmarks/useBookmarksQuery';
-import { Bookmark, ChevronLeft, ChevronRightIcon, X } from 'lucide-react';
+import {
+  Bookmark,
+  ChevronLeft,
+  ChevronRightIcon,
+  SlidersHorizontal,
+  X,
+} from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export default function Bookmarks() {
@@ -65,6 +71,17 @@ export default function Bookmarks() {
           )}
         </div>
         <div className="flex items-center space-x-2">
+          {/* TODO - Turn into a dropdown of filter options.
+          - Favorites
+          - Asc
+          - Desc
+          - Most Visited */}
+          <Button
+            variant="outline"
+            className="mr-2 h-8 w-8 p-0"
+          >
+            <SlidersHorizontal className="size-4" />
+          </Button>
           <Button
             variant="outline"
             className="h-8 w-8 p-0"
