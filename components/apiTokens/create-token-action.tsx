@@ -53,7 +53,7 @@ export function CreateTokenAction() {
                   border: '1px solid var(--success-text)',
                 }}
               >
-                <CopyIcon className="h-4 w-4" />
+                <CopyIcon className="size-4" />
               </Button>
 
               <p className="ml-4">{token}</p>
@@ -82,7 +82,7 @@ export function CreateTokenAction() {
     >
       <DialogTrigger asChild>
         <Button>
-          <KeyRound className="mr-3 size-4" />
+          <KeyRound className="mr-2 size-4" />
           Create
         </Button>
       </DialogTrigger>
