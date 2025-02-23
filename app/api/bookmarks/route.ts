@@ -15,7 +15,7 @@ export const GET = withAuthManager(
     NextResponse<OasisResponse<{ bookmarks: Bookmark[]; total: number }>>
   > => {
     const schema = getBookmarkSchema();
-    const { page, limit, search } = await schema.parse({
+    const { page, limit, search } = schema.parse({
       page: searchParams.get('page'),
       limit: searchParams.get('limit'),
       search: searchParams.get('search') ?? '',

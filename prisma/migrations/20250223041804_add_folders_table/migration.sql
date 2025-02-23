@@ -5,7 +5,7 @@ ALTER TABLE "bookmarks" ADD COLUMN     "folder_id" TEXT;
 CREATE TABLE "folders" (
     "id" TEXT NOT NULL,
     "user_id" TEXT NOT NULL,
-    "parent_id" TEXT,
+    "parent_folder_id" TEXT,
     "title" TEXT NOT NULL,
     "description" TEXT,
     "icon_name" TEXT,
@@ -24,4 +24,4 @@ ALTER TABLE "bookmarks" ADD CONSTRAINT "bookmarks_folder_id_fkey" FOREIGN KEY ("
 ALTER TABLE "folders" ADD CONSTRAINT "folders_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "folders" ADD CONSTRAINT "folders_parent_id_fkey" FOREIGN KEY ("parent_id") REFERENCES "folders"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "folders" ADD CONSTRAINT "folders_parent_folder_id_fkey" FOREIGN KEY ("parent_folder_id") REFERENCES "folders"("id") ON DELETE SET NULL ON UPDATE CASCADE;

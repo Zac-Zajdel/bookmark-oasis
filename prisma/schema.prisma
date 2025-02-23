@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -20,15 +14,14 @@ model Account {
   type              String
   provider          String
   providerAccountId String  @map("provider_account_id")
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
   @@map("accounts")
@@ -50,14 +43,14 @@ model User {
   email         String?    @unique
   emailVerified DateTime?  @map("email_verified")
   image         String?
-  accounts      Account[]
-  sessions      Session[]
   createdAt     DateTime   @default(now()) @map("created_at")
   updatedAt     DateTime   @default(now()) @map("updated_at")
   deletedAt     DateTime?  @map("deleted_at")
-  Bookmark      Bookmark[]
+  accounts      Account[]
   ApiToken      ApiToken[]
+  Bookmark      Bookmark[]
   Folder        Folder[]
+  sessions      Session[]
 
   @@map("users")
 }
@@ -74,40 +67,40 @@ model VerificationToken {
 model Bookmark {
   id          String   @id @default(cuid())
   userId      String   @map("user_id")
-  folderId    String?  @map("folder_id")
   url         String
   title       String
   description String?
   imageUrl    String?  @map("image_url")
-  iconName    String?  @map("icon_name")
   visits      Int      @default(0)
-  isFavorite  Boolean  @default(false) @map("is_favorite")
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
+  isFavorite  Boolean  @default(false) @map("is_favorite")
+  iconName    String?  @map("icon_name")
+  folderId    String?  @map("folder_id")
 
-  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   Folder Folder? @relation(fields: [folderId], references: [id])
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, url])
   @@map("bookmarks")
 }
 
 model Folder {
-  id          String   @id @default(cuid())
-  userId      String   @map("user_id")
-  parentId    String?  @map("parent_id")
-  title       String
-  description String?
-  iconName    String?  @map("icon_name")
-  visits      Int      @default(0)
-  isFavorite  Boolean  @default(false) @map("is_favorite")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  id             String   @id @default(cuid())
+  userId         String   @map("user_id")
+  parentFolderId String?  @map("parent_folder_id")
+  title          String
+  description    String?
+  iconName       String?  @map("icon_name")
+  visits         Int      @default(0)
+  isFavorite     Boolean  @default(false) @map("is_favorite")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
 
-  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  parent     Folder?    @relation("FolderToSubfolders", fields: [parentId], references: [id])
-  subfolders Folder[]   @relation("FolderToSubfolders")
-  Bookmark   Bookmark[]
+  Bookmarks    Bookmark[]
+  parentFolder Folder?    @relation("FolderSelfRelation", fields: [parentFolderId], references: [id])
+  subFolders   Folder[]   @relation("FolderSelfRelation")
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("folders")
 }
