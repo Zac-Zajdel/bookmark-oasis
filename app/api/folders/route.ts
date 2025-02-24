@@ -59,19 +59,15 @@ export const POST = withAuthManager(
     const { title, description, iconName, parentFolderId } =
       await schema.parseAsync(await req.json());
 
-    console.log('hello world');
-
     const createdFolder = await prisma.folder.create({
       data: {
-        title: title,
-        description: description,
-        iconName: iconName,
+        title,
+        description,
+        iconName,
         userId: user.id,
-        // parentFolderId,
+        parentFolderId,
       },
     });
-
-    console.log('hello after');
 
     return NextResponse.json(
       {
