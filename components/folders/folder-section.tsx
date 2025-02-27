@@ -1,4 +1,5 @@
 import FolderCardSkeleton from '@/components/folders/folder-card-skeleton';
+import FolderCreate from '@/components/folders/folder-create';
 import { SectionHeader } from '@/components/ui/section-header';
 
 export default function FolderSection() {
@@ -8,7 +9,7 @@ export default function FolderSection() {
         title="Folders"
         description="Structure and organizer your content."
       >
-        Create Folder Button
+        <FolderCreate />
       </SectionHeader>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-5">
