@@ -31,6 +31,27 @@ export const GET = withAuthManager(
       },
       take: limit,
       skip: (page - 1) * limit,
+      select: {
+        id: true,
+        userId: true,
+        parentFolderId: true,
+        title: true,
+        description: true,
+        iconName: true,
+        visits: true,
+        isFavorite: true,
+        createdAt: true,
+        updatedAt: true,
+
+        // todo - make this conditional...
+        ...(true && {
+          _count: {
+            select: {
+              bookmarks: true,
+            },
+          },
+        }),
+      },
     });
 
     const total = await prisma.folder.count({

@@ -23,7 +23,7 @@ export const withAuthManager =
 
         const authUser = await prisma.user.findFirst({
           where: {
-            ApiToken: {
+            apiToken: {
               some: {
                 token: externalDatabaseToken,
               },

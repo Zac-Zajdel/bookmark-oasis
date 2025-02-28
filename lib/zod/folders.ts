@@ -14,8 +14,8 @@ export const getFoldersSchema = () => {
     limit: z
       .string()
       .transform((val) => parseInt(val))
-      .refine((val) => val >= 10, {
-        message: 'limit cannot be less than 10',
+      .refine((val) => val >= 5, {
+        message: 'limit cannot be less than 5',
       }),
     search: z.string().optional(),
   });

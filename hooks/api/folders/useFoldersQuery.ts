@@ -32,7 +32,7 @@ export const useFoldersQuery = (
   const { data, isLoading } = queryResult;
 
   return {
-    bookmarks: data?.folders || [],
+    folders: data?.folders || [],
     total: data?.total || 0,
     isLoading,
   };
