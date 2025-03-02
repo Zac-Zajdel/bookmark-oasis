@@ -1,5 +1,6 @@
 'use client';
 
+import FolderCard from '@/components/folders/folder-card';
 import FolderCardSkeleton from '@/components/folders/folder-card-skeleton';
 import FolderCreate from '@/components/folders/folder-create';
 import { Button } from '@/components/ui/button';
@@ -7,34 +8,26 @@ import { EmptyPlaceholder } from '@/components/ui/empty-placeholder';
 import { Input } from '@/components/ui/input';
 import { SectionHeader } from '@/components/ui/section-header';
 import { useFoldersQuery } from '@/hooks/api/folders/useFoldersQuery';
+import { useDebounce } from '@/hooks/useDebounce';
 import { ChevronLeft, ChevronRightIcon, Folder, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export default function FolderSection() {
   const [search, setSearch] = useState('');
-  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 250);
 
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedSearch(search);
-      setPage(1);
-    }, 300);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [search]);
+  useEffect(() => setPage(1), [debouncedSearch]);
 
   const [page, setPage] = useState(1);
-  const [itemsPerPage] = useState(5);
+  const [itemsPerPage] = useState(10);
 
-  const { folders, total, isLoading } = useFoldersQuery(
+  const { folders, totalPages, isLoading } = useFoldersQuery(
     debouncedSearch,
     page,
     itemsPerPage,
   );
 
-  const totalPages = folders ? Math.ceil(total / itemsPerPage) : 1;
+  // const totalPages = folders ? Math.ceil(total / itemsPerPage) : 1;
 
   // TODO - Non-auth page is /home
   // TODO - Main "dashboard" is just /
@@ -89,10 +82,17 @@ export default function FolderSection() {
       </div>
 
       {((!isLoading && folders.length) || isLoading) && (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-5">
-          {folders.map((_, index) => (
-            <FolderCardSkeleton key={index} />
-          ))}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          {isLoading
+            ? Array.from({ length: 10 }).map((_, index) => (
+                <FolderCardSkeleton key={index} />
+              ))
+            : folders?.map((folder) => (
+                <FolderCard
+                  key={folder.id}
+                  folder={folder}
+                />
+              ))}
         </div>
       )}
 

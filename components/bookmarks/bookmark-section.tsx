@@ -8,34 +8,24 @@ import { EmptyPlaceholder } from '@/components/ui/empty-placeholder';
 import { Input } from '@/components/ui/input';
 import { SectionHeader } from '@/components/ui/section-header';
 import { useBookmarksQuery } from '@/hooks/api/bookmarks/useBookmarksQuery';
+import { useDebounce } from '@/hooks/useDebounce';
 import { Bookmark, ChevronLeft, ChevronRightIcon, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export default function BookmarkSection() {
   const [search, setSearch] = useState('');
-  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 250);
 
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedSearch(search);
-      setPage(1);
-    }, 300);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [search]);
+  useEffect(() => setPage(1), [debouncedSearch]);
 
   const [page, setPage] = useState(1);
   const [itemsPerPage] = useState(10);
 
-  const { bookmarks, total, isLoading } = useBookmarksQuery(
+  const { bookmarks, totalPages, isLoading } = useBookmarksQuery(
     debouncedSearch,
     page,
     itemsPerPage,
   );
-
-  const totalPages = bookmarks ? Math.ceil(total / itemsPerPage) : 1;
 
   return (
     <div className="flex flex-col">
@@ -87,7 +77,7 @@ export default function BookmarkSection() {
       {((!isLoading && bookmarks.length) || isLoading) && (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
           {isLoading
-            ? Array.from({ length: 10 }).map((_, index) => (
+            ? Array.from({ length: 4 }).map((_, index) => (
                 <BookmarkCardSkeleton key={index} />
               ))
             : bookmarks?.map((bookmark) => (

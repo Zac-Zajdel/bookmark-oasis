@@ -7,7 +7,7 @@ export const useBookmarksQuery = (
   page: number,
   itemsPerPage: number,
 ) => {
-  const queryResult = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['bookmarks', debouncedSearch, page, itemsPerPage],
     queryFn: async (): Promise<{ bookmarks: Bookmark[]; total: number }> => {
       const {
@@ -29,11 +29,14 @@ export const useBookmarksQuery = (
     },
   });
 
-  const { data, isLoading } = queryResult;
+  const total = data?.total || 0;
+  const bookmarks = data?.bookmarks || [];
+  const totalPages = bookmarks ? Math.ceil(total / itemsPerPage) : 1;
 
   return {
-    bookmarks: data?.bookmarks || [],
-    total: data?.total || 0,
+    total,
+    bookmarks,
     isLoading,
+    totalPages,
   };
 };

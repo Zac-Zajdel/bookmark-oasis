@@ -7,7 +7,7 @@ export const useFoldersQuery = (
   page: number,
   itemsPerPage: number,
 ) => {
-  const queryResult = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['folders', debouncedSearch, page, itemsPerPage],
     queryFn: async (): Promise<{ folders: Folder[]; total: number }> => {
       const {
@@ -29,11 +29,14 @@ export const useFoldersQuery = (
     },
   });
 
-  const { data, isLoading } = queryResult;
+  const total = data?.total || 0;
+  const folders = data?.folders || [];
+  const totalPages = folders ? Math.ceil(total / itemsPerPage) : 1;
 
   return {
-    folders: data?.folders || [],
-    total: data?.total || 0,
+    total,
+    folders,
     isLoading,
+    totalPages,
   };
 };

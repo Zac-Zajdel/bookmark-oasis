@@ -6,7 +6,7 @@ export default function Bookmarks() {
   return (
     <div className="container">
       <FolderSection />
-      <Separator className="my-10" />
+      <Separator className="mb-5 mt-10" />
       <BookmarkSection />
     </div>
   );
