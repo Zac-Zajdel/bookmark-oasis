@@ -3,22 +3,41 @@ import { AuthUser } from '@/types/auth';
 import { lucideIcons } from '@/types/lucideIcons';
 import { z } from 'zod';
 
-export const getBookmarkSchema = () => {
-  return z.object({
-    page: z
-      .string()
-      .transform((val) => parseInt(val))
-      .refine((val) => val >= 1, {
-        message: 'page cannot be less than 1',
-      }),
-    limit: z
-      .string()
-      .transform((val) => parseInt(val))
-      .refine((val) => val >= 10, {
-        message: 'limit cannot be less than 10',
-      }),
-    search: z.string().optional(),
-  });
+export const getBookmarkSchema = (user: AuthUser) => {
+  return z
+    .object({
+      page: z
+        .string()
+        .transform((val) => parseInt(val))
+        .refine((val) => val >= 1, {
+          message: 'page cannot be less than 1',
+        }),
+      limit: z
+        .string()
+        .transform((val) => parseInt(val))
+        .refine((val) => val >= 10, {
+          message: 'limit cannot be less than 10',
+        }),
+      search: z.string().optional(),
+      folderId: z.string().cuid().optional().nullable(),
+    })
+    .superRefine(async (data, ctx) => {
+      if (!data.folderId) return;
+
+      const folder = await prisma.folder.findFirst({
+        where: {
+          id: data.folderId,
+          userId: user.id,
+        },
+      });
+
+      if (!folder) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'This folder does not exist.',
+        });
+      }
+    });
 };
 
 export const showBookmarkSchema = (user: AuthUser) => {

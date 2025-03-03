@@ -37,6 +37,8 @@ test('POST MANUAL /bookmarks', async (ctx: OasisTestContext) => {
   );
 });
 
+// TODO - Create and associate with folder...
+
 afterAll(async () => {
   await prisma.bookmark.deleteMany({});
 });

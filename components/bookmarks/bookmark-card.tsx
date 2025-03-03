@@ -53,7 +53,7 @@ export default function BookmarkCard({ bookmark }: { bookmark: Bookmark }) {
               )}
             </div>
           </div>
-          <h1 className="text-md h-10 overflow-hidden truncate text-ellipsis whitespace-nowrap pl-2 pt-2 font-semibold leading-snug tracking-tight">
+          <h1 className="text-md h-10 truncate whitespace-nowrap pl-2 pt-2 font-semibold leading-snug tracking-tight">
             {bookmark.title}
           </h1>
         </div>

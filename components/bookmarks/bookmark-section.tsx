@@ -12,7 +12,13 @@ import { useDebounce } from '@/hooks/useDebounce';
 import { Bookmark, ChevronLeft, ChevronRightIcon, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
-export default function BookmarkSection() {
+export default function BookmarkSection({
+  description = 'Important and frequently visited websites.',
+  folderId,
+}: {
+  description?: string;
+  folderId?: string;
+}) {
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 250);
 
@@ -25,13 +31,14 @@ export default function BookmarkSection() {
     debouncedSearch,
     page,
     itemsPerPage,
+    folderId,
   );
 
   return (
     <div className="flex flex-col">
       <SectionHeader
         title="Bookmarks"
-        description="Important and frequently visited websites."
+        description={description}
       >
         <BookmarkCreate />
       </SectionHeader>

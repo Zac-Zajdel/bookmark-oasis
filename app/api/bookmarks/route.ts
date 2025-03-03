@@ -14,11 +14,12 @@ export const GET = withAuthManager(
   }): Promise<
     NextResponse<OasisResponse<{ bookmarks: Bookmark[]; total: number }>>
   > => {
-    const schema = getBookmarkSchema();
-    const { page, limit, search } = schema.parse({
+    const schema = getBookmarkSchema(user);
+    const { page, limit, search, folderId } = await schema.parseAsync({
       page: searchParams.get('page'),
       limit: searchParams.get('limit'),
       search: searchParams.get('search') ?? '',
+      folderId: searchParams.get('folderId'),
     });
 
     const bookmarks = await prisma.bookmark.findMany({
@@ -29,6 +30,9 @@ export const GET = withAuthManager(
             contains: search,
             mode: 'insensitive',
           },
+        }),
+        ...(folderId && {
+          folderId,
         }),
       },
       orderBy: [

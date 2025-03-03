@@ -49,6 +49,8 @@ test('GET /bookmarks', async (ctx: OasisTestContext) => {
   }).toEqual(fetchedBookmarks);
 });
 
+// TODO - Only retrieve bookmarks associated with folder...
+
 afterAll(async () => {
   await prisma.bookmark.deleteMany({});
 });
