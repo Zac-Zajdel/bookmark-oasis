@@ -1,6 +1,7 @@
 import { ClientSessionProvider } from '@/components/providers/client-session-provider';
 import { ReactQueryClientProvider } from '@/components/providers/react-query-client-provider';
 import { ThemeProvider } from '@/components/providers/theme-provider';
+import Navbar from '@/components/ui/navbar';
 import { Toaster } from '@/components/ui/sonner';
 import { cn } from '@/lib/utils';
 import '@/styles/globals.css';
@@ -87,7 +88,10 @@ export default function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
-              <main>{children}</main>
+              <main className="min-h-screen">
+                <Navbar />
+                {children}
+              </main>
               <Analytics />
               <Toaster
                 richColors

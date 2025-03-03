@@ -27,14 +27,6 @@ export default function FolderSection() {
     itemsPerPage,
   );
 
-  // const totalPages = folders ? Math.ceil(total / itemsPerPage) : 1;
-
-  // TODO - Non-auth page is /home
-  // TODO - Main "dashboard" is just /
-  // TODO - Than keep the designated view for /bookmarks like before...
-  // TODO - Create designated view for /folders
-  // TODO - Fix 404 error page stuff...
-
   return (
     <div className="mt-10 flex flex-col">
       <SectionHeader
