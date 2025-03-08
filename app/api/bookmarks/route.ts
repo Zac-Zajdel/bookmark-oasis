@@ -54,6 +54,9 @@ export const GET = withAuthManager(
             mode: 'insensitive',
           },
         }),
+        ...(folderId && {
+          folderId,
+        }),
       },
     });
 
@@ -74,7 +77,7 @@ export const GET = withAuthManager(
 export const POST = withAuthManager(
   async ({ req, user }): Promise<NextResponse<OasisResponse<Bookmark>>> => {
     const schema = createBookmarkSchema(user);
-    const { url, title, description, iconName, isManual } =
+    const { url, title, description, iconName, isManual, folderId } =
       await schema.parseAsync(await req.json());
 
     let createdBookmark;
@@ -86,6 +89,7 @@ export const POST = withAuthManager(
           title: title || 'must be required',
           description: description,
           iconName: iconName,
+          folderId: folderId,
         },
       });
     } else {
@@ -106,6 +110,7 @@ export const POST = withAuthManager(
           title: result.ogTitle || result.ogSiteName || 'Title',
           description: result.ogDescription || result.twitterDescription || '',
           imageUrl: parseUrl(result?.favicon),
+          folderId: folderId,
         },
       });
     }

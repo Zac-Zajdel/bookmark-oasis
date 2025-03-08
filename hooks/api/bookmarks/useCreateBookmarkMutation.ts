@@ -10,12 +10,14 @@ export const useCreateBookmarkMutation = () => {
       title,
       description,
       isManual,
+      folderId,
     }: CreateBookmarkParams): Promise<{
       bookmark: Bookmark;
       message: string;
     }> => {
       let parameters: CreateBookmarkParams = {
         url,
+        folderId,
       };
 
       if (isManual) {

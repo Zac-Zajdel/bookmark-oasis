@@ -40,7 +40,7 @@ export default function BookmarkSection({
         title="Bookmarks"
         description={description}
       >
-        <BookmarkCreate />
+        <BookmarkCreate folderId={folderId} />
       </SectionHeader>
 
       <div className="flex items-center justify-between pb-3">

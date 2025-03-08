@@ -70,6 +70,7 @@ export const createBookmarkSchema = (user: AuthUser) => {
       description: z.string().nullable().optional(),
       iconName: z.enum(lucideIcons).nullable().optional(),
       isManual: z.boolean().optional(),
+      folderId: z.string().cuid().optional().nullable(),
     })
     .refine((data) => !data.isManual || (data.isManual && data.title), {
       message: 'Title is required',
@@ -88,6 +89,24 @@ export const createBookmarkSchema = (user: AuthUser) => {
           code: z.ZodIssueCode.custom,
           message: 'This URL has already been bookmarked.',
         });
+      }
+
+      if (!data.folderId) return;
+
+      if (data.folderId) {
+        const folder = await prisma.folder.findFirst({
+          where: {
+            id: data.folderId,
+            userId: user.id,
+          },
+        });
+
+        if (!folder) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'This folder does not exist.',
+          });
+        }
       }
     });
 };
