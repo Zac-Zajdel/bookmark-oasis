@@ -6,10 +6,19 @@ import { toast } from 'sonner';
 
 export const useDeleteFolderMutation = () => {
   return useMutation({
-    mutationFn: async (folder: Folder): Promise<string> => {
+    mutationFn: async ({
+      folder,
+      keepBookmarks = false,
+    }: {
+      folder: Folder;
+      keepBookmarks: boolean;
+    }): Promise<string> => {
       const { success, message }: OasisResponse = await (
         await fetch(`/api/folders/${folder.id}`, {
           method: 'DELETE',
+          body: JSON.stringify({
+            keepBookmarks: keepBookmarks,
+          }),
         })
       ).json();
 

@@ -3,6 +3,8 @@ import { IntegrationHarness } from '@/tests/utils/integration';
 import { OasisTestContext, getSetupData } from '@/tests/utils/setup';
 import { afterAll, expect, test } from 'vitest';
 
+// TODO - Test folder keeping and removing bookmarks.
+
 test('DELETE /folders/{id}', async (ctx: OasisTestContext) => {
   const { user } = getSetupData();
   const { http } = await new IntegrationHarness(ctx).init();

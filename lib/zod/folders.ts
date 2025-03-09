@@ -107,6 +107,7 @@ export const deleteFolderSchema = (user: AuthUser) => {
   return z
     .object({
       id: z.string().cuid(),
+      keepBookmarks: z.boolean().optional(),
     })
     .superRefine(async (data, ctx) => {
       const folder = await prisma.folder.findFirst({

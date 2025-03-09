@@ -75,7 +75,20 @@ export const PUT = withAuthManager(
 export const DELETE = withAuthManager(
   async ({ user, params }): Promise<NextResponse<OasisResponse>> => {
     const schema = deleteFolderSchema(user);
-    const { id } = await schema.parseAsync({ id: params.id });
+    const { id, keepBookmarks } = await schema.parseAsync({
+      id: params.id,
+      keepBookmarks: params.keepBookmarks,
+    });
+
+    // User can choose to keep all bookmarks stored within the folder.
+    if (!keepBookmarks) {
+      await prisma.bookmark.deleteMany({
+        where: {
+          userId: user.id,
+          folderId: id,
+        },
+      });
+    }
 
     await prisma.folder.delete({
       where: {
@@ -87,7 +100,7 @@ export const DELETE = withAuthManager(
     return NextResponse.json(
       {
         success: true,
-        message: 'Folder was removed successfully.',
+        message: `Folder ${keepBookmarks ? 'and bookmarks were' : 'was'} removed successfully.`,
       },
       { status: 200 },
     );
