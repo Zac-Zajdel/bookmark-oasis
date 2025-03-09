@@ -3,7 +3,7 @@ import { withAuthManager } from '@/lib/authManager';
 import { prisma } from '@/lib/db';
 import { createApiTokenSchema, getApiTokenSchema } from '@/lib/zod/apiTokens';
 import { OasisResponse } from '@/types/apiHelpers';
-import { ApiToken } from '@prisma/client';
+import { ApiToken, Prisma } from '@prisma/client';
 import { randomBytes } from 'crypto';
 import { NextResponse } from 'next/server';
 
@@ -15,7 +15,7 @@ export const GET = withAuthManager(
     NextResponse<OasisResponse<{ apiTokens: ApiToken[]; total: number }>>
   > => {
     const schema = getApiTokenSchema();
-    const { page, limit, column, order, search } = await schema.parse({
+    const { page, limit, column, order, search } = schema.parse({
       page: searchParams.get('page'),
       limit: searchParams.get('limit'),
       column: searchParams.get('columns'),
@@ -23,11 +23,13 @@ export const GET = withAuthManager(
       search: searchParams.get('search'),
     });
 
+    const apiTokenWhereInput: Prisma.ApiTokenWhereInput = {
+      userId: user.id,
+      ...(search && { name: { contains: search, mode: 'insensitive' } }),
+    };
+
     const apiTokens = await prisma.apiToken.findMany({
-      where: {
-        userId: user.id,
-        ...(search && { name: { contains: search, mode: 'insensitive' } }),
-      },
+      where: apiTokenWhereInput,
       orderBy: {
         [column || 'name']: order || 'asc',
       },
@@ -36,9 +38,7 @@ export const GET = withAuthManager(
     });
 
     const total = await prisma.apiToken.count({
-      where: {
-        userId: user.id,
-      },
+      where: apiTokenWhereInput,
     });
 
     return NextResponse.json(

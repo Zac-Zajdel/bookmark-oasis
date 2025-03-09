@@ -3,7 +3,7 @@ import { withAuthManager } from '@/lib/authManager';
 import { prisma } from '@/lib/db';
 import { createBookmarkSchema, getBookmarkSchema } from '@/lib/zod/bookmarks';
 import { OasisResponse } from '@/types/apiHelpers';
-import { Bookmark } from '@prisma/client';
+import { Bookmark, Prisma } from '@prisma/client';
 import { NextResponse } from 'next/server';
 import { default as ogs } from 'open-graph-scraper';
 
@@ -22,42 +22,21 @@ export const GET = withAuthManager(
       folderId: searchParams.get('folderId'),
     });
 
+    const bookmarkWhereInput: Prisma.BookmarkWhereInput = {
+      userId: user.id,
+      ...(search && { title: { contains: search, mode: 'insensitive' } }),
+      ...(folderId && { folderId }),
+    };
+
     const bookmarks = await prisma.bookmark.findMany({
-      where: {
-        userId: user.id,
-        ...(search && {
-          title: {
-            contains: search,
-            mode: 'insensitive',
-          },
-        }),
-        ...(folderId && {
-          folderId,
-        }),
-      },
-      orderBy: [
-        {
-          isFavorite: 'desc',
-        },
-        { title: 'asc' },
-      ],
+      where: bookmarkWhereInput,
+      orderBy: [{ isFavorite: 'desc' }, { title: 'asc' }],
       take: limit,
       skip: (page - 1) * limit,
     });
 
     const total = await prisma.bookmark.count({
-      where: {
-        userId: user.id,
-        ...(search && {
-          title: {
-            contains: search,
-            mode: 'insensitive',
-          },
-        }),
-        ...(folderId && {
-          folderId,
-        }),
-      },
+      where: bookmarkWhereInput,
     });
 
     return NextResponse.json(

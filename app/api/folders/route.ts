@@ -2,7 +2,7 @@ import { withAuthManager } from '@/lib/authManager';
 import { prisma } from '@/lib/db';
 import { createFolderSchema, getFoldersSchema } from '@/lib/zod/folders';
 import { OasisResponse } from '@/types/apiHelpers';
-import { Folder } from '@prisma/client';
+import { Folder, Prisma } from '@prisma/client';
 import { NextResponse } from 'next/server';
 
 export const GET = withAuthManager(
@@ -19,30 +19,16 @@ export const GET = withAuthManager(
       search: searchParams.get('search') ?? '',
     });
 
+    const folderWhereInput: Prisma.FolderWhereInput = {
+      userId: user.id,
+      ...(search && { title: { contains: search, mode: 'insensitive' } }),
+    };
+
     const folders = await prisma.folder.findMany({
-      where: {
-        userId: user.id,
-        ...(search && {
-          title: {
-            contains: search,
-            mode: 'insensitive',
-          },
-        }),
-      },
+      where: folderWhereInput,
       take: limit,
       skip: (page - 1) * limit,
-      select: {
-        id: true,
-        userId: true,
-        parentFolderId: true,
-        title: true,
-        description: true,
-        iconName: true,
-        visits: true,
-        isFavorite: true,
-        createdAt: true,
-        updatedAt: true,
-
+      include: {
         // todo - make this conditional...
         ...(true && {
           _count: {
@@ -55,9 +41,7 @@ export const GET = withAuthManager(
     });
 
     const total = await prisma.folder.count({
-      where: {
-        userId: user.id,
-      },
+      where: folderWhereInput,
     });
 
     return NextResponse.json(

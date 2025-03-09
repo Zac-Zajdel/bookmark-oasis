@@ -69,6 +69,7 @@ export function TokenTableActions({ row }: { row: Row<ApiToken> }) {
         </DropdownMenuContent>
       </DropdownMenu>
 
+      {/* TODO - Use ConfirmDialogModal */}
       {showDeleteAlert && (
         <AlertDialog
           open={showDeleteAlert}
@@ -84,7 +85,7 @@ export function TokenTableActions({ row }: { row: Row<ApiToken> }) {
                 longer have access. This action cannot be undone.
               </AlertDialogDescription>
             </AlertDialogHeader>
-            <AlertDialogFooter>
+            <AlertDialogFooter className="sm:justify-end">
               <AlertDialogCancel onClick={() => setShowDeleteAlert(false)}>
                 Cancel
               </AlertDialogCancel>

@@ -1,18 +1,9 @@
 'use client';
 
 import { DynamicIcon } from '@/components/icons/dynamic-icon';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { Button, buttonVariants } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { ConfirmDialogModal } from '@/components/ui/confirm-dialog-modal';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,9 +11,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useDeleteFolderMutation } from '@/hooks/api/folders/useDeleteFolderMutation';
-import { cn } from '@/lib/utils';
 import { Folder } from '@prisma/client';
-import { EllipsisVertical, Loader, Trash2 } from 'lucide-react';
+import { EllipsisVertical, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -34,29 +24,32 @@ import { useState } from 'react';
 // };
 
 export default function FolderCard({ folder }: { folder: Folder }) {
-  const [isLoading, setIsLoading] = useState(false);
+  const [loadingAction, setLoadingAction] = useState<null | 'keep' | 'delete'>(
+    null,
+  );
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [showDeleteAlert, setShowDeleteAlert] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const deleteFolderMutation = useDeleteFolderMutation();
 
-  // TODO - Force them to type Delete {INSERT_NAME} and make this a reusable component to be used here and elsewhere...
-  const handleDeleteClick = async (
-    event: React.MouseEvent,
-    keepBookmarks: boolean = false,
-  ) => {
-    event.preventDefault();
+  const createDeleteHandler = (keepBookmarks: boolean) => {
+    return async (event: React.MouseEvent) => {
+      event.preventDefault();
 
-    setIsLoading(true);
-    await deleteFolderMutation.mutateAsync({ folder, keepBookmarks });
-    setIsLoading(false);
+      setLoadingAction(keepBookmarks ? 'keep' : 'delete');
 
-    setShowDeleteAlert(false);
+      try {
+        await deleteFolderMutation.mutateAsync({ folder, keepBookmarks });
+        setIsModalOpen(false);
+      } finally {
+        setLoadingAction(null);
+      }
+    };
   };
 
   const openDeleteDialog = () => {
     setIsDropdownOpen(false);
-    setShowDeleteAlert(true);
+    setIsModalOpen(true);
   };
 
   return (
@@ -102,60 +95,28 @@ export default function FolderCard({ folder }: { folder: Folder }) {
         </div>
       </Card>
 
-      {showDeleteAlert && (
-        <AlertDialog
-          open={showDeleteAlert}
-          onOpenChange={setShowDeleteAlert}
-        >
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Delete Folder</AlertDialogTitle>
-              <AlertDialogDescription>
-                Please choose from your options below. You can still delete your
-                folder without loosing your bookmarks!
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel
-                disabled={isLoading}
-                onClick={() => setShowDeleteAlert(false)}
-              >
-                Cancel
-              </AlertDialogCancel>
-              <AlertDialogAction
-                className={cn(
-                  'text-primary',
-                  buttonVariants({ variant: 'outline' }),
-                )}
-                disabled={isLoading}
-                onClick={(e) => handleDeleteClick(e, true)}
-              >
-                {isLoading ? (
-                  <Loader className="mr-2 size-4 animate-spin" />
-                ) : (
-                  <Trash2 className="mr-2 size-4 text-red-500" />
-                )}
-                <span>Delete and Keep Bookmarks</span>
-              </AlertDialogAction>
-              <AlertDialogAction
-                className={cn(
-                  'text-primary',
-                  buttonVariants({ variant: 'outline' }),
-                )}
-                disabled={isLoading}
-                onClick={handleDeleteClick}
-              >
-                {isLoading ? (
-                  <Loader className="mr-2 size-4 animate-spin" />
-                ) : (
-                  <Trash2 className="mr-2 size-4 text-red-500" />
-                )}
-                <span>Delete</span>
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      )}
+      <ConfirmDialogModal
+        open={isModalOpen}
+        onOpenChange={setIsModalOpen}
+        title="Delete Folder"
+        description="This action cannot be undone. You can still delete your folder without losing your bookmarks!"
+        actions={[
+          {
+            label: 'Delete and keep bookmarks',
+            variant: 'outline',
+            isLoading: loadingAction === 'keep',
+            icon: <Trash2 className="mr-2 size-4 text-red-500" />,
+            onClick: createDeleteHandler(true),
+          },
+          {
+            label: 'Delete',
+            variant: 'destructive',
+            isLoading: loadingAction === 'delete',
+            icon: <Trash2 className="mr-2 size-4 text-red-500" />,
+            onClick: createDeleteHandler(false),
+          },
+        ]}
+      />
     </div>
   );
 }
