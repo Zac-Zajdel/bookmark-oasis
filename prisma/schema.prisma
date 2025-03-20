@@ -25,6 +25,7 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([userId])
   @@map("accounts")
 }
 
@@ -36,6 +37,7 @@ model Session {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([userId])
   @@map("sessions")
 }
 
@@ -85,6 +87,8 @@ model Bookmark {
   user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, url])
+  @@index([userId])
+  @@index([folderId])
   @@map("bookmarks")
 }
 
@@ -105,6 +109,8 @@ model Folder {
   subFolders   Folder[]   @relation("FolderSelfRelation")
   user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([userId])
+  @@index([parentFolderId])
   @@map("folders")
 }
 
@@ -120,5 +126,6 @@ model ApiToken {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, name])
+  @@index([userId])
   @@map("api_tokens")
 }

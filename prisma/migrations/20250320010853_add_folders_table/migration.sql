@@ -17,11 +17,20 @@ CREATE TABLE "folders" (
     CONSTRAINT "folders_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateIndex
+CREATE INDEX "folders_user_id_idx" ON "folders"("user_id");
+
+-- CreateIndex
+CREATE INDEX "folders_parent_folder_id_idx" ON "folders"("parent_folder_id");
+
+-- CreateIndex
+CREATE INDEX "bookmarks_folder_id_idx" ON "bookmarks"("folder_id");
+
 -- AddForeignKey
 ALTER TABLE "bookmarks" ADD CONSTRAINT "bookmarks_folder_id_fkey" FOREIGN KEY ("folder_id") REFERENCES "folders"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "folders" ADD CONSTRAINT "folders_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "folders" ADD CONSTRAINT "folders_parent_folder_id_fkey" FOREIGN KEY ("parent_folder_id") REFERENCES "folders"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "folders" ADD CONSTRAINT "folders_parent_folder_id_fkey" FOREIGN KEY ("parent_folder_id") REFERENCES "folders"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "folders" ADD CONSTRAINT "folders_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
