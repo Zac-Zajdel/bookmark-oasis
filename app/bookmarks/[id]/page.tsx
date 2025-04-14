@@ -1,5 +1,6 @@
 'use client';
 
+import BookmarkDetailsSkeleton from '@/components/bookmarks/bookmark-details-skeleton';
 import { IconHolder } from '@/components/icons/icon-holder';
 import {
   Breadcrumb,
@@ -13,7 +14,6 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Skeleton } from '@/components/ui/skeleton';
 import { Textarea } from '@/components/ui/textarea';
 import { useBookmarkQuery } from '@/hooks/api/bookmarks/useBookmarkQuery';
 import { useUpdateBookmarkMutation } from '@/hooks/api/bookmarks/useUpdateBookmarkMutation';
@@ -57,6 +57,10 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
     setIconName(icon);
   };
 
+  if (isLoading || !bookmark) {
+    return <BookmarkDetailsSkeleton />;
+  }
+
   return (
     <div className="container mt-5">
       <div className="flex items-center justify-between">
@@ -64,7 +68,7 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link href="/bookmarks">Home</Link>
+                <Link href="/bookmarks">Bookmarks</Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
@@ -97,81 +101,46 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
         </Card>
         <div className="ml-2 mt-1 w-full">
           <div className="mt-3">
-            {bookmark ? (
-              <>
-                <Input
-                  id="text"
-                  style={{ border: 'none', outline: 'none', boxShadow: 'none' }}
-                  className="border-transparent text-xl"
-                  placeholder="Bookmark Title"
-                  autoComplete="off"
-                  required
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                />
-              </>
-            ) : (
-              <>
-                <div className="ml-2 flex">
-                  <div className="w-full space-y-2">
-                    <Skeleton className="mb-5 h-6 w-56" />
-                  </div>
-                </div>
-              </>
-            )}
+            <Input
+              id="text"
+              style={{ border: 'none', outline: 'none', boxShadow: 'none' }}
+              className="border-transparent text-xl"
+              placeholder="Bookmark Title"
+              autoComplete="off"
+              required
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
           </div>
 
           <div className="text-sm">
-            {bookmark ? (
-              <>
-                <Input
-                  id="url"
-                  style={{ border: 'none', outline: 'none', boxShadow: 'none' }}
-                  className="border-transparent text-muted-foreground"
-                  placeholder="Bookmark URL"
-                  required
-                  value={url}
-                  onChange={(e) => setUrl(e.target.value)}
-                />
-              </>
-            ) : (
-              <>
-                <div className="ml-2 flex">
-                  <div className="w-full space-y-2">
-                    <Skeleton className="h-6 w-80" />
-                  </div>
-                </div>
-              </>
-            )}
+            <Input
+              id="url"
+              style={{ border: 'none', outline: 'none', boxShadow: 'none' }}
+              className="border-transparent text-muted-foreground"
+              placeholder="Bookmark URL"
+              required
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+            />
           </div>
         </div>
       </div>
 
       <div className="grid w-full gap-1.5 pt-5">
-        {bookmark ? (
-          <>
-            <Label
-              htmlFor="description"
-              className="mb-1"
-            >
-              Description
-            </Label>
-            <Textarea
-              id="description"
-              placeholder="Bookmark information"
-              value={description}
-              rows={4}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-          </>
-        ) : (
-          <>
-            <div className="w-full space-y-2">
-              <Skeleton className="h-5 w-20" />
-              <Skeleton className="h-14 w-full" />
-            </div>
-          </>
-        )}
+        <Label
+          htmlFor="description"
+          className="mb-1"
+        >
+          Description
+        </Label>
+        <Textarea
+          id="description"
+          placeholder="Bookmark information"
+          value={description}
+          rows={4}
+          onChange={(e) => setDescription(e.target.value)}
+        />
       </div>
     </div>
   );

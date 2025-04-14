@@ -99,7 +99,7 @@ export default function FolderCard({ folder }: { folder: Folder }) {
         open={isModalOpen}
         onOpenChange={setIsModalOpen}
         title="Delete Folder"
-        description="This action cannot be undone. You can still delete your folder without losing your bookmarks!"
+        description="You can still delete your folder without losing your bookmarks!"
         actions={[
           {
             label: 'Delete and keep bookmarks',

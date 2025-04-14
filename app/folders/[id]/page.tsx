@@ -1,6 +1,7 @@
 'use client';
 
 import BookmarkSection from '@/components/bookmarks/bookmark-section';
+import FolderDetailsSkeleton from '@/components/folders/folder-details-skeleton';
 import { IconHolder } from '@/components/icons/icon-holder';
 import {
   Breadcrumb,
@@ -14,7 +15,6 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Skeleton } from '@/components/ui/skeleton';
 import { Textarea } from '@/components/ui/textarea';
 import { useFolderQuery } from '@/hooks/api/folders/useFolderQuery';
 import { useUpdateFolderMutation } from '@/hooks/api/folders/useUpdateFolderMutation';
@@ -55,6 +55,10 @@ export default function FolderDetails({ params }: { params: { id: string } }) {
     setIconName(icon);
   };
 
+  if (isLoading || !folder) {
+    return <FolderDetailsSkeleton />;
+  }
+
   return (
     <div className="container mt-5">
       <div className="flex items-center justify-between">
@@ -62,7 +66,7 @@ export default function FolderDetails({ params }: { params: { id: string } }) {
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link href="/folders">Home</Link>
+                <Link href="/folders">Folders</Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
@@ -95,66 +99,41 @@ export default function FolderDetails({ params }: { params: { id: string } }) {
         </Card>
         <div className="ml-2 mt-1 w-full">
           <div className="mt-3">
-            {folder ? (
-              <>
-                <Input
-                  id="text"
-                  style={{ border: 'none', outline: 'none', boxShadow: 'none' }}
-                  className="border-transparent text-xl"
-                  placeholder="Folder Title"
-                  autoComplete="off"
-                  required
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                />
-              </>
-            ) : (
-              <>
-                <div className="ml-2 flex">
-                  <div className="w-full space-y-2">
-                    <Skeleton className="mb-5 h-6 w-56" />
-                  </div>
-                </div>
-              </>
-            )}
+            <Input
+              id="text"
+              style={{ border: 'none', outline: 'none', boxShadow: 'none' }}
+              className="border-transparent text-xl"
+              placeholder="Folder Title"
+              autoComplete="off"
+              required
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
           </div>
         </div>
       </div>
 
       <div className="grid w-full gap-1.5 pt-5">
-        {folder ? (
-          <>
-            <Label
-              htmlFor="description"
-              className="mb-1"
-            >
-              Description
-            </Label>
-            <Textarea
-              id="description"
-              placeholder="Folder information"
-              value={description}
-              rows={4}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-          </>
-        ) : (
-          <>
-            <div className="w-full space-y-2">
-              <Skeleton className="h-5 w-20" />
-              <Skeleton className="h-14 w-full" />
-            </div>
-          </>
-        )}
+        <Label
+          htmlFor="description"
+          className="mb-1"
+        >
+          Description
+        </Label>
+        <Textarea
+          id="description"
+          placeholder="Folder information"
+          value={description}
+          rows={4}
+          onChange={(e) => setDescription(e.target.value)}
+        />
       </div>
 
       <div className="mt-10">
-        {folder && (
-          <BookmarkSection
-            description="Bookmarks associated to this folder."
-            folderId={folder?.id}
-          />
-        )}
+        <BookmarkSection
+          description="Bookmarks associated to this folder."
+          folderId={folder?.id}
+        />
       </div>
     </div>
   );
