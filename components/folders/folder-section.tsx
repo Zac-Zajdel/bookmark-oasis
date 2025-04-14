@@ -74,9 +74,9 @@ export default function FolderSection() {
       </div>
 
       {((!isLoading && folders.length) || isLoading) && (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
           {isLoading
-            ? Array.from({ length: 10 }).map((_, index) => (
+            ? Array.from({ length: 4 }).map((_, index) => (
                 <FolderCardSkeleton key={index} />
               ))
             : folders?.map((folder) => (
@@ -90,10 +90,10 @@ export default function FolderSection() {
 
       {!isLoading && folders.length === 0 && (
         <EmptyPlaceholder className="h-42 min-h-42">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted">
+          <div className="flex size-14 items-center justify-center rounded-full bg-muted">
             <Folder className="size-6" />
           </div>
-          <EmptyPlaceholder.Title>No folders created</EmptyPlaceholder.Title>
+          <EmptyPlaceholder.Title>No Folders Found</EmptyPlaceholder.Title>
           <EmptyPlaceholder.Description>
             Categorize subjects and topics into folders.
           </EmptyPlaceholder.Description>

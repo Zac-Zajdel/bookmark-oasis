@@ -28,16 +28,6 @@ export const GET = withAuthManager(
       where: folderWhereInput,
       take: limit,
       skip: (page - 1) * limit,
-      include: {
-        // todo - make this conditional...
-        ...(true && {
-          _count: {
-            select: {
-              bookmarks: true,
-            },
-          },
-        }),
-      },
     });
 
     const total = await prisma.folder.count({

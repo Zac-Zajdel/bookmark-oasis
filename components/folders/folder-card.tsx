@@ -16,13 +16,6 @@ import { EllipsisVertical, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
-// TODO - Experiment with that...
-// type FolderWithCount = Folder & {
-//   _count: {
-//     bookmarks: number;
-//   };
-// };
-
 export default function FolderCard({ folder }: { folder: Folder }) {
   const [loadingAction, setLoadingAction] = useState<null | 'keep' | 'delete'>(
     null,

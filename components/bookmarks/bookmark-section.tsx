@@ -98,7 +98,7 @@ export default function BookmarkSection({
 
       {!isLoading && bookmarks.length === 0 && (
         <EmptyPlaceholder>
-          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-muted">
+          <div className="flex size-14 items-center justify-center rounded-full bg-muted">
             <Bookmark className="size-6" />
           </div>
           <EmptyPlaceholder.Title>No Bookmarks created</EmptyPlaceholder.Title>

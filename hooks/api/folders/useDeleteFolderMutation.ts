@@ -32,6 +32,9 @@ export const useDeleteFolderMutation = () => {
       await queryClient.invalidateQueries({
         queryKey: ['folders'],
       });
+      await queryClient.invalidateQueries({
+        queryKey: ['bookmarks'],
+      });
     },
     onError: (error) => toast.error(error.message),
   });

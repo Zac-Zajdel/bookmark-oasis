@@ -27,9 +27,6 @@ test('GET /folders', async (ctx: OasisTestContext) => {
     })
   ).map((folder) => ({
     ...folder,
-    _count: {
-      bookmarks: 0,
-    },
     createdAt: folder.createdAt.toISOString(),
     updatedAt: folder.updatedAt.toISOString(),
   }));
