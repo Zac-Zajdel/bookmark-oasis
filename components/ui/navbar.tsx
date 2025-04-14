@@ -18,16 +18,35 @@ export default function Navbar() {
   const pathname = usePathname();
   const { data: session } = useSession();
 
+  if (['/', '/login', '/signup'].includes(pathname)) return;
+
   return (
     <nav>
       <div className="mx-auto border-b px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-12 items-center justify-between">
           <div className="flex flex-1 items-center sm:items-center sm:justify-start">
             <div className="hidden flex-shrink-0 items-center sm:block">
-              <h1 className="mr-4 text-lg font-bold">Bookmark Oasis</h1>
+              <Link
+                href="/dashboard"
+                prefetch={false}
+              >
+                <h1 className="mr-4 text-lg font-bold">Bookmark Oasis</h1>
+              </Link>
             </div>
             <div className="ml-4 flex items-center justify-between">
               <div className="space-x-5">
+                <Link
+                  href="/folders"
+                  prefetch={false}
+                  className={cn(
+                    pathname.includes('/folders')
+                      ? 'border-b-2 border-b-muted-foreground dark:border-b-white'
+                      : 'text-muted-foreground',
+                    'whitespace-nowrap px-2 pb-[0.90rem] text-sm font-medium',
+                  )}
+                >
+                  Folders
+                </Link>
                 <Link
                   href="/bookmarks"
                   prefetch={false}

@@ -3,7 +3,7 @@ import { withAuthManager } from '@/lib/authManager';
 import { prisma } from '@/lib/db';
 import { createBookmarkSchema, getBookmarkSchema } from '@/lib/zod/bookmarks';
 import { OasisResponse } from '@/types/apiHelpers';
-import { Bookmark } from '@prisma/client';
+import { Bookmark, Prisma } from '@prisma/client';
 import { NextResponse } from 'next/server';
 import { default as ogs } from 'open-graph-scraper';
 
@@ -14,43 +14,29 @@ export const GET = withAuthManager(
   }): Promise<
     NextResponse<OasisResponse<{ bookmarks: Bookmark[]; total: number }>>
   > => {
-    const schema = getBookmarkSchema();
-    const { page, limit, search } = await schema.parse({
+    const schema = getBookmarkSchema(user);
+    const { page, limit, search, folderId } = await schema.parseAsync({
       page: searchParams.get('page'),
       limit: searchParams.get('limit'),
       search: searchParams.get('search') ?? '',
+      folderId: searchParams.get('folderId'),
     });
 
+    const bookmarkWhereInput: Prisma.BookmarkWhereInput = {
+      userId: user.id,
+      ...(search && { title: { contains: search, mode: 'insensitive' } }),
+      ...(folderId && { folderId }),
+    };
+
     const bookmarks = await prisma.bookmark.findMany({
-      where: {
-        userId: user.id,
-        ...(search && {
-          title: {
-            contains: search,
-            mode: 'insensitive',
-          },
-        }),
-      },
-      orderBy: [
-        {
-          isFavorite: 'desc',
-        },
-        { title: 'asc' },
-      ],
+      where: bookmarkWhereInput,
+      orderBy: [{ isFavorite: 'desc' }, { title: 'asc' }],
       take: limit,
       skip: (page - 1) * limit,
     });
 
     const total = await prisma.bookmark.count({
-      where: {
-        userId: user.id,
-        ...(search && {
-          title: {
-            contains: search,
-            mode: 'insensitive',
-          },
-        }),
-      },
+      where: bookmarkWhereInput,
     });
 
     return NextResponse.json(
@@ -70,7 +56,7 @@ export const GET = withAuthManager(
 export const POST = withAuthManager(
   async ({ req, user }): Promise<NextResponse<OasisResponse<Bookmark>>> => {
     const schema = createBookmarkSchema(user);
-    const { url, title, description, iconName, isManual } =
+    const { url, title, description, iconName, isManual, folderId } =
       await schema.parseAsync(await req.json());
 
     let createdBookmark;
@@ -82,6 +68,7 @@ export const POST = withAuthManager(
           title: title || 'must be required',
           description: description,
           iconName: iconName,
+          folderId: folderId,
         },
       });
     } else {
@@ -102,6 +89,7 @@ export const POST = withAuthManager(
           title: result.ogTitle || result.ogSiteName || 'Title',
           description: result.ogDescription || result.twitterDescription || '',
           imageUrl: parseUrl(result?.favicon),
+          folderId: folderId,
         },
       });
     }

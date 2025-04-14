@@ -16,7 +16,7 @@ import {
   Star,
   Trash,
 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
 interface BookmarkActionsProps {
@@ -33,6 +33,7 @@ export default function BookmarkActions({
   onVisit,
 }: BookmarkActionsProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const copy = useCopyToClipboard();
 
   function onCopyLink(url: string | undefined) {
@@ -44,7 +45,10 @@ export default function BookmarkActions({
 
   function visitLink() {
     window.open(bookmark.url, '_blank');
-    onVisit(bookmark);
+
+    if (pathname !== '/') {
+      onVisit(bookmark);
+    }
   }
 
   return (
@@ -71,6 +75,7 @@ export default function BookmarkActions({
             variant="ghost"
             size="icon"
             className="flex size-7 items-center justify-center"
+            disabled={pathname === '/'}
             onClick={() =>
               bookmark.id ? router.push(`/bookmarks/${bookmark.id}`) : null
             }
@@ -89,6 +94,7 @@ export default function BookmarkActions({
             variant="ghost"
             size="icon"
             className="flex size-7 items-center justify-center"
+            disabled={pathname === '/'}
             onClick={() =>
               onFavorite({
                 ...bookmark,
@@ -130,6 +136,7 @@ export default function BookmarkActions({
             variant="ghost"
             size="icon"
             className="flex size-7 items-center justify-center"
+            disabled={pathname === '/'}
             onClick={() => onDelete(bookmark)}
           >
             <Trash className="size-4 hover:text-red-500 dark:text-gray-200 dark:hover:text-red-500" />

@@ -1,6 +1,7 @@
 'use client';
 
-import BookmarkDetailsSkeleton from '@/components/bookmarks/bookmark-details-skeleton';
+import BookmarkSection from '@/components/bookmarks/bookmark-section';
+import FolderDetailsSkeleton from '@/components/folders/folder-details-skeleton';
 import { IconHolder } from '@/components/icons/icon-holder';
 import {
   Breadcrumb,
@@ -15,50 +16,47 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { useBookmarkQuery } from '@/hooks/api/bookmarks/useBookmarkQuery';
-import { useUpdateBookmarkMutation } from '@/hooks/api/bookmarks/useUpdateBookmarkMutation';
+import { useFolderQuery } from '@/hooks/api/folders/useFolderQuery';
+import { useUpdateFolderMutation } from '@/hooks/api/folders/useUpdateFolderMutation';
 import { truncate } from '@/lib/utils';
 import { Save } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
-export default function DetailsPage({ params }: { params: { id: string } }) {
-  const [url, setUrl] = useState('');
+export default function FolderDetails({ params }: { params: { id: string } }) {
   const [title, setTitle] = useState('');
   const [iconName, setIconName] = useState('');
   const [description, setDescription] = useState('');
 
-  const { isLoading, data: bookmark } = useBookmarkQuery(params.id);
+  const { isLoading, data: folder } = useFolderQuery(params.id);
 
   useEffect(() => {
-    if (bookmark) {
-      setUrl(bookmark.url);
-      setTitle(bookmark.title);
-      setIconName(bookmark.iconName ?? '');
-      setDescription(bookmark.description ?? '');
+    if (folder) {
+      setTitle(folder.title);
+      setIconName(folder.iconName ?? '');
+      setDescription(folder.description ?? '');
     }
-  }, [bookmark]);
+  }, [folder]);
 
-  const updateBookmarkMutation = useUpdateBookmarkMutation();
-  const updateBookmark = (icon?: string) => {
-    if (bookmark) {
-      updateBookmarkMutation.mutate({
-        ...bookmark,
+  const updateFolderMutation = useUpdateFolderMutation();
+  const updateFolder = (icon?: string) => {
+    if (folder) {
+      updateFolderMutation.mutate({
+        ...folder,
         title,
-        url,
         description,
-        iconName: icon || bookmark.iconName,
+        iconName: icon || folder.iconName,
       });
     }
   };
 
   const onSelectIcon = (icon: string) => {
-    updateBookmark(icon);
+    updateFolder(icon);
     setIconName(icon);
   };
 
-  if (isLoading || !bookmark) {
-    return <BookmarkDetailsSkeleton />;
+  if (isLoading || !folder) {
+    return <FolderDetailsSkeleton />;
   }
 
   return (
@@ -68,20 +66,20 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link href="/bookmarks">Bookmarks</Link>
+                <Link href="/folders">Folders</Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbPage>
-                {truncate(bookmark?.title ?? '...', 35)}
+                {truncate(folder?.title ?? '...', 35)}
               </BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
         <Button
-          disabled={updateBookmarkMutation.isPending}
-          onClick={() => updateBookmark()}
+          disabled={updateFolderMutation.isPending}
+          onClick={() => updateFolder()}
         >
           <Save className="mr-2 size-4" />
           Save
@@ -92,7 +90,7 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
         <Card className="mt-5 min-h-24 min-w-24 content-center p-8">
           <div className="flex items-center justify-center">
             <IconHolder
-              module={bookmark}
+              module={folder}
               iconName={iconName}
               isLoading={isLoading}
               onSelectIcon={onSelectIcon}
@@ -105,23 +103,11 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
               id="text"
               style={{ border: 'none', outline: 'none', boxShadow: 'none' }}
               className="border-transparent text-xl"
-              placeholder="Bookmark Title"
+              placeholder="Folder Title"
               autoComplete="off"
               required
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-            />
-          </div>
-
-          <div className="text-sm">
-            <Input
-              id="url"
-              style={{ border: 'none', outline: 'none', boxShadow: 'none' }}
-              className="border-transparent text-muted-foreground"
-              placeholder="Bookmark URL"
-              required
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
             />
           </div>
         </div>
@@ -136,10 +122,17 @@ export default function DetailsPage({ params }: { params: { id: string } }) {
         </Label>
         <Textarea
           id="description"
-          placeholder="Bookmark information"
+          placeholder="Folder information"
           value={description}
           rows={4}
           onChange={(e) => setDescription(e.target.value)}
+        />
+      </div>
+
+      <div className="mt-10">
+        <BookmarkSection
+          description="Bookmarks associated to this folder."
+          folderId={folder?.id}
         />
       </div>
     </div>

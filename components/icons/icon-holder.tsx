@@ -1,6 +1,6 @@
 import { DynamicIcon } from '@/components/icons/dynamic-icon';
 import { Button } from '@/components/ui/button';
-import { Bookmark } from '@prisma/client';
+import { Bookmark, Folder } from '@prisma/client';
 import { useState } from 'react';
 
 import dynamic from 'next/dynamic';
@@ -8,19 +8,19 @@ const IconPicker = dynamic(() => import('@/components/icons/icon-picker'), {
   ssr: false,
 });
 
-interface BookmarkIconProps {
-  bookmark?: Bookmark;
+interface IconHolderProps {
+  module?: Bookmark | Folder;
   iconName: string;
   isLoading: boolean;
   onSelectIcon: (icon: string) => void;
 }
 
-export function BookmarkIcon({
-  bookmark,
+export function IconHolder({
+  module,
   iconName,
   isLoading,
   onSelectIcon,
-}: BookmarkIconProps) {
+}: IconHolderProps) {
   const [showIconPicker, setShowIconPicker] = useState(false);
 
   const selectIcon = (icon: string) => {
@@ -32,12 +32,12 @@ export function BookmarkIcon({
 
   return (
     <>
-      {bookmark?.imageUrl ? (
+      {module && 'imageUrl' in module && module.imageUrl !== null ? (
         <>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={bookmark.imageUrl}
-            alt={bookmark.title}
+            src={module.imageUrl}
+            alt={module.title}
             className="mx-4 size-5"
           />
         </>

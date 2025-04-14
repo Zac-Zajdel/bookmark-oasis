@@ -18,7 +18,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
-export default function BookmarkCreate() {
+export default function BookmarkCreate({ folderId }: { folderId?: string }) {
   const [isManual, setIsManual] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -30,7 +30,9 @@ export default function BookmarkCreate() {
   const onCreate = () => {
     let hookContent: CreateBookmarkParams = {
       url,
+      folderId,
     };
+
     if (isManual) {
       hookContent = {
         ...hookContent,

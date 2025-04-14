@@ -31,7 +31,7 @@ export default function BookmarkCard({ bookmark }: { bookmark: Bookmark }) {
   };
 
   return (
-    <Card className="flex h-full w-full flex-col justify-between rounded-lg">
+    <Card className="flex h-full w-full flex-col justify-between rounded-lg bg-secondary/20 dark:bg-background">
       <CardHeader className="flex h-full flex-col items-start p-5">
         <div className="flex w-full items-center justify-start">
           <div className="min-w-8">
@@ -53,7 +53,7 @@ export default function BookmarkCard({ bookmark }: { bookmark: Bookmark }) {
               )}
             </div>
           </div>
-          <h1 className="text-md h-10 overflow-hidden truncate text-ellipsis whitespace-nowrap pl-2 pt-2 font-semibold leading-snug tracking-tight">
+          <h1 className="text-md h-10 truncate whitespace-nowrap pl-2 pt-2 font-semibold leading-snug tracking-tight">
             {bookmark.title}
           </h1>
         </div>
