@@ -40,9 +40,9 @@ export default function Navbar() {
                   prefetch={false}
                   className={cn(
                     pathname.includes('/folders')
-                      ? 'border-b-2 border-b-muted-foreground dark:border-b-white'
+                      ? 'border-b-muted-foreground border-b-2 dark:border-b-white'
                       : 'text-muted-foreground',
-                    'whitespace-nowrap px-2 pb-[0.90rem] text-sm font-medium',
+                    'px-2 pb-[0.90rem] text-sm font-medium whitespace-nowrap',
                   )}
                 >
                   Folders
@@ -52,9 +52,9 @@ export default function Navbar() {
                   prefetch={false}
                   className={cn(
                     pathname.includes('/bookmarks')
-                      ? 'border-b-2 border-b-muted-foreground dark:border-b-white'
+                      ? 'border-b-muted-foreground border-b-2 dark:border-b-white'
                       : 'text-muted-foreground',
-                    'whitespace-nowrap px-2 pb-[0.90rem] text-sm font-medium',
+                    'px-2 pb-[0.90rem] text-sm font-medium whitespace-nowrap',
                   )}
                 >
                   Bookmarks
@@ -64,9 +64,9 @@ export default function Navbar() {
                   prefetch={false}
                   className={cn(
                     pathname.includes('/settings')
-                      ? 'border-b-2 border-b-muted-foreground'
+                      ? 'border-b-muted-foreground border-b-2'
                       : 'text-muted-foreground',
-                    'whitespace-nowrap px-2 pb-[0.90rem] text-sm font-medium',
+                    'px-2 pb-[0.90rem] text-sm font-medium whitespace-nowrap',
                   )}
                 >
                   Settings
@@ -94,7 +94,7 @@ export default function Navbar() {
                 </Avatar>
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="mr-2 mt-1">
+            <DropdownMenuContent className="mt-1 mr-2">
               <DropdownMenuItem onClick={() => signOut()}>
                 Log out
               </DropdownMenuItem>

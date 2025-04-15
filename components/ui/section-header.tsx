@@ -18,7 +18,7 @@ export function SectionHeader({
       <div className="flex-col">
         <h1 className="font-heading pb-1 text-xl">{title}</h1>
         {description && (
-          <p className="text-sm text-muted-foreground">{description}</p>
+          <p className="text-muted-foreground text-sm">{description}</p>
         )}
       </div>
       {children}

@@ -47,7 +47,7 @@ export default function FolderCard({ folder }: { folder: Folder }) {
 
   return (
     <div>
-      <Card className="flex h-full w-full flex-col justify-between rounded-lg bg-secondary/20 dark:bg-background">
+      <Card className="bg-secondary/20 dark:bg-background flex h-full w-full flex-col justify-between rounded-lg">
         <div className="flex w-full items-center justify-between px-3 py-2">
           <Link
             href={`/folders/${folder.id}`}
@@ -60,7 +60,7 @@ export default function FolderCard({ folder }: { folder: Folder }) {
                   className="size-3.5"
                 />
               </div>
-              <h1 className="min-w-0 flex-1 truncate whitespace-nowrap pl-2 text-xs font-semibold leading-snug tracking-tight">
+              <h1 className="min-w-0 flex-1 truncate pl-2 text-xs leading-snug font-semibold tracking-tight whitespace-nowrap">
                 {folder.title}
               </h1>
             </div>

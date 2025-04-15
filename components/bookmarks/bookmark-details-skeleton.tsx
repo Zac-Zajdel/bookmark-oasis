@@ -39,7 +39,7 @@ export default function BookmarkDetailsSkeleton() {
             <Skeleton className="h-8 w-10" />
           </div>
         </Card>
-        <div className="ml-2 mt-1 w-full">
+        <div className="mt-1 ml-2 w-full">
           <div className="mt-3">
             <div className="ml-2 flex">
               <div className="w-full space-y-2">

@@ -102,7 +102,7 @@ export default function DetailsPage(props: {
             />
           </div>
         </Card>
-        <div className="ml-2 mt-1 w-full">
+        <div className="mt-1 ml-2 w-full">
           <div className="mt-3">
             <Input
               id="text"
@@ -120,7 +120,7 @@ export default function DetailsPage(props: {
             <Input
               id="url"
               style={{ border: 'none', outline: 'none', boxShadow: 'none' }}
-              className="border-transparent text-muted-foreground"
+              className="text-muted-foreground border-transparent"
               placeholder="Bookmark URL"
               required
               value={url}

@@ -6,7 +6,7 @@ export default function Dashboard() {
   return (
     <div className="container">
       <FolderSection />
-      <Separator className="mb-5 mt-10" />
+      <Separator className="mt-10 mb-5" />
       <BookmarkSection />
     </div>
   );
