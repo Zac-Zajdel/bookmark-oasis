@@ -8,10 +8,7 @@ import { z } from 'zod';
 
 export const withAuthManager =
   (handler: WithAuthManagerInterface) =>
-  async (
-    req: NextRequest,
-    { params = {} }: { params: Record<string, string> | undefined },
-  ) => {
+  async (req: NextRequest, params: { params: Promise<any> }) => {
     try {
       let user: AuthUser | null = null;
       const authorizationHeader = req.headers.get('Authorization');
@@ -70,7 +67,8 @@ export const withAuthManager =
       }
 
       const searchParams = req.nextUrl.searchParams;
-      return await handler({ req, user, searchParams, params });
+      const awaitedParams = await params.params;
+      return await handler({ req, user, searchParams, params: awaitedParams });
     } catch (error) {
       if ((error as any)?.result?.error === '403 Forbidden') {
         return NextResponse.json(
