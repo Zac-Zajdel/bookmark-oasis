@@ -4,6 +4,7 @@ import {
   DialogContent,
   DialogFooter,
   DialogHeader,
+  DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -98,18 +99,16 @@ export default function BookmarkCreate({ folderId }: { folderId?: string }) {
             Create
           </Button>
         </DialogTrigger>
-        <DialogContent
-          className="sm:max-w-[525px]"
-          aria-describedby={undefined}
-        >
+        <DialogContent className="sm:max-w-[525px]">
+          <DialogTitle className="mb-1">Create Bookmark</DialogTitle>
           <DialogHeader>
-            <div className="-mt-2 space-x-3 text-sm">
+            <div className="mb-2 space-x-3 text-sm">
               <button
                 className={cn(
                   !isManual
                     ? 'border-b border-b-muted-foreground dark:border-b-white'
                     : 'text-muted-foreground',
-                  'whitespace-nowrap px-1 pb-0.5 font-medium',
+                  'whitespace-nowrap pb-0.5 font-medium',
                 )}
                 onClick={() => setIsManual(false)}
               >
@@ -120,7 +119,7 @@ export default function BookmarkCreate({ folderId }: { folderId?: string }) {
                   isManual
                     ? 'border-b border-b-muted-foreground'
                     : 'text-muted-foreground',
-                  'whitespace-nowrap px-1 pb-0.5 font-medium',
+                  'whitespace-nowrap pb-0.5 font-medium',
                 )}
                 onClick={() => setIsManual(true)}
               >

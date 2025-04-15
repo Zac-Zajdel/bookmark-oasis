@@ -18,6 +18,7 @@ import { DataTablePagination } from './data-table-pagination';
 
 interface DataTableProps<TData> {
   table: TanStackTable<TData>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   columns: ColumnDef<TData, any>[];
   isInitialLoad: boolean;
 }

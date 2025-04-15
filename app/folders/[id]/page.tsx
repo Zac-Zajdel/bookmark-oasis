@@ -21,9 +21,12 @@ import { useUpdateFolderMutation } from '@/hooks/api/folders/useUpdateFolderMuta
 import { truncate } from '@/lib/utils';
 import { Save } from 'lucide-react';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 
-export default function FolderDetails({ params }: { params: { id: string } }) {
+export default function FolderDetails(props: {
+  params: Promise<{ id: string }>;
+}) {
+  const params = use(props.params);
   const [title, setTitle] = useState('');
   const [iconName, setIconName] = useState('');
   const [description, setDescription] = useState('');

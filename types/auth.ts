@@ -15,7 +15,7 @@ export interface WithAuthManagerInterface {
   }: {
     req: NextRequest;
     user: AuthUser;
-    params: Record<string, string>;
+    params: any;
     searchParams: URLSearchParams;
   }): Promise<Response>;
 }

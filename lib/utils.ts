@@ -18,7 +18,8 @@ export const queryClient = new QueryClient({
       const message = error?.message || 'An Unknown Error Occurred.';
 
       if (error instanceof OasisError) {
-        error.statusCode >= 500 ? toast.error(message) : toast.info(message);
+        if (error.statusCode >= 500) toast.error(message);
+        else toast.info(message);
       } else {
         toast.error(message);
       }

@@ -5,6 +5,7 @@ import {
   Dialog,
   DialogContent,
   DialogFooter,
+  DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -85,10 +86,8 @@ export default function FolderCreate() {
             Create
           </Button>
         </DialogTrigger>
-        <DialogContent
-          className="sm:max-w-[525px]"
-          aria-describedby={undefined}
-        >
+        <DialogContent className="sm:max-w-[525px]">
+          <DialogTitle>Create Folder</DialogTitle>
           <div className="my-1">
             <Label htmlFor="title">Title</Label>
             <Input

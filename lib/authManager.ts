@@ -8,10 +8,8 @@ import { z } from 'zod';
 
 export const withAuthManager =
   (handler: WithAuthManagerInterface) =>
-  async (
-    req: NextRequest,
-    { params = {} }: { params: Record<string, string> | undefined },
-  ) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async (req: NextRequest, params: { params: Promise<any> }) => {
     try {
       let user: AuthUser | null = null;
       const authorizationHeader = req.headers.get('Authorization');
@@ -19,7 +17,7 @@ export const withAuthManager =
       // User is using external API token.
       if (authorizationHeader) {
         const userPassedToken = authorizationHeader.replace('Bearer ', '');
-        const externalDatabaseToken = await hashApiToken(userPassedToken);
+        const externalDatabaseToken = hashApiToken(userPassedToken);
 
         const authUser = await prisma.user.findFirst({
           where: {
@@ -70,8 +68,10 @@ export const withAuthManager =
       }
 
       const searchParams = req.nextUrl.searchParams;
-      return await handler({ req, user, searchParams, params });
+      const awaitedParams = await params.params;
+      return await handler({ req, user, searchParams, params: awaitedParams });
     } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if ((error as any)?.result?.error === '403 Forbidden') {
         return NextResponse.json(
           {
