@@ -35,7 +35,7 @@ export default function BookmarkCard({ bookmark }: { bookmark: Bookmark }) {
       <CardHeader className="flex h-full flex-col items-start p-5">
         <div className="flex w-full items-center justify-start">
           <div className="min-w-8">
-            <div className="inline-flex size-7 items-center justify-center rounded-md border shadow-sm">
+            <div className="inline-flex size-7 items-center justify-center rounded-md border shadow-xs">
               {bookmark.imageUrl ? (
                 <>
                   {/* eslint-disable-next-line @next/next/no-img-element */}

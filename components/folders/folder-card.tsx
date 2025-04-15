@@ -54,7 +54,7 @@ export default function FolderCard({ folder }: { folder: Folder }) {
             className="min-w-0 flex-1 hover:underline"
           >
             <div className="flex items-center">
-              <div className="inline-flex size-7 items-center justify-center rounded-md border shadow-sm">
+              <div className="inline-flex size-7 items-center justify-center rounded-md border shadow-xs">
                 <DynamicIcon
                   name={folder.iconName ?? 'Search'}
                   className="size-3.5"

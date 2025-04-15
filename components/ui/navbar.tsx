@@ -25,7 +25,7 @@ export default function Navbar() {
       <div className="mx-auto border-b px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-12 items-center justify-between">
           <div className="flex flex-1 items-center sm:items-center sm:justify-start">
-            <div className="hidden flex-shrink-0 items-center sm:block">
+            <div className="hidden shrink-0 items-center sm:block">
               <Link
                 href="/dashboard"
                 prefetch={false}

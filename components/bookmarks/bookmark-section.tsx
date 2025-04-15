@@ -97,7 +97,7 @@ export default function BookmarkSection({
       )}
 
       {!isLoading && bookmarks.length === 0 && (
-        <EmptyPlaceholder>
+        <EmptyPlaceholder className="min-h-56">
           <div className="flex size-14 items-center justify-center rounded-full bg-muted">
             <Bookmark className="size-6" />
           </div>
