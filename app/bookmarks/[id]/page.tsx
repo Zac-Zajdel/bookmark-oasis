@@ -20,9 +20,11 @@ import { useUpdateBookmarkMutation } from '@/hooks/api/bookmarks/useUpdateBookma
 import { truncate } from '@/lib/utils';
 import { Save } from 'lucide-react';
 import Link from 'next/link';
-import { useEffect, useState, use } from 'react';
+import { use, useEffect, useState } from 'react';
 
-export default function DetailsPage(props: { params: Promise<{ id: string }> }) {
+export default function DetailsPage(props: {
+  params: Promise<{ id: string }>;
+}) {
   const params = use(props.params);
   const [url, setUrl] = useState('');
   const [title, setTitle] = useState('');

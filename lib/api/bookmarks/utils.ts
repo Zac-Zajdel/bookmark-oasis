@@ -4,7 +4,7 @@ export function parseUrl(url: string | undefined): string | null {
   try {
     const { href } = new URL(url);
     return /^https?:\/\//i.test(href) ? href : null;
-  } catch (err) {
+  } catch {
     return null;
   }
 }

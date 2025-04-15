@@ -8,6 +8,7 @@ import { z } from 'zod';
 
 export const withAuthManager =
   (handler: WithAuthManagerInterface) =>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async (req: NextRequest, params: { params: Promise<any> }) => {
     try {
       let user: AuthUser | null = null;
@@ -70,6 +71,7 @@ export const withAuthManager =
       const awaitedParams = await params.params;
       return await handler({ req, user, searchParams, params: awaitedParams });
     } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if ((error as any)?.result?.error === '403 Forbidden') {
         return NextResponse.json(
           {
