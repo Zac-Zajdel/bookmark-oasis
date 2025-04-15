@@ -89,8 +89,8 @@ export default function FolderSection() {
       )}
 
       {!isLoading && folders.length === 0 && (
-        <EmptyPlaceholder className="h-42 min-h-42">
-          <div className="flex size-14 items-center justify-center rounded-full bg-muted">
+        <EmptyPlaceholder className="min-h-56">
+          <div className="bg-muted flex size-14 items-center justify-center rounded-full">
             <Folder className="size-6" />
           </div>
           <EmptyPlaceholder.Title>No Folders Found</EmptyPlaceholder.Title>

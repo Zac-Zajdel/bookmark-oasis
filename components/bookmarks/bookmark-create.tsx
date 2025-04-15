@@ -106,9 +106,9 @@ export default function BookmarkCreate({ folderId }: { folderId?: string }) {
               <button
                 className={cn(
                   !isManual
-                    ? 'border-b border-b-muted-foreground dark:border-b-white'
+                    ? 'border-b-muted-foreground border-b dark:border-b-white'
                     : 'text-muted-foreground',
-                  'whitespace-nowrap pb-0.5 font-medium',
+                  'pb-0.5 font-medium whitespace-nowrap',
                 )}
                 onClick={() => setIsManual(false)}
               >
@@ -117,9 +117,9 @@ export default function BookmarkCreate({ folderId }: { folderId?: string }) {
               <button
                 className={cn(
                   isManual
-                    ? 'border-b border-b-muted-foreground'
+                    ? 'border-b-muted-foreground border-b'
                     : 'text-muted-foreground',
-                  'whitespace-nowrap pb-0.5 font-medium',
+                  'pb-0.5 font-medium whitespace-nowrap',
                 )}
                 onClick={() => setIsManual(true)}
               >

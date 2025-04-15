@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 export default function Landing() {
   return (
     <>
-      <section className="mx-10 space-y-6 pb-16 pt-28">
+      <section className="mx-10 space-y-6 pt-28 pb-16">
         <div className="container flex max-w-[64rem] flex-col items-center gap-4 text-center">
           <motion.h1
             initial={{ opacity: 0, scale: 0.5 }}
@@ -22,7 +22,7 @@ export default function Landing() {
             </span>
           </motion.h1>
 
-          <section className="mt-3 max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8">
+          <section className="text-muted-foreground mt-3 max-w-[42rem] leading-normal sm:text-xl sm:leading-8">
             <motion.h2
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}

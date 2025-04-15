@@ -54,7 +54,7 @@ export function IconHolder({
             />
           </Button>
 
-          <div className="absolute z-10 min-w-60 max-w-60 rounded-lg bg-background shadow-lg">
+          <div className="bg-background absolute z-10 max-w-60 min-w-60 rounded-lg shadow-lg">
             {showIconPicker && (
               <div className="rounded-lg border p-2">
                 <IconPicker onSelectIcon={selectIcon} />

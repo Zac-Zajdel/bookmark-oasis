@@ -146,22 +146,22 @@ export function BentoTags() {
 
   return (
     <div className="w-full overflow-hidden">
-      <div className="flex min-w-[200%] animate-scroll space-x-2 whitespace-nowrap">
+      <div className="animate-scroll flex min-w-[200%] space-x-2 whitespace-nowrap">
         <div className="flex space-x-2">{renderBadges(badgeSet1)}</div>
       </div>
-      <div className="flex min-w-[200%] animate-scroll space-x-2 whitespace-nowrap pt-2">
+      <div className="animate-scroll flex min-w-[200%] space-x-2 pt-2 whitespace-nowrap">
         <div className="flex space-x-2">{renderBadges(badgeSet2)}</div>
       </div>
-      <div className="flex min-w-[200%] animate-scroll space-x-2 whitespace-nowrap pt-2">
+      <div className="animate-scroll flex min-w-[200%] space-x-2 pt-2 whitespace-nowrap">
         <div className="flex space-x-2">{renderBadges(badgeSet3)}</div>
       </div>
-      <div className="flex min-w-[200%] animate-scroll space-x-2 whitespace-nowrap pt-2">
+      <div className="animate-scroll flex min-w-[200%] space-x-2 pt-2 whitespace-nowrap">
         <div className="flex space-x-2">{renderBadges(badgeSet4)}</div>
       </div>
-      <div className="flex min-w-[200%] animate-scroll space-x-2 whitespace-nowrap pt-2">
+      <div className="animate-scroll flex min-w-[200%] space-x-2 pt-2 whitespace-nowrap">
         <div className="flex space-x-2">{renderBadges(badgeSet5)}</div>
       </div>
-      <div className="flex min-w-[200%] animate-scroll space-x-2 whitespace-nowrap pt-2">
+      <div className="animate-scroll flex min-w-[200%] space-x-2 pt-2 whitespace-nowrap">
         <div className="flex space-x-2">{renderBadges(badgeSet6)}</div>
       </div>
     </div>

@@ -36,7 +36,7 @@ const IconButton = React.memo(function IconButton({
       <Tooltip>
         <TooltipTrigger asChild>
           <div
-            className={`cursor-pointer justify-self-center rounded-md border border-gray-500/50 p-1 hover:bg-muted-foreground/20 ${
+            className={`hover:bg-muted-foreground/20 cursor-pointer justify-self-center rounded-md border border-gray-500/50 p-1 ${
               isSelected ? 'bg-muted-foreground/20' : ''
             }`}
             onClick={() => onClick(iconName)}

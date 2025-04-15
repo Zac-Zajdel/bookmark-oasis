@@ -54,7 +54,7 @@ export default function Settings() {
         />
       </div>
 
-      <div className="mb-12 divide-y divide-border rounded-md">
+      <div className="divide-border mb-12 divide-y rounded-md">
         <div className="space-y-1">
           <DataTable
             table={table}

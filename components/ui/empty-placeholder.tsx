@@ -11,7 +11,7 @@ export function EmptyPlaceholder({
   return (
     <div
       className={cn(
-        'flex min-h-[300px] flex-col items-center justify-center rounded-md border border-dashed p-8 text-center animate-in fade-in-50',
+        'animate-in fade-in-50 flex min-h-[300px] flex-col items-center justify-center rounded-md border border-dashed p-8 text-center',
         className,
       )}
       {...props}
@@ -48,7 +48,7 @@ EmptyPlaceholder.Description = function EmptyPlaceholderDescription({
   return (
     <p
       className={cn(
-        'mb-8 mt-2 text-center text-sm font-normal leading-6 text-muted-foreground',
+        'text-muted-foreground mt-2 mb-8 text-center text-sm leading-6 font-normal',
         className,
       )}
       {...props}

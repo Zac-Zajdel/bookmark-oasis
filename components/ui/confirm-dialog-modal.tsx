@@ -134,7 +134,7 @@ export function ConfirmDialogModal({
                 }
                 onClick={action.onClick}
                 className={cn(
-                  'mt-2 text-primary sm:mt-0',
+                  'text-primary mt-2 sm:mt-0',
                   buttonVariants({ variant: action.variant ?? 'default' }),
                 )}
               >

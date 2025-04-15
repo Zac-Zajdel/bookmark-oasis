@@ -4,11 +4,11 @@ export function BentoTask() {
   return (
     <div>
       <h1 className="mb-3 font-semibold">Spanish 101</h1>
-      <p className="mb-4 text-xs text-muted-foreground">
+      <p className="text-muted-foreground mb-4 text-xs">
         Learn common spanish sayings such as questions and introductions.
       </p>
       <div className="flex justify-between pb-3">
-        <span className="text-sm text-muted-foreground">Tags:</span>
+        <span className="text-muted-foreground text-sm">Tags:</span>
         <Badge
           variant="secondary"
           className="ml-3 cursor-pointer"
@@ -17,7 +17,7 @@ export function BentoTask() {
         </Badge>
       </div>
       <div className="flex justify-between">
-        <span className="text-sm text-muted-foreground">Status:</span>
+        <span className="text-muted-foreground text-sm">Status:</span>
         <Badge
           variant="secondary"
           className="ml-3 cursor-pointer bg-yellow-200 text-xs text-yellow-700 hover:bg-yellow-200"

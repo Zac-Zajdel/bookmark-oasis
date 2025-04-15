@@ -71,7 +71,7 @@ export function BentoApiAccess() {
                 </div>
               </div>
               <div className="flex w-full justify-between">
-                <h1 className="h-10 overflow-hidden truncate text-ellipsis whitespace-nowrap pl-1 pt-3 text-xs font-medium">
+                <h1 className="h-10 truncate overflow-hidden pt-3 pl-1 text-xs font-medium text-ellipsis whitespace-nowrap">
                   {token}
                 </h1>
                 <Button
