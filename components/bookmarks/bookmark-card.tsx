@@ -1,12 +1,14 @@
 'use client';
 
 import BookmarkActions from '@/components/bookmarks/bookmark-actions';
-import { DynamicIcon } from '@/components/icons/dynamic-icon';
+// import { DynamicIcon } from '@/components/icons/dynamic-icon';
+import DynamicIcon from '@/components/icons/dynamic-icon';
 import { Card, CardHeader } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { useDeleteBookmarkMutation } from '@/hooks/api/bookmarks/useDeleteBookmarkMutation';
 import { usePatchBookmarkMutation } from '@/hooks/api/bookmarks/usePatchBookmarkMutation';
 import { Bookmark } from '@prisma/client';
+import { IconName } from 'lucide-react/dynamic';
 
 export default function BookmarkCard({ bookmark }: { bookmark: Bookmark }) {
   const patchBookmarkMutation = usePatchBookmarkMutation();
@@ -47,7 +49,7 @@ export default function BookmarkCard({ bookmark }: { bookmark: Bookmark }) {
                 </>
               ) : (
                 <DynamicIcon
-                  name={bookmark.iconName ?? 'Search'}
+                  name={(bookmark.iconName as IconName) ?? 'search'}
                   className="size-3.5"
                 />
               )}

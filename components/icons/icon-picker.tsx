@@ -1,3 +1,4 @@
+import DynamicIcon from '@/components/icons/dynamic-icon';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import {
@@ -6,7 +7,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import * as LucideIcons from 'lucide-react';
+import { lucideIcons } from '@/types/lucideIcons';
+import { IconName } from 'lucide-react/dynamic';
 import React, {
   forwardRef,
   ReactNode,
@@ -16,21 +18,15 @@ import React, {
 } from 'react';
 import { VirtuosoGrid } from 'react-virtuoso';
 
-type LucideIcon = keyof typeof LucideIcons.icons;
-
-const iconsArray = Object.keys(LucideIcons.icons) as LucideIcon[];
-
 const IconButton = React.memo(function IconButton({
   iconName,
   onClick,
   isSelected,
 }: {
-  iconName: LucideIcon;
-  onClick: (iconName: LucideIcon) => void;
+  iconName: IconName;
+  onClick: (iconName: IconName) => void;
   isSelected: boolean;
 }) {
-  const IconComponent = LucideIcons[iconName];
-
   return (
     <TooltipProvider delayDuration={500}>
       <Tooltip>
@@ -41,7 +37,10 @@ const IconButton = React.memo(function IconButton({
             }`}
             onClick={() => onClick(iconName)}
           >
-            <IconComponent size={16} />
+            <DynamicIcon
+              name={iconName}
+              size={16}
+            />
           </div>
         </TooltipTrigger>
         <TooltipContent>
@@ -52,16 +51,42 @@ const IconButton = React.memo(function IconButton({
   );
 });
 
+const Item = React.forwardRef<HTMLDivElement, { children?: ReactNode }>(
+  ({ children, ...props }, ref) => (
+    <div
+      ref={ref}
+      {...props}
+      className="p-1"
+    >
+      {children}
+    </div>
+  ),
+);
+Item.displayName = 'VirtuosoItem';
+
+const List = forwardRef<HTMLDivElement, { children?: ReactNode }>(
+  ({ children, ...props }, ref) => (
+    <div
+      ref={ref}
+      {...props}
+      className="grid grid-cols-6 justify-items-center"
+    >
+      {children}
+    </div>
+  ),
+);
+List.displayName = 'VirtuosoList';
+
 export default function IconPicker({
   onSelectIcon,
 }: {
   onSelectIcon: (icon: string) => void;
 }) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedIcon, setSelectedIcon] = useState<LucideIcon | null>(null);
+  const [selectedIcon, setSelectedIcon] = useState<IconName | null>(null);
 
   const handleIconClick = useCallback(
-    (iconName: LucideIcon) => {
+    (iconName: IconName) => {
       setSelectedIcon(iconName);
       onSelectIcon(iconName);
     },
@@ -69,36 +94,12 @@ export default function IconPicker({
   );
 
   const filteredIcons = useMemo(() => {
-    return iconsArray.filter((iconName) =>
-      iconName.toLowerCase().includes(searchQuery.toLowerCase()),
+    if (!searchQuery) return lucideIcons;
+
+    return lucideIcons.filter((iconName) =>
+      iconName.includes(searchQuery.toLowerCase()),
     );
   }, [searchQuery]);
-
-  const Item = React.forwardRef<HTMLDivElement, { children?: ReactNode }>(
-    ({ children, ...props }, ref) => (
-      <div
-        ref={ref}
-        {...props}
-        className="p-1"
-      >
-        {children}
-      </div>
-    ),
-  );
-  Item.displayName = 'VirtuosoItem';
-
-  const List = forwardRef<HTMLDivElement, { children?: ReactNode }>(
-    ({ children, ...props }, ref) => (
-      <div
-        ref={ref}
-        {...props}
-        className="grid grid-cols-6 justify-items-center"
-      >
-        {children}
-      </div>
-    ),
-  );
-  List.displayName = 'VirtuosoList';
 
   return (
     <>
@@ -121,7 +122,7 @@ export default function IconPicker({
             Item,
             List,
           }}
-          itemContent={(index: number, iconName: LucideIcon) => (
+          itemContent={(index: number, iconName: IconName) => (
             <IconButton
               key={index}
               iconName={iconName}

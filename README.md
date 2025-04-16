@@ -2,8 +2,8 @@
 
 ## 🎉 Features
 
-- 🚀 [Next.js 14 (App router)](https://nextjs.org/) - Meta Framework for React
-- ⚛️ [React 18](https://react.dev/) - A library for web and native user interfaces
+- 🚀 [Next.js 15 (App router)](https://nextjs.org/) - Meta Framework for React
+- ⚛️ [React 19](https://react.dev/) - A library for web and native user interfaces
 - 📘 [Typescript](https://www.typescriptlang.org/) - JavaScript with syntax for types
 - 🎨 [TailwindCSS](https://tailwindcss.com/) - Class sorting, merging and linting
 - 🛠️ [shadcn/ui](https://ui.shadcn.com/) - Customizable UI components

@@ -1,30 +1,35 @@
-import { type LucideProps, icons } from 'lucide-react';
+'use client';
+import dynamicIconImports from 'lucide-react/dynamicIconImports';
+import dynamic from 'next/dynamic';
+import { FC, memo } from 'react';
 
-type IconComponentName = keyof typeof icons;
+type IconName = keyof typeof dynamicIconImports;
 
-interface IconProps extends LucideProps {
-  name: string;
+const icons = Object.keys(dynamicIconImports) as IconName[];
+
+type ReactComponent = FC<{ className?: string }>;
+const icons_components = {} as Record<IconName, ReactComponent>;
+
+for (const name of icons) {
+  const NewIcon = dynamic(dynamicIconImports[name], {
+    ssr: false,
+  }) as ReactComponent;
+  icons_components[name] = NewIcon;
 }
 
-function isValidIconComponent(
-  componentName: string,
-): componentName is IconComponentName {
-  return componentName in icons;
-}
+type DynamicIconProps = {
+  name: IconName;
+  className?: string;
+  size?: number;
+};
 
-export function DynamicIcon({ name, ...props }: IconProps) {
-  const kebabToPascal = (str: string) =>
-    str
-      .split('-')
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join('');
+const DynamicIcon = memo(({ name, ...props }: DynamicIconProps) => {
+  const Icon = icons_components[name];
 
-  const componentName = kebabToPascal(name);
+  if (!Icon) return null;
 
-  if (!isValidIconComponent(componentName)) {
-    return null;
-  }
-
-  const Icon = icons[componentName];
   return <Icon {...props} />;
-}
+});
+DynamicIcon.displayName = 'DynamicIcon';
+
+export default DynamicIcon;

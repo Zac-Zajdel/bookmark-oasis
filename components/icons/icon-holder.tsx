@@ -1,8 +1,9 @@
-import { DynamicIcon } from '@/components/icons/dynamic-icon';
+import DynamicIcon from '@/components/icons/dynamic-icon';
 import { Button } from '@/components/ui/button';
 import { Bookmark, Folder } from '@prisma/client';
 import { useState } from 'react';
 
+import { IconName } from 'lucide-react/dynamic';
 import dynamic from 'next/dynamic';
 const IconPicker = dynamic(() => import('@/components/icons/icon-picker'), {
   ssr: false,
@@ -30,6 +31,18 @@ export function IconHolder({
 
   const selectNewIcon = () => setShowIconPicker(!showIconPicker);
 
+  const IconPickerWrapper = () => {
+    if (!showIconPicker) return null;
+
+    return (
+      <div className="bg-background absolute z-10 max-w-60 min-w-60 rounded-lg shadow-lg">
+        <div className="rounded-lg border p-2">
+          <IconPicker onSelectIcon={selectIcon} />
+        </div>
+      </div>
+    );
+  };
+
   return (
     <>
       {module && 'imageUrl' in module && module.imageUrl !== null ? (
@@ -49,17 +62,17 @@ export function IconHolder({
             onClick={selectNewIcon}
           >
             <DynamicIcon
-              name={isLoading ? 'Loading' : iconName || 'Search'}
+              name={
+                isLoading
+                  ? ('loader' as IconName)
+                  : (iconName as IconName) || ('search' as IconName)
+              }
               className="size-5"
             />
           </Button>
 
           <div className="bg-background absolute z-10 max-w-60 min-w-60 rounded-lg shadow-lg">
-            {showIconPicker && (
-              <div className="rounded-lg border p-2">
-                <IconPicker onSelectIcon={selectIcon} />
-              </div>
-            )}
+            <IconPickerWrapper />
           </div>
         </div>
       )}

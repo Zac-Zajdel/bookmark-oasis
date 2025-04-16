@@ -1,6 +1,7 @@
 'use client';
 
-import { DynamicIcon } from '@/components/icons/dynamic-icon';
+// import { DynamicIcon } from '@/components/icons/dynamic-icon';
+import DynamicIcon from '@/components/icons/dynamic-icon';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ConfirmDialogModal } from '@/components/ui/confirm-dialog-modal';
@@ -13,6 +14,7 @@ import {
 import { useDeleteFolderMutation } from '@/hooks/api/folders/useDeleteFolderMutation';
 import { Folder } from '@prisma/client';
 import { EllipsisVertical, Trash2 } from 'lucide-react';
+import { IconName } from 'lucide-react/dynamic';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -56,7 +58,7 @@ export default function FolderCard({ folder }: { folder: Folder }) {
             <div className="flex items-center">
               <div className="inline-flex size-7 items-center justify-center rounded-md border shadow-xs">
                 <DynamicIcon
-                  name={folder.iconName ?? 'Search'}
+                  name={(folder.iconName as IconName) ?? 'search'}
                   className="size-3.5"
                 />
               </div>
