@@ -11,7 +11,11 @@ const withBundleAnalyzerImport = import('@next/bundle-analyzer').then((mod) =>
 jiti('./env.ts');
 
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  experimental: {
+    optimizePackageImports: ['lucide-react'],
+  },
+};
 
 export default async function getConfig() {
   const withBundleAnalyzer = await withBundleAnalyzerImport;
