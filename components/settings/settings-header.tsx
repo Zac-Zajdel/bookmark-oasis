@@ -27,7 +27,7 @@ export default function SettingsHeader() {
   const pathname = usePathname();
 
   return (
-    <div className="mb-2 space-x-3 text-sm">
+    <div className="space-x-3 text-sm">
       {navTabs.map((tab, index) => {
         return (
           <Link
@@ -37,7 +37,7 @@ export default function SettingsHeader() {
               pathname === tab.url
                 ? 'border-b-muted-foreground border-b-2'
                 : 'text-muted-foreground',
-              'px-1 pb-1 text-sm font-medium whitespace-nowrap',
+              'text-md font-lg px-1 pb-4 whitespace-nowrap',
             )}
           >
             {tab.title}
