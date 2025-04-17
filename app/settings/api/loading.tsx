@@ -4,7 +4,7 @@ import { KeyRound } from 'lucide-react';
 
 export default function Loading() {
   return (
-    <div className="container mt-10">
+    <div className="mt-10">
       <div className="mt-10 flex flex-col">
         <SectionHeader
           title="API Tokens"

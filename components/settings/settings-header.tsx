@@ -1,5 +1,6 @@
 'use client';
 
+import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -7,19 +8,20 @@ import { usePathname } from 'next/navigation';
 interface SettingsRoutes {
   title: string;
   url: string;
-  active: boolean;
 }
 
 const navTabs: SettingsRoutes[] = [
   {
     title: 'Profile',
     url: '/settings/profile',
-    active: true,
   },
+  // {
+  //   title: 'Tags',
+  //   url: '/settings/tags',
+  // },
   {
     title: 'API',
     url: '/settings/api',
-    active: false,
   },
 ];
 
@@ -27,7 +29,7 @@ export default function SettingsHeader() {
   const pathname = usePathname();
 
   return (
-    <div className="space-x-3 text-sm">
+    <div className="-mt-3 space-x-5 text-sm">
       {navTabs.map((tab, index) => {
         return (
           <Link
@@ -35,12 +37,17 @@ export default function SettingsHeader() {
             key={index}
             className={cn(
               pathname === tab.url
-                ? 'border-b-muted-foreground border-b-2'
+                ? 'border-b-muted-foreground'
                 : 'text-muted-foreground',
-              'text-md font-lg px-1 pb-4 whitespace-nowrap',
+              'text-md font-lg whitespace-nowrap',
             )}
           >
-            {tab.title}
+            <Badge
+              className="inline-block min-w-32 rounded-xl p-2 text-center"
+              variant={pathname === tab.url ? 'secondary' : 'outline'}
+            >
+              {tab.title}
+            </Badge>
           </Link>
         );
       })}
