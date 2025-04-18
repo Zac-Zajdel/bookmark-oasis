@@ -60,7 +60,7 @@ export default function Navbar() {
                   Bookmarks
                 </Link>
                 <Link
-                  href="/settings"
+                  href="/settings/profile"
                   prefetch={false}
                   className={cn(
                     pathname.includes('/settings')
