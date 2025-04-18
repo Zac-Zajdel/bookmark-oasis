@@ -15,6 +15,7 @@ export interface WithAuthManagerInterface {
   }: {
     req: NextRequest;
     user: AuthUser;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     params: any;
     searchParams: URLSearchParams;
   }): Promise<Response>;

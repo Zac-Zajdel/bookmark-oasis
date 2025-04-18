@@ -1,7 +1,8 @@
 import { prisma } from '@/lib/db';
 import { PrismaAdapter } from '@auth/prisma-adapter';
-import NextAuth from 'next-auth';
-import { AdapterUser } from 'next-auth/adapters';
+import { User as PrismaUser } from '@prisma/client';
+import NextAuth, { Session } from 'next-auth';
+import { JWT } from 'next-auth/jwt';
 import Google from 'next-auth/providers/google';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
@@ -26,21 +27,32 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     error: '/error',
   },
   callbacks: {
-    jwt({ token, user }) {
-      if (user) {
-        // User is available during sign-in
-        token.id = user.id;
+    async jwt({ token, user, trigger, session }) {
+      if (trigger === 'update' && session?.name) {
+        token.name = session.name;
+
+        await prisma.user.update({
+          where: { id: token.id },
+          data: { name: session.name },
+        });
       }
+
+      if (user) {
+        token.id = user.id;
+        token.createdAt = (user as PrismaUser).createdAt;
+      }
+
       return token;
     },
-    session({ token, session }) {
+    session({ token, session }: { token: JWT; session: Session }) {
       if (token) {
         session = {
           ...session,
           user: {
             ...session.user,
             id: token.id,
-          } as AdapterUser,
+            createdAt: token.createdAt,
+          },
         };
       }
 
