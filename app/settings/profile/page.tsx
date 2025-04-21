@@ -15,13 +15,16 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { SectionHeader } from '@/components/ui/section-header';
+import { useDebounce } from '@/hooks/useDebounce';
 import { cn } from '@/lib/utils';
+import { UserThemes } from '@/types/settings';
 import { Check, ChevronsUpDown, MonitorCog, Moon, Sun } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
-const themes = [
+const themes: UserThemes[] = [
   {
     value: 'light',
     label: 'Light',
@@ -41,16 +44,30 @@ const themes = [
 
 export default function ProfileSettings() {
   const [open, setOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const { data: session, update } = useSession();
+
+  const [name, setName] = useState('');
+  const debouncedName = useDebounce(name, 250);
+
+  useEffect(() => {
+    if (session?.user?.name && !name) {
+      setName(session.user.name);
+      return;
+    }
+
+    if (debouncedName && debouncedName !== session?.user?.name) {
+      update({ name: debouncedName });
+      toast.success('Name updated.');
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedName, session?.user?.name, name]);
 
   const { theme, setTheme } = useTheme();
   const selectedTheme = themes.find((t) => t.value === theme);
 
-  // TODO - Won't need this once I have the loading.tsx file.
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   return (
     <div>
@@ -65,11 +82,8 @@ export default function ProfileSettings() {
           <Input
             required
             id="name"
-            value={session?.user?.name ?? ''}
-            onChange={(e) => {
-              // TODO - I need to debounce this update...
-              update({ name: e.target.value });
-            }}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             className="mt-1"
             placeholder="Name"
           />

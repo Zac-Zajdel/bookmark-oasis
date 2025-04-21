@@ -2,11 +2,11 @@ import SettingsHeader from '@/components/settings/settings-header';
 import { SectionHeader } from '@/components/ui/section-header';
 import { Separator } from '@/components/ui/separator';
 
-interface SettingsLayoutProps {
+export default function SettingsLayout({
+  children,
+}: {
   children: React.ReactNode;
-}
-
-export default function SettingsLayout({ children }: SettingsLayoutProps) {
+}) {
   return (
     <div className="container mt-10">
       <SectionHeader
