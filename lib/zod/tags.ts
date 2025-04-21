@@ -1,3 +1,5 @@
+import { prisma } from '@/lib/db';
+import { AuthUser } from '@/types/auth';
 import { z } from 'zod';
 
 export const getTagSchema = () => {
@@ -14,4 +16,111 @@ export const getTagSchema = () => {
     order: z.enum(['asc', 'desc']).nullable().optional(),
     search: z.string().nullable(),
   });
+};
+
+export const createTagSchema = (user: AuthUser) => {
+  return z
+    .object({
+      name: z.string().min(1, { message: 'Name is required' }),
+      color: z
+        .enum(['red', 'orange', 'yellow', 'green', 'blue', 'purple'])
+        .optional(),
+      bookmarkId: z.string().cuid().nullable().optional(),
+      folderId: z.string().cuid().nullable().optional(),
+    })
+    .superRefine(async (data, ctx) => {
+      const tag = await prisma.tag.findFirst({
+        where: {
+          name: data.name,
+          userId: user.id,
+        },
+      });
+
+      if (tag) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Tag names must be unique.',
+        });
+      }
+
+      if (data.bookmarkId) {
+        const bookmark = await prisma.bookmark.findFirst({
+          where: {
+            id: data.bookmarkId,
+            userId: user.id,
+          },
+        });
+
+        if (!bookmark) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'Bookmark does not exist.',
+          });
+        }
+      }
+
+      if (data.folderId) {
+        const folder = await prisma.folder.findFirst({
+          where: {
+            id: data.folderId,
+            userId: user.id,
+          },
+        });
+
+        if (!folder) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'Folder does not exist.',
+          });
+        }
+      }
+    });
+};
+
+export const updateTagSchema = (user: AuthUser) => {
+  return z
+    .object({
+      id: z.string().cuid(),
+      name: z.string().min(1, { message: 'Name is required' }),
+      color: z
+        .enum(['red', 'orange', 'yellow', 'green', 'blue', 'purple'])
+        .optional(),
+    })
+    .superRefine(async (data, ctx) => {
+      const tag = await prisma.tag.findFirst({
+        where: {
+          id: data.id,
+          userId: user.id,
+        },
+      });
+
+      if (!tag) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'This Tag does not exist.',
+        });
+      }
+    });
+};
+
+export const deleteTagSchema = (user: AuthUser) => {
+  return z
+    .object({
+      id: z.string().cuid(),
+    })
+    .superRefine(async (data, ctx) => {
+      const tag = await prisma.tag.findFirst({
+        where: {
+          id: data.id,
+          userId: user.id,
+        },
+      });
+
+      if (!tag) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'This Tag does not exist.',
+        });
+      }
+    });
 };

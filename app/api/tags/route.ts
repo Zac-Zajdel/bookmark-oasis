@@ -1,6 +1,6 @@
 import { withAuthManager } from '@/lib/authManager';
 import { prisma } from '@/lib/db';
-import { getTagSchema } from '@/lib/zod/tags';
+import { createTagSchema, getTagSchema } from '@/lib/zod/tags';
 import { OasisResponse } from '@/types/apiHelpers';
 import { Prisma, Tag } from '@prisma/client';
 import { NextResponse } from 'next/server';
@@ -47,6 +47,30 @@ export const GET = withAuthManager(
         },
       },
       { status: 200 },
+    );
+  },
+);
+
+export const POST = withAuthManager(
+  async ({ user, req }): Promise<NextResponse<OasisResponse<Tag>>> => {
+    const schema = createTagSchema(user);
+    const { name, color } = await schema.parseAsync(await req.json());
+
+    const createdTag = await prisma.tag.create({
+      data: {
+        name,
+        color,
+        userId: user.id,
+      },
+    });
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: 'Tag was created successfully.',
+        data: createdTag,
+      },
+      { status: 201 },
     );
   },
 );

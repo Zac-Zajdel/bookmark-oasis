@@ -1,8 +1,8 @@
 'use client';
 
-import { CreateTokenAction } from '@/components/apiTokens/create-token-action';
 import { DataTable } from '@/components/tables/data-table';
 import { DataTableToolbar } from '@/components/tables/data-table-toolbar';
+import { CreateTagAction } from '@/components/tags/create-tag-action';
 import { tagTableColumns } from '@/components/tags/tags-table-columns';
 import { SectionHeader } from '@/components/ui/section-header';
 import { useTagsQuery } from '@/hooks/api/tags/useTagsQuery';
@@ -44,7 +44,7 @@ export default function TagsSettings() {
         title="Tags"
         description="Manage your tags."
       >
-        <CreateTokenAction />
+        <CreateTagAction />
       </SectionHeader>
 
       <div className="pb-3">
