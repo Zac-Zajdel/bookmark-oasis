@@ -11,7 +11,7 @@ import { useTableSortingParams } from '@/hooks/useTableSortingParams';
 import { ApiToken } from '@prisma/client';
 import { useEffect, useState } from 'react';
 
-export default function Settings() {
+export default function APISettings() {
   const [total, setTotal] = useState(0);
   const [apiTokens, setApiTokens] = useState<ApiToken[]>([]);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
@@ -39,10 +39,10 @@ export default function Settings() {
   }, [tokens]);
 
   return (
-    <div className="container mt-10">
+    <div>
       <SectionHeader
         title="API Tokens"
-        description="Query and obtain your data programmatically."
+        description="Manage your API credentials."
       >
         <CreateTokenAction />
       </SectionHeader>
