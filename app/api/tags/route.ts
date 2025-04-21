@@ -1,0 +1,52 @@
+import { withAuthManager } from '@/lib/authManager';
+import { prisma } from '@/lib/db';
+import { getTagSchema } from '@/lib/zod/tags';
+import { OasisResponse } from '@/types/apiHelpers';
+import { Prisma, Tag } from '@prisma/client';
+import { NextResponse } from 'next/server';
+
+export const GET = withAuthManager(
+  async ({
+    user,
+    searchParams,
+  }): Promise<NextResponse<OasisResponse<{ tags: Tag[]; total: number }>>> => {
+    const schema = getTagSchema();
+    const { page, limit, column, order, search } = schema.parse({
+      page: searchParams.get('page'),
+      limit: searchParams.get('limit'),
+      column: searchParams.get('column'),
+      order: searchParams.get('order'),
+      search: searchParams.get('search'),
+    });
+
+    const tagWhereInput: Prisma.TagWhereInput = {
+      userId: user.id,
+      ...(search && { name: { contains: search, mode: 'insensitive' } }),
+    };
+
+    const tags = await prisma.tag.findMany({
+      where: tagWhereInput,
+      orderBy: {
+        [column || 'name']: order || 'asc',
+      },
+      take: limit,
+      skip: (page - 1) * limit,
+    });
+
+    const total = await prisma.tag.count({
+      where: tagWhereInput,
+    });
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: 'Tags gathered successfully.',
+        data: {
+          tags,
+          total,
+        },
+      },
+      { status: 200 },
+    );
+  },
+);

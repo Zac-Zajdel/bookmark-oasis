@@ -1,0 +1,59 @@
+'use client';
+
+import { DataTableColumnHeader } from '@/components/tables/data-table-column-header';
+import { formatDate } from '@/lib/utils';
+import { Tag } from '@prisma/client';
+import { ColumnDef } from '@tanstack/react-table';
+
+export const tagTableColumns: ColumnDef<Tag>[] = [
+  {
+    accessorKey: 'name',
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        title="Name"
+      />
+    ),
+    cell: ({ row }) => {
+      return <div className="w-36">{row.getValue('name')}</div>;
+    },
+  },
+  {
+    accessorKey: 'color',
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        title="Color"
+      />
+    ),
+    cell: ({ row }) => {
+      return <div className="w-36">{row.getValue('color')}</div>;
+    },
+  },
+  {
+    accessorKey: 'createdAt',
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        title="Created"
+      />
+    ),
+    cell: ({ row }) => {
+      if (row.getValue('createdAt')) {
+        return (
+          <div>{formatDate(row.getValue('createdAt'), 'MMM D, YYYY')}</div>
+        );
+      }
+
+      return '---';
+    },
+  },
+  {
+    meta: 'Actions',
+    id: 'actions',
+    // cell: ({ row }) => {
+    //   return <TokenTableActions row={row} />;
+    // },
+    enableSorting: false,
+  },
+];

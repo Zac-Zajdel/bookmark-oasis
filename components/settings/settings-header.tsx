@@ -15,10 +15,10 @@ const navTabs: SettingsRoutes[] = [
     title: 'Profile',
     url: '/settings/profile',
   },
-  // {
-  //   title: 'Tags',
-  //   url: '/settings/tags',
-  // },
+  {
+    title: 'Tags',
+    url: '/settings/tags',
+  },
   {
     title: 'API',
     url: '/settings/api',

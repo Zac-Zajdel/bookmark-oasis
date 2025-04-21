@@ -7,6 +7,7 @@ async function main() {
   try {
     const user = await seedUser();
     await seedBookmarksAndFolders(user);
+    await seedTags(user);
     await seedExternalApiToken(user);
   } catch (error) {
     if (error instanceof Error) {
@@ -105,6 +106,17 @@ async function seedBookmarksAndFolders(user: User): Promise<void> {
       description: 'Official resource to learn Rust.',
       iconName: 'Book',
     },
+  });
+}
+
+async function seedTags(user: User): Promise<void> {
+  await prisma.tag.createMany({
+    data: [
+      { name: 'Data Structures', color: 'orange', userId: user.id },
+      { name: 'YouTube', color: 'red', userId: user.id },
+      { name: 'Learning', color: 'green', userId: user.id },
+      { name: 'Programming', color: 'blue', userId: user.id },
+    ],
   });
 }
 
