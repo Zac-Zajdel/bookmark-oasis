@@ -1,7 +1,11 @@
-export interface CreateBookmarkParams {
-  url: string;
-  title?: string;
+import { Prisma } from '@prisma/client';
+
+type BaseBookmarkParams = Pick<
+  Partial<Prisma.BookmarkCreateInput>,
+  'url' | 'title' | 'description'
+>;
+
+export type CreateBookmarkParams = BaseBookmarkParams & {
   folderId?: string;
-  description?: string;
   isManual?: boolean;
-}
+};

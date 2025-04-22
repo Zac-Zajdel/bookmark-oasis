@@ -1,13 +1,13 @@
 import { queryClient } from '@/lib/utils';
 import { OasisResponse } from '@/types/apiHelpers';
-import { Folder } from '@prisma/client';
+import { Folder, Prisma } from '@prisma/client';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 export const useUpdateFolderMutation = () => {
   return useMutation({
     mutationFn: async (
-      folder: Folder,
+      folder: Prisma.FolderUpdateInput,
     ): Promise<{ folder: Folder; message: string }> => {
       const { success, message, data }: OasisResponse<Folder> = await (
         await fetch(`/api/folders/${folder.id}`, {
