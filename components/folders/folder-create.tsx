@@ -13,7 +13,6 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useCreateFolderMutation } from '@/hooks/api/folders/useCreateFolderMutation';
 import { queryClient } from '@/lib/utils';
-import { CreateFolderParams } from '@/types/folders';
 import { Folder } from '@prisma/client';
 import { FolderIcon, LoaderCircle } from 'lucide-react';
 import Link from 'next/link';
@@ -28,44 +27,45 @@ export default function FolderCreate() {
   const createFolderMutation = useCreateFolderMutation();
 
   const onCreate = () => {
-    const hookContent: CreateFolderParams = {
-      title,
-      description,
-    };
-
-    createFolderMutation.mutate(hookContent, {
-      onSuccess: async ({
-        folder,
-        message,
-      }: {
-        folder: Folder;
-        message: string;
-      }) => {
-        toast.success(
-          <div>
-            <div className="pb-3">{message}</div>
-            <Link
-              href={`/folders/${folder.id}`}
-              className="hover:underline"
-            >
-              View Folder
-            </Link>
-          </div>,
-          {
-            duration: 5000,
-          },
-        );
-
-        setDialogOpen(false);
-
-        await queryClient.invalidateQueries({
-          queryKey: ['folders'],
-        });
+    createFolderMutation.mutate(
+      {
+        title,
+        description,
       },
-      onError(error) {
-        toast.error(error.message);
+      {
+        onSuccess: async ({
+          folder,
+          message,
+        }: {
+          folder: Folder;
+          message: string;
+        }) => {
+          toast.success(
+            <div>
+              <div className="pb-3">{message}</div>
+              <Link
+                href={`/folders/${folder.id}`}
+                className="hover:underline"
+              >
+                View Folder
+              </Link>
+            </div>,
+            {
+              duration: 5000,
+            },
+          );
+
+          setDialogOpen(false);
+
+          await queryClient.invalidateQueries({
+            queryKey: ['folders'],
+          });
+        },
+        onError(error) {
+          toast.error(error.message);
+        },
       },
-    });
+    );
   };
 
   const onDialogChange = () => {

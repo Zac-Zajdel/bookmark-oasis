@@ -18,6 +18,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useBookmarkQuery } from '@/hooks/api/bookmarks/useBookmarkQuery';
 import { useUpdateBookmarkMutation } from '@/hooks/api/bookmarks/useUpdateBookmarkMutation';
 import { truncate } from '@/lib/utils';
+import { Bookmark } from '@prisma/client';
 import { Save } from 'lucide-react';
 import Link from 'next/link';
 import { use, useEffect, useState } from 'react';
@@ -26,33 +27,26 @@ export default function DetailsPage(props: {
   params: Promise<{ id: string }>;
 }) {
   const params = use(props.params);
-  const [url, setUrl] = useState('');
-  const [title, setTitle] = useState('');
   const [iconName, setIconName] = useState('');
-  const [description, setDescription] = useState('');
 
   const { isLoading, data: bookmark } = useBookmarkQuery(params.id);
+  const [loadedBookmark, setLoadedBookmark] = useState<Bookmark>(
+    {} as Bookmark,
+  );
 
   useEffect(() => {
     if (bookmark) {
-      setUrl(bookmark.url);
-      setTitle(bookmark.title);
+      setLoadedBookmark(bookmark);
       setIconName(bookmark.iconName ?? '');
-      setDescription(bookmark.description ?? '');
     }
   }, [bookmark]);
 
   const updateBookmarkMutation = useUpdateBookmarkMutation();
   const updateBookmark = (icon?: string) => {
-    if (bookmark) {
-      updateBookmarkMutation.mutate({
-        ...bookmark,
-        title,
-        url,
-        description,
-        iconName: icon || bookmark.iconName,
-      });
-    }
+    updateBookmarkMutation.mutate({
+      ...loadedBookmark,
+      iconName: icon || loadedBookmark.iconName,
+    });
   };
 
   const onSelectIcon = (icon: string) => {
@@ -60,7 +54,7 @@ export default function DetailsPage(props: {
     setIconName(icon);
   };
 
-  if (isLoading || !bookmark) {
+  if (isLoading || !bookmark || !loadedBookmark) {
     return <BookmarkDetailsSkeleton />;
   }
 
@@ -77,7 +71,7 @@ export default function DetailsPage(props: {
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbPage>
-                {truncate(bookmark?.title ?? '...', 35)}
+                {truncate(loadedBookmark?.title ?? '...', 35)}
               </BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
@@ -95,7 +89,7 @@ export default function DetailsPage(props: {
         <Card className="mt-5 min-h-24 min-w-24 content-center p-8">
           <div className="flex items-center justify-center">
             <IconHolder
-              module={bookmark}
+              module={loadedBookmark}
               iconName={iconName}
               isLoading={isLoading}
               onSelectIcon={onSelectIcon}
@@ -111,8 +105,13 @@ export default function DetailsPage(props: {
               placeholder="Bookmark Title"
               autoComplete="off"
               required
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              value={loadedBookmark?.title || ''}
+              onChange={(e) =>
+                setLoadedBookmark({
+                  ...loadedBookmark,
+                  title: e.target.value,
+                })
+              }
             />
           </div>
 
@@ -123,8 +122,13 @@ export default function DetailsPage(props: {
               className="text-muted-foreground border-transparent"
               placeholder="Bookmark URL"
               required
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
+              value={loadedBookmark?.url || ''}
+              onChange={(e) =>
+                setLoadedBookmark({
+                  ...loadedBookmark,
+                  url: e.target.value,
+                })
+              }
             />
           </div>
         </div>
@@ -140,9 +144,14 @@ export default function DetailsPage(props: {
         <Textarea
           id="description"
           placeholder="Bookmark information"
-          value={description}
           rows={4}
-          onChange={(e) => setDescription(e.target.value)}
+          value={loadedBookmark?.description || ''}
+          onChange={(e) =>
+            setLoadedBookmark({
+              ...loadedBookmark,
+              description: e.target.value,
+            })
+          }
         />
       </div>
     </div>

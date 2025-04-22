@@ -1,13 +1,13 @@
 import { queryClient } from '@/lib/utils';
 import { OasisResponse } from '@/types/apiHelpers';
-import { Bookmark } from '@prisma/client';
+import { Bookmark, Prisma } from '@prisma/client';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 export const useUpdateBookmarkMutation = () => {
   return useMutation({
     mutationFn: async (
-      bookmark: Bookmark,
+      bookmark: Prisma.BookmarkUpdateInput,
     ): Promise<{ bookmark: Bookmark; message: string }> => {
       const { success, message, data }: OasisResponse<Bookmark> = await (
         await fetch(`/api/bookmarks/${bookmark.id}`, {

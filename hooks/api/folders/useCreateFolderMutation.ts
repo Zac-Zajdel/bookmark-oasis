@@ -12,11 +12,6 @@ export const useCreateFolderMutation = () => {
       folder: Folder;
       message: string;
     }> => {
-      const parameters: CreateFolderParams = {
-        title,
-        description,
-      };
-
       const {
         success,
         message,
@@ -24,7 +19,10 @@ export const useCreateFolderMutation = () => {
       }: OasisResponse<Folder> = await (
         await fetch('/api/folders', {
           method: 'POST',
-          body: JSON.stringify(parameters),
+          body: JSON.stringify({
+            title,
+            description,
+          }),
         })
       )?.json();
 

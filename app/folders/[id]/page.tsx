@@ -19,6 +19,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useFolderQuery } from '@/hooks/api/folders/useFolderQuery';
 import { useUpdateFolderMutation } from '@/hooks/api/folders/useUpdateFolderMutation';
 import { truncate } from '@/lib/utils';
+import { Folder } from '@prisma/client';
 import { Save } from 'lucide-react';
 import Link from 'next/link';
 import { use, useEffect, useState } from 'react';
@@ -27,30 +28,24 @@ export default function FolderDetails(props: {
   params: Promise<{ id: string }>;
 }) {
   const params = use(props.params);
-  const [title, setTitle] = useState('');
   const [iconName, setIconName] = useState('');
-  const [description, setDescription] = useState('');
 
   const { isLoading, data: folder } = useFolderQuery(params.id);
+  const [loadedFolder, setLoadedFolder] = useState<Folder>({} as Folder);
 
   useEffect(() => {
     if (folder) {
-      setTitle(folder.title);
+      setLoadedFolder(folder);
       setIconName(folder.iconName ?? '');
-      setDescription(folder.description ?? '');
     }
   }, [folder]);
 
   const updateFolderMutation = useUpdateFolderMutation();
   const updateFolder = (icon?: string) => {
-    if (folder) {
-      updateFolderMutation.mutate({
-        ...folder,
-        title,
-        description,
-        iconName: icon || folder.iconName,
-      });
-    }
+    updateFolderMutation.mutate({
+      ...loadedFolder,
+      iconName: icon || loadedFolder.iconName,
+    });
   };
 
   const onSelectIcon = (icon: string) => {
@@ -58,7 +53,7 @@ export default function FolderDetails(props: {
     setIconName(icon);
   };
 
-  if (isLoading || !folder) {
+  if (isLoading || !folder || !loadedFolder) {
     return <FolderDetailsSkeleton />;
   }
 
@@ -75,7 +70,7 @@ export default function FolderDetails(props: {
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbPage>
-                {truncate(folder?.title ?? '...', 35)}
+                {truncate(loadedFolder?.title ?? '...', 35)}
               </BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
@@ -109,8 +104,13 @@ export default function FolderDetails(props: {
               placeholder="Folder Title"
               autoComplete="off"
               required
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              value={loadedFolder?.title || ''}
+              onChange={(e) =>
+                setLoadedFolder({
+                  ...loadedFolder,
+                  title: e.target.value,
+                })
+              }
             />
           </div>
         </div>
@@ -126,16 +126,21 @@ export default function FolderDetails(props: {
         <Textarea
           id="description"
           placeholder="Folder information"
-          value={description}
+          value={loadedFolder?.description || ''}
           rows={4}
-          onChange={(e) => setDescription(e.target.value)}
+          onChange={(e) =>
+            setLoadedFolder({
+              ...loadedFolder,
+              description: e.target.value,
+            })
+          }
         />
       </div>
 
       <div className="mt-10">
         <BookmarkSection
           description="Bookmarks associated to this folder."
-          folderId={folder?.id}
+          folderId={loadedFolder?.id}
         />
       </div>
     </div>
