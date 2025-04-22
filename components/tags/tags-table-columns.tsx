@@ -1,6 +1,7 @@
 'use client';
 
 import { DataTableColumnHeader } from '@/components/tables/data-table-column-header';
+import { TagTableAction } from '@/components/tags/tag-table-action';
 import { formatDate } from '@/lib/utils';
 import { Tag } from '@prisma/client';
 import { ColumnDef } from '@tanstack/react-table';
@@ -51,9 +52,9 @@ export const tagTableColumns: ColumnDef<Tag>[] = [
   {
     meta: 'Actions',
     id: 'actions',
-    // cell: ({ row }) => {
-    //   return <TokenTableActions row={row} />;
-    // },
+    cell: ({ row }) => {
+      return <TagTableAction row={row} />;
+    },
     enableSorting: false,
   },
 ];

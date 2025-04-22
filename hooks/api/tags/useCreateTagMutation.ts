@@ -1,6 +1,7 @@
 import { OasisResponse } from '@/types/apiHelpers';
 import { Prisma, Tag } from '@prisma/client';
 import { useMutation } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 export const useCreateTagMutation = () => {
   return useMutation({
@@ -32,5 +33,6 @@ export const useCreateTagMutation = () => {
         message,
       };
     },
+    onError: (error) => toast.error(error.message),
   });
 };

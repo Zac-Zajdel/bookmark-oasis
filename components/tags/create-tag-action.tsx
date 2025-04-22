@@ -44,7 +44,6 @@ export function CreateTagAction() {
             queryKey: ['tags'],
           });
         },
-        onError: (error) => toast.error(error.message),
       },
     );
   };
