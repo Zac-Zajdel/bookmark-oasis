@@ -1,3 +1,4 @@
+import { GradientPicker } from '@/components/tags/gradiant-picker';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -21,6 +22,8 @@ export function CreateTagAction() {
     name: '',
     color: 'blue',
   });
+
+  const [background, setBackground] = useState('blue');
 
   const createTagMutation = useCreateTagMutation();
 
@@ -78,6 +81,12 @@ export function CreateTagAction() {
               })
             }
             placeholder="Tag Name . . ."
+          />
+        </div>
+        <div className="py-2">
+          <GradientPicker
+            background={background}
+            setBackground={setBackground}
           />
         </div>
         <DialogFooter>
