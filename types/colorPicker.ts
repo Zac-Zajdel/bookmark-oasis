@@ -1,4 +1,4 @@
-export const colorPickerOptions = [
+export const colorPickerValues = [
   'White',
   'Red',
   'Pink',
@@ -19,15 +19,15 @@ export const colorPickerOptions = [
   'Black',
 ] as const;
 
-export type ColorPickerOptionName = (typeof colorPickerOptions)[number];
+export type ColorPickerName = (typeof colorPickerValues)[number];
 
-export type ColorPickerSolid = {
-  name: ColorPickerOptionName;
+export type ColorPickerOption = {
+  name: ColorPickerName;
   color: string;
   darkText: boolean;
 };
 
-export const colorPickerSolids: ColorPickerSolid[] = [
+export const colorPickerOptions: ColorPickerOption[] = [
   { name: 'White', color: '#E2E2E2', darkText: true },
   { name: 'Red', color: '#F44336', darkText: false },
   { name: 'Pink', color: '#E91E63', darkText: false },

@@ -3,7 +3,7 @@ CREATE TABLE "tags" (
     "id" TEXT NOT NULL,
     "user_id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "color" TEXT NOT NULL DEFAULT 'blue',
+    "color" TEXT NOT NULL DEFAULT 'Blue',
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 

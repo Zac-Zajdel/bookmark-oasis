@@ -7,7 +7,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
-import { ColorPickerOptionName, colorPickerSolids } from '@/types/colorPicker';
+import { ColorPickerName, colorPickerOptions } from '@/types/colorPicker';
 import { Paintbrush } from 'lucide-react';
 
 export function ColorPicker({
@@ -16,10 +16,10 @@ export function ColorPicker({
   className,
 }: {
   color: string;
-  setColor: (color: ColorPickerOptionName) => void;
+  setColor: (color: ColorPickerName) => void;
   className?: string;
 }) {
-  const hexColor = colorPickerSolids.find((s) => s.name === color)?.color;
+  const hexColor = colorPickerOptions.find((s) => s.name === color)?.color;
 
   return (
     <Popover modal={true}>
@@ -49,7 +49,7 @@ export function ColorPicker({
       </PopoverTrigger>
       <PopoverContent className="w-72">
         <div className="mt-0 flex flex-wrap gap-1">
-          {colorPickerSolids.map((s) => (
+          {colorPickerOptions.map((s) => (
             <div
               key={s.name}
               style={{ background: s.color }}

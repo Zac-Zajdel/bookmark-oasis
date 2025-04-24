@@ -1,6 +1,7 @@
 'use client';
 
 import { DataTableColumnHeader } from '@/components/tables/data-table-column-header';
+import { TagBadge } from '@/components/tags/tag-badge';
 import { TagTableAction } from '@/components/tags/tag-table-action';
 import { formatDate } from '@/lib/utils';
 import { Tag } from '@prisma/client';
@@ -16,7 +17,11 @@ export const tagTableColumns: ColumnDef<Tag>[] = [
       />
     ),
     cell: ({ row }) => {
-      return <div className="w-36">{row.getValue('name')}</div>;
+      return (
+        <div className="w-36">
+          <TagBadge tag={row.original} />
+        </div>
+      );
     },
   },
   {

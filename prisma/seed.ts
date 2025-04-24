@@ -112,10 +112,11 @@ async function seedBookmarksAndFolders(user: User): Promise<void> {
 async function seedTags(user: User): Promise<void> {
   await prisma.tag.createMany({
     data: [
-      { name: 'Data Structures', color: 'orange', userId: user.id },
-      { name: 'YouTube', color: 'red', userId: user.id },
-      { name: 'Learning', color: 'green', userId: user.id },
-      { name: 'Programming', color: 'blue', userId: user.id },
+      { name: 'Data Structures', color: 'Blue', userId: user.id },
+      { name: 'YouTube', color: 'Red', userId: user.id },
+      { name: 'Learning', color: 'Green', userId: user.id },
+      { name: 'Programming', color: 'White', userId: user.id },
+      { name: 'Rust', color: 'Orange', userId: user.id },
     ],
   });
 }

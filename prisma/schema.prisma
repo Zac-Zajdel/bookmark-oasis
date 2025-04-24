@@ -137,7 +137,7 @@ model Tag {
   id        String   @id @default(cuid())
   userId    String   @map("user_id")
   name      String   @unique
-  color     String   @default("blue")
+  color     String   @default("Blue")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
