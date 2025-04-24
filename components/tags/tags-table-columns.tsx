@@ -20,18 +20,6 @@ export const tagTableColumns: ColumnDef<Tag>[] = [
     },
   },
   {
-    accessorKey: 'color',
-    header: ({ column }) => (
-      <DataTableColumnHeader
-        column={column}
-        title="Color"
-      />
-    ),
-    cell: ({ row }) => {
-      return <div className="w-36">{row.getValue('color')}</div>;
-    },
-  },
-  {
     accessorKey: 'createdAt',
     header: ({ column }) => (
       <DataTableColumnHeader

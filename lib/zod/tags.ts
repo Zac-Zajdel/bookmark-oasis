@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/db';
 import { AuthUser } from '@/types/auth';
+import { colorPickerOptions } from '@/types/colorPicker';
 import { z } from 'zod';
 
 export const getTagSchema = () => {
@@ -22,9 +23,7 @@ export const createTagSchema = (user: AuthUser) => {
   return z
     .object({
       name: z.string().min(1, { message: 'Name is required' }),
-      color: z
-        .enum(['red', 'orange', 'yellow', 'green', 'blue', 'purple'])
-        .optional(),
+      color: z.enum(colorPickerOptions),
       bookmarkId: z.string().cuid().nullable().optional(),
       folderId: z.string().cuid().nullable().optional(),
     })
@@ -82,9 +81,7 @@ export const updateTagSchema = (user: AuthUser) => {
     .object({
       id: z.string().cuid(),
       name: z.string().min(1, { message: 'Name is required' }),
-      color: z
-        .enum(['red', 'orange', 'yellow', 'green', 'blue', 'purple'])
-        .optional(),
+      color: z.enum(colorPickerOptions),
     })
     .superRefine(async (data, ctx) => {
       const tag = await prisma.tag.findFirst({

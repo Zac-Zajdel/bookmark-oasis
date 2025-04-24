@@ -1,4 +1,4 @@
-import { GradientPicker } from '@/components/tags/gradiant-picker';
+import { ColorPicker } from '@/components/tags/color-picker';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -9,6 +9,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { useCreateTagMutation } from '@/hooks/api/tags/useCreateTagMutation';
 import { queryClient } from '@/lib/utils';
 import { Prisma, Tag } from '@prisma/client';
@@ -20,10 +21,8 @@ export function CreateTagAction() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [createTag, setCreateTag] = useState<Partial<Prisma.TagCreateInput>>({
     name: '',
-    color: 'blue',
+    color: 'Blue',
   });
-
-  const [background, setBackground] = useState('blue');
 
   const createTagMutation = useCreateTagMutation();
 
@@ -39,7 +38,7 @@ export function CreateTagAction() {
 
           setCreateTag({
             name: '',
-            color: 'blue',
+            color: 'Blue',
           });
           setDialogOpen(false);
 
@@ -70,23 +69,32 @@ export function CreateTagAction() {
           <DialogTitle>Create Tag</DialogTitle>
         </DialogHeader>
         <div className="py-2">
+          <Label htmlFor="name">Name</Label>
           <Input
             value={createTag?.name}
+            id="name"
             required
+            className="mt-1"
             onChange={(event) =>
               setCreateTag({
                 ...createTag,
                 name: event.target.value,
-                color: createTag?.color || 'blue',
+                color: createTag?.color || 'Blue',
               })
             }
             placeholder="Tag Name . . ."
           />
         </div>
         <div className="py-2">
-          <GradientPicker
-            background={background}
-            setBackground={setBackground}
+          <div className="mb-2 text-sm leading-none font-medium">Color</div>
+          <ColorPicker
+            color={createTag.color || 'Blue'}
+            setColor={(color) =>
+              setCreateTag({
+                ...createTag,
+                color,
+              })
+            }
           />
         </div>
         <DialogFooter>

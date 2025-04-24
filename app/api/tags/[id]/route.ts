@@ -15,7 +15,7 @@ export const PUT = withAuthManager(
 
     const tag = await prisma.tag.update({
       where: {
-        id: id,
+        id,
         userId: user.id,
       },
       data: {
