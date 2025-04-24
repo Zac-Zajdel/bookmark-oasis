@@ -30,6 +30,7 @@ export function CreateTagAction() {
     if (!createTag?.name) {
       return toast.error('You must supply a name.');
     }
+
     createTagMutation.mutate(
       { tag: createTag },
       {

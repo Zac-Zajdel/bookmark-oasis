@@ -18,7 +18,7 @@ export const tagTableColumns: ColumnDef<Tag>[] = [
     ),
     cell: ({ row }) => {
       return (
-        <div className="w-36">
+        <div className="w-72">
           <TagBadge tag={row.original} />
         </div>
       );
