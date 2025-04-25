@@ -22,7 +22,7 @@ import { useDeleteTagMutation } from '@/hooks/api/tags/useDeleteTagMutation';
 import { cn } from '@/lib/utils';
 import { Tag } from '@prisma/client';
 import { Row } from '@tanstack/react-table';
-import { EllipsisVertical, Loader, Trash2 } from 'lucide-react';
+import { EllipsisVertical, Loader, Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
 export function TagTableAction({ row }: { row: Row<Tag> }) {
@@ -66,9 +66,12 @@ export function TagTableAction({ row }: { row: Row<Tag> }) {
         <DropdownMenuContent align="end">
           <TagActionDialog
             mode="Update"
+            tag={row.original}
+            setDropdownOpen={setIsDropdownOpen}
             triggerChildren={
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                Test
+                <Pencil className="mr-3 size-3.5" />
+                Edit
               </DropdownMenuItem>
             }
           />

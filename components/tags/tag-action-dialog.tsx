@@ -11,41 +11,68 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useCreateTagMutation } from '@/hooks/api/tags/useCreateTagMutation';
-import { Prisma } from '@prisma/client';
+import { useUpdateTagMutation } from '@/hooks/api/tags/useUpdateTagMutation';
+import { Prisma, Tag } from '@prisma/client';
 import { LoaderCircle, Tag as TagIcon } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
-// TODO - This should handle create or update
 export function TagActionDialog({
   mode,
   triggerChildren,
+  tag,
+  setDropdownOpen,
 }: {
   mode: 'Create' | 'Update';
   triggerChildren: React.ReactNode;
+  tag?: Partial<Tag>;
+  setDropdownOpen?: (open: boolean) => void;
 }) {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [createTag, setCreateTag] = useState<Partial<Prisma.TagCreateInput>>({
-    name: '',
-    color: 'Blue',
+  const [tagData, setTagData] = useState<Partial<Prisma.TagCreateInput>>({
+    name: tag?.name || '',
+    color: tag?.color || 'Blue',
   });
 
   const createTagMutation = useCreateTagMutation();
+  const updateTagMutation = useUpdateTagMutation();
+
+  const isLoading = createTagMutation.isPending || updateTagMutation.isPending;
 
   const tagCreateAction = async () => {
-    if (!createTag?.name) {
+    if (!tagData?.name) {
       return toast.error('You must supply a name.');
     }
 
     createTagMutation.mutate(
-      { tag: createTag },
+      { tag: tagData },
       {
         onSuccess: () => {
-          setCreateTag({
+          setTagData({
             name: '',
             color: 'Blue',
           });
           setDialogOpen(false);
+        },
+      },
+    );
+  };
+
+  const tagUpdateAction = async () => {
+    if (!tagData?.name) {
+      return toast.error('You must supply a name.');
+    }
+
+    updateTagMutation.mutate(
+      { ...tagData, id: tag?.id },
+      {
+        onSuccess: () => {
+          setTagData({
+            name: '',
+            color: 'Blue',
+          });
+          setDialogOpen(false);
+          setDropdownOpen?.(false);
         },
       },
     );
@@ -67,15 +94,15 @@ export function TagActionDialog({
         <div className="py-2">
           <Label htmlFor="name">Name</Label>
           <Input
-            value={createTag?.name}
+            value={tagData?.name}
             id="name"
             required
             className="mt-1"
             onChange={(event) =>
-              setCreateTag({
-                ...createTag,
+              setTagData({
+                ...tagData,
                 name: event.target.value,
-                color: createTag?.color || 'Blue',
+                color: tagData?.color || 'Blue',
               })
             }
             placeholder="Tag Name . . ."
@@ -84,10 +111,10 @@ export function TagActionDialog({
         <div className="py-2">
           <div className="mb-2 text-sm leading-none font-medium">Color</div>
           <ColorPicker
-            color={createTag.color || 'Blue'}
+            color={tagData.color || 'Blue'}
             setColor={(color) =>
-              setCreateTag({
-                ...createTag,
+              setTagData({
+                ...tagData,
                 color,
               })
             }
@@ -95,15 +122,15 @@ export function TagActionDialog({
         </div>
         <DialogFooter>
           <Button
-            onClick={tagCreateAction}
-            disabled={createTagMutation.isPending}
+            onClick={mode === 'Create' ? tagCreateAction : tagUpdateAction}
+            disabled={isLoading}
           >
-            {createTagMutation.isPending ? (
+            {isLoading ? (
               <LoaderCircle className="mr-2 size-4 animate-spin" />
             ) : (
               <TagIcon className="mr-2 size-4" />
             )}
-            Create Tag
+            {mode} Tag
           </Button>
         </DialogFooter>
       </DialogContent>

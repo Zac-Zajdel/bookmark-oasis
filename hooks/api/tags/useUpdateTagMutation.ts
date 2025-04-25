@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 export const useUpdateTagMutation = () => {
   return useMutation({
     mutationFn: async (
-      tag: Prisma.TagUpdateInput,
+      tag: Partial<Prisma.TagUpdateInput>,
     ): Promise<{ tag: Tag; message: string }> => {
       const { success, message, data }: OasisResponse<Tag> = await (
         await fetch(`/api/tags/${tag.id}`, {
