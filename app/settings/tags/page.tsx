@@ -2,13 +2,15 @@
 
 import { DataTable } from '@/components/tables/data-table';
 import { DataTableToolbar } from '@/components/tables/data-table-toolbar';
-import { CreateTagAction } from '@/components/tags/create-tag-action';
+import { TagActionDialog } from '@/components/tags/tag-action-dialog';
 import { tagTableColumns } from '@/components/tags/tags-table-columns';
+import { Button } from '@/components/ui/button';
 import { SectionHeader } from '@/components/ui/section-header';
 import { useTagsQuery } from '@/hooks/api/tags/useTagsQuery';
 import { useDataTable } from '@/hooks/useDataTable';
 import { useTableSortingParams } from '@/hooks/useTableSortingParams';
 import { Tag } from '@prisma/client';
+import { TagIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export default function TagsSettings() {
@@ -44,7 +46,15 @@ export default function TagsSettings() {
         title="Tags"
         description="Manage your tags."
       >
-        <CreateTagAction />
+        <TagActionDialog
+          mode="Create"
+          triggerChildren={
+            <Button>
+              <TagIcon className="mr-2 size-4" />
+              Create
+            </Button>
+          }
+        />
       </SectionHeader>
 
       <div className="pb-3">

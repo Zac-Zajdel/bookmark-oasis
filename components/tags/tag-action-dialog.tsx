@@ -11,13 +11,19 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useCreateTagMutation } from '@/hooks/api/tags/useCreateTagMutation';
-import { queryClient } from '@/lib/utils';
-import { Prisma, Tag } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { LoaderCircle, Tag as TagIcon } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
-export function CreateTagAction() {
+// TODO - This should handle create or update
+export function TagActionDialog({
+  mode,
+  triggerChildren,
+}: {
+  mode: 'Create' | 'Update';
+  triggerChildren: React.ReactNode;
+}) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [createTag, setCreateTag] = useState<Partial<Prisma.TagCreateInput>>({
     name: '',
@@ -34,18 +40,12 @@ export function CreateTagAction() {
     createTagMutation.mutate(
       { tag: createTag },
       {
-        onSuccess: async ({ message }: { tag: Tag; message: string }) => {
-          toast.success(message);
-
+        onSuccess: () => {
           setCreateTag({
             name: '',
             color: 'Blue',
           });
           setDialogOpen(false);
-
-          await queryClient.invalidateQueries({
-            queryKey: ['tags'],
-          });
         },
       },
     );
@@ -56,18 +56,13 @@ export function CreateTagAction() {
       open={dialogOpen}
       onOpenChange={setDialogOpen}
     >
-      <DialogTrigger asChild>
-        <Button>
-          <TagIcon className="mr-2 size-4" />
-          Create
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{triggerChildren}</DialogTrigger>
       <DialogContent
         className="sm:max-w-[525px]"
         aria-describedby={undefined}
       >
         <DialogHeader>
-          <DialogTitle>Create Tag</DialogTitle>
+          <DialogTitle>{mode} Tag</DialogTitle>
         </DialogHeader>
         <div className="py-2">
           <Label htmlFor="name">Name</Label>

@@ -4,25 +4,17 @@ import { Prisma, Tag } from '@prisma/client';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-export const useCreateTagMutation = () => {
+export const useUpdateTagMutation = () => {
   return useMutation({
-    mutationFn: async ({
-      tag,
-      bookmarkId,
-      folderId,
-    }: {
-      tag: Partial<Prisma.TagCreateInput>;
-      bookmarkId?: string;
-      folderId?: string;
-    }) => {
+    mutationFn: async (
+      tag: Prisma.TagUpdateInput,
+    ): Promise<{ tag: Tag; message: string }> => {
       const { success, message, data }: OasisResponse<Tag> = await (
-        await fetch('/api/tags', {
-          method: 'POST',
+        await fetch(`/api/tags/${tag.id}`, {
+          method: 'PUT',
           body: JSON.stringify({
-            name: tag?.name,
-            color: tag?.color,
-            bookmarkId,
-            folderId,
+            name: tag.name,
+            color: tag.color,
           }),
         })
       ).json();
