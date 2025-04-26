@@ -1,6 +1,6 @@
 'use client';
 
-import { Badge } from '@/components/ui/badge';
+import { TagBadge } from '@/components/tags/tag-badge';
 import {
   Command,
   CommandGroup,
@@ -9,22 +9,23 @@ import {
 } from '@/components/ui/command';
 import { cn } from '@/lib/utils';
 import { Command as CommandPrimitive, useCommandState } from 'cmdk';
-import { X } from 'lucide-react';
 import * as React from 'react';
-import { forwardRef, useEffect } from 'react';
-
-/**
- * TODO:
- * 1. Remove Fixed Option
- * 2. Remove GroupBy Logic.
- */
+import {
+  forwardRef,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 export interface Option {
+  id?: string;
   value: string;
   label: string;
+  color?: string;
   disable?: boolean;
-  /** fixed option that can't be removed. */
-  fixed?: boolean;
   /** Group the options by providing key. */
   [key: string]: string | boolean | undefined;
 }
@@ -40,9 +41,9 @@ interface MultipleSelectorProps {
   options?: Option[];
   placeholder?: string;
   /** Loading component. */
-  loadingIndicator?: React.ReactNode;
+  loadingIndicator?: ReactNode;
   /** Empty component. */
-  emptyIndicator?: React.ReactNode;
+  emptyIndicator?: ReactNode;
   /** Debounce time for async search. Only work with `onSearch`. */
   delay?: number;
   /**
@@ -58,7 +59,7 @@ interface MultipleSelectorProps {
    * i.e.: creatable, groupBy, delay.
    **/
   onSearchSync?: (value: string) => Option[];
-  onSelect?: (options: Option[]) => void;
+  onSelect?: (options: Option) => void;
   onCreate?: (value: Option) => void;
   onRemove?: (option: Option) => void;
   /** Hide the placeholder when there are options selected. */
@@ -94,7 +95,7 @@ export interface MultipleSelectorRef {
 }
 
 export function useDebounce<T>(value: T, delay?: number): T {
-  const [debouncedValue, setDebouncedValue] = React.useState<T>(value);
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
 
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedValue(value), delay || 500);
@@ -190,19 +191,18 @@ const MultipleSelector = React.forwardRef<
       onSelect,
       onCreate,
       onRemove,
+      onSearch,
+      onSearchSync,
       placeholder,
       defaultOptions: arrayDefaultOptions = [],
       options: arrayOptions,
       delay,
-      onSearch,
-      onSearchSync,
       loadingIndicator,
       emptyIndicator,
       hidePlaceholderWhenSelected,
       disabled,
       groupBy,
       className,
-      badgeClassName,
       selectFirstItem = true,
       creatable = false,
       triggerSearchOnFocus = false,
@@ -211,17 +211,17 @@ const MultipleSelector = React.forwardRef<
     }: MultipleSelectorProps,
     ref: React.Ref<MultipleSelectorRef>,
   ) => {
-    const inputRef = React.useRef<HTMLInputElement>(null);
-    const [open, setOpen] = React.useState(false);
-    const [onScrollbar, setOnScrollbar] = React.useState(false);
-    const [isLoading, setIsLoading] = React.useState(false);
-    const dropdownRef = React.useRef<HTMLDivElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
+    const [open, setOpen] = useState(false);
+    const [onScrollbar, setOnScrollbar] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
 
-    const [selected, setSelected] = React.useState<Option[]>(value || []);
-    const [options, setOptions] = React.useState<GroupOption>(
+    const [selected, setSelected] = useState<Option[]>(value || []);
+    const [options, setOptions] = useState<GroupOption>(
       transToGroupOption(arrayDefaultOptions, groupBy),
     );
-    const [inputValue, setInputValue] = React.useState('');
+    const [inputValue, setInputValue] = useState('');
     const debouncedSearchTerm = useDebounce(inputValue, delay || 250);
 
     React.useImperativeHandle(
@@ -247,7 +247,7 @@ const MultipleSelector = React.forwardRef<
       }
     };
 
-    const handleUnselect = React.useCallback(
+    const handleUnselect = useCallback(
       (option: Option) => {
         const newOptions = selected.filter((s) => s.value !== option.value);
         setSelected(newOptions);
@@ -256,17 +256,13 @@ const MultipleSelector = React.forwardRef<
       [onRemove, selected],
     );
 
-    const handleKeyDown = React.useCallback(
+    const handleKeyDown = useCallback(
       (e: React.KeyboardEvent<HTMLDivElement>) => {
         const input = inputRef.current;
         if (input) {
           if (e.key === 'Delete' || e.key === 'Backspace') {
             if (input.value === '' && selected.length > 0) {
-              const lastSelectOption = selected[selected.length - 1];
-              // If last item is fixed, we should not remove it.
-              if (!lastSelectOption.fixed) {
-                handleUnselect(selected[selected.length - 1]);
-              }
+              handleUnselect(selected[selected.length - 1]);
             }
           }
 
@@ -383,7 +379,10 @@ const MultipleSelector = React.forwardRef<
           }}
           onSelect={(value: string) => {
             setInputValue('');
-            setSelected([...selected, { value, label: value }]);
+            setSelected([
+              ...selected,
+              { value, label: value, color: 'Blue', name: value },
+            ]);
             onCreate?.({ value, label: value });
           }}
         >
@@ -404,7 +403,7 @@ const MultipleSelector = React.forwardRef<
       return undefined;
     };
 
-    const EmptyItem = React.useCallback(() => {
+    const EmptyItem = useCallback(() => {
       if (!emptyIndicator) return undefined;
 
       // For async search that showing emptyIndicator
@@ -422,13 +421,13 @@ const MultipleSelector = React.forwardRef<
       return <CommandEmpty>{emptyIndicator}</CommandEmpty>;
     }, [creatable, emptyIndicator, onSearch, options]);
 
-    const selectables = React.useMemo<GroupOption>(
+    const selectables = useMemo<GroupOption>(
       () => removePickedOption(options, selected),
       [options, selected],
     );
 
     /** Avoid Creatable Selector freezing or lagging when paste a long string. */
-    const commandFilter = React.useCallback(() => {
+    const commandFilter = useCallback(() => {
       if (commandProps?.filter) {
         return commandProps.filter;
       }
@@ -478,43 +477,21 @@ const MultipleSelector = React.forwardRef<
         >
           <div className="relative flex flex-wrap gap-1">
             {selected.map((option) => {
-              // TODO - TagBadge Component...
               return (
-                <Badge
+                <TagBadge
                   key={option.value}
-                  className={cn(
-                    'data-[disabled]:bg-muted-foreground data-[disabled]:text-muted data-[disabled]:hover:bg-muted-foreground',
-                    'data-[fixed]:bg-muted-foreground data-[fixed]:text-muted data-[fixed]:hover:bg-muted-foreground',
-                    badgeClassName,
-                  )}
-                  data-fixed={option.fixed}
-                  data-disabled={disabled || undefined}
-                >
-                  {option.label}
-                  <button
-                    type="button"
-                    className={cn(
-                      'ring-offset-background focus:ring-ring ml-1 rounded-full outline-none focus:ring-2 focus:ring-offset-2',
-                      (disabled || option.fixed) && 'hidden',
-                    )}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        handleUnselect(option);
-                      }
-                    }}
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                    }}
-                    onClick={() => handleUnselect(option)}
-                  >
-                    <X className="text-muted-foreground hover:text-foreground h-3 w-3" />
-                  </button>
-                </Badge>
+                  tag={{
+                    id: option.id,
+                    name: option.label,
+                    color: option.color,
+                  }}
+                  onRemove={() => {
+                    handleUnselect(option);
+                  }}
+                />
               );
             })}
 
-            {/* Avoid having the "Search" Icon */}
             <CommandPrimitive.Input
               {...inputProps}
               ref={inputRef}
@@ -599,7 +576,7 @@ const MultipleSelector = React.forwardRef<
                                 setInputValue('');
                                 const newOptions = [...selected, option];
                                 setSelected(newOptions);
-                                onSelect?.(newOptions);
+                                onSelect?.(option);
                               }}
                               className={cn(
                                 'cursor-pointer',

@@ -3,7 +3,6 @@
 import { DataTable } from '@/components/tables/data-table';
 import { DataTableToolbar } from '@/components/tables/data-table-toolbar';
 import { TagActionDialog } from '@/components/tags/tag-action-dialog';
-import TagSearchDropdown from '@/components/tags/tag-search-dropdown';
 import { tagTableColumns } from '@/components/tags/tags-table-columns';
 import { Button } from '@/components/ui/button';
 import { SectionHeader } from '@/components/ui/section-header';
@@ -56,11 +55,6 @@ export default function TagsSettings() {
           }
         />
       </SectionHeader>
-
-      {/* TESTING COMPONENT CREATION */}
-      <div className="w-[56rem] py-10">
-        <TagSearchDropdown />
-      </div>
 
       <div className="pb-3">
         <DataTableToolbar

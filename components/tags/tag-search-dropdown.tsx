@@ -1,12 +1,22 @@
 'use client';
 
-import MultipleSelector from '@/components/ui/multiple-selector';
+import MultipleSelector, { Option } from '@/components/ui/multiple-selector';
 import { useTagsQuery } from '@/hooks/api/tags/useTagsQuery';
 import { OasisResponse } from '@/types/apiHelpers';
 import { Tag } from '@prisma/client';
 import { useMutation } from '@tanstack/react-query';
 
-export default function TagSearchDropdown() {
+type TagSearchDropdownProps = {
+  onSelect?: (value: Option) => void;
+  onCreate?: (value: Option) => void;
+  onRemove?: (value: Option) => void;
+};
+
+export default function TagSearchDropdown({
+  onSelect,
+  onCreate,
+  onRemove,
+}: TagSearchDropdownProps) {
   const { data: initialTagData } = useTagsQuery({
     pageSize: 10,
     pageIndex: 0,
@@ -15,9 +25,8 @@ export default function TagSearchDropdown() {
     globalFilter: '',
   });
 
-  // Mutation for search
   const searchMutation = useMutation({
-    mutationFn: async (searchTerm: string) => {
+    mutationFn: async (searchTerm: string): Promise<Option[]> => {
       const queryParams = new URLSearchParams({
         page: '1',
         limit: '10',
@@ -30,18 +39,24 @@ export default function TagSearchDropdown() {
         await fetch(`/api/tags?${queryParams.toString()}`)
       ).json();
 
-      return data.tags.map((t) => ({
-        label: t.name,
-        value: t.name,
+      return data.tags.map((tag: Tag) => ({
+        id: tag.id,
+        label: tag.name,
+        name: tag.name,
+        value: tag.name,
+        color: tag.color,
       }));
     },
   });
 
-  const mapTagsToOptions = (tags: Tag[]) => {
+  const mapTagsToOptions = (tags: Tag[]): Option[] => {
     return (
-      tags?.map((t: Tag) => ({
-        label: t.name,
-        value: t.name,
+      tags?.map((tag: Tag) => ({
+        id: tag.id,
+        label: tag.name,
+        name: tag.name,
+        value: tag.name,
+        color: tag.color,
       })) ?? []
     );
   };
@@ -49,18 +64,12 @@ export default function TagSearchDropdown() {
   return (
     <MultipleSelector
       defaultOptions={mapTagsToOptions(initialTagData?.data ?? [])}
-      onSelect={(value) => {
-        console.log('onSelect', value);
-      }}
-      onCreate={(value) => {
-        console.log('onCreate', value);
-      }}
-      onRemove={(value) => {
-        console.log('onRemove', value);
-      }}
-      onSearch={async (value) => {
-        return await searchMutation.mutateAsync(value);
-      }}
+      onSelect={(value) => onSelect?.(value)}
+      onCreate={(value) => onCreate?.(value)}
+      onRemove={(value) => onRemove?.(value)}
+      onSearch={async (value: string) =>
+        await searchMutation.mutateAsync(value)
+      }
       hidePlaceholderWhenSelected
       triggerSearchOnFocus
       placeholder="Search Tags..."

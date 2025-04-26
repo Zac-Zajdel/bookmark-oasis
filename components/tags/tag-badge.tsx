@@ -9,15 +9,22 @@ import {
 } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { colorPickerOptions } from '@/types/colorPicker';
-import { Tag } from '@prisma/client';
+import { X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
-type TagBadgeProps = {
-  tag: Tag;
-  className?: string;
+type TagContent = {
+  id?: string;
+  name: string;
+  color?: string;
 };
 
-export function TagBadge({ tag, className }: TagBadgeProps) {
+type TagBadgeProps = {
+  tag: TagContent;
+  className?: string;
+  onRemove?: (tag: TagContent) => void;
+};
+
+export function TagBadge({ tag, className, onRemove }: TagBadgeProps) {
   const pickedColor = colorPickerOptions.find(
     (color) => color.name === tag.color,
   );
@@ -47,6 +54,30 @@ export function TagBadge({ tag, className }: TagBadgeProps) {
       >
         {tag.name}
       </span>
+      <button
+        type="button"
+        className={cn(
+          'ring-offset-background focus:ring-ring ml-2 cursor-pointer rounded-full outline-none focus:ring-2 focus:ring-offset-2',
+          !onRemove && 'hidden',
+        )}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            onRemove?.(tag);
+          }
+        }}
+        onMouseDown={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+        onClick={() => onRemove?.(tag)}
+      >
+        <X
+          className={cn(
+            'hover:text-foreground size-3',
+            pickedColor?.darkText ? 'text-black' : 'text-white',
+          )}
+        />
+      </button>
     </Badge>
   );
 

@@ -19,7 +19,13 @@ export const tagTableColumns: ColumnDef<Tag>[] = [
     cell: ({ row }) => {
       return (
         <div className="w-72">
-          <TagBadge tag={row.original} />
+          <TagBadge
+            tag={{
+              id: row.original.id,
+              name: row.original.name,
+              color: row.original.color,
+            }}
+          />
         </div>
       );
     },
