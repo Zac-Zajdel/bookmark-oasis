@@ -13,6 +13,14 @@ import { X } from 'lucide-react';
 import * as React from 'react';
 import { forwardRef, useEffect } from 'react';
 
+/**
+ * TODO:
+ * 1. Remove Fixed Option
+ * 2. Remove GroupBy Logic.
+ * 3. Cleanup Component and types...
+ * 4. Remove max selected limitations.
+ */
+
 export interface Option {
   value: string;
   label: string;
@@ -313,7 +321,6 @@ const MultipleSelector = React.forwardRef<
 
     useEffect(() => {
       /** sync search */
-
       const doSearchSync = () => {
         const res = onSearchSync?.(debouncedSearchTerm);
         setOptions(transToGroupOption(res || [], groupBy));
@@ -480,6 +487,7 @@ const MultipleSelector = React.forwardRef<
         >
           <div className="relative flex flex-wrap gap-1">
             {selected.map((option) => {
+              // TODO - TagBadge Component...
               return (
                 <Badge
                   key={option.value}

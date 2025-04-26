@@ -6,23 +6,13 @@ import { toast } from 'sonner';
 
 export const useCreateTagMutation = () => {
   return useMutation({
-    mutationFn: async ({
-      tag,
-      bookmarkId,
-      folderId,
-    }: {
-      tag: Partial<Prisma.TagCreateInput>;
-      bookmarkId?: string;
-      folderId?: string;
-    }) => {
+    mutationFn: async ({ tag }: { tag: Partial<Prisma.TagCreateInput> }) => {
       const { success, message, data }: OasisResponse<Tag> = await (
         await fetch('/api/tags', {
           method: 'POST',
           body: JSON.stringify({
             name: tag?.name,
             color: tag?.color,
-            bookmarkId,
-            folderId,
           }),
         })
       ).json();

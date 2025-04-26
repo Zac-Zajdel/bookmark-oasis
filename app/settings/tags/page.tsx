@@ -81,9 +81,13 @@ export default function TagsSettings() {
         />
       </SectionHeader>
 
+      {/* TESTING COMPONENT CREATION */}
       <div className="w-[56rem] py-10">
         <MultipleSelector
           defaultOptions={OPTIONS}
+          onChange={(value) => {
+            console.log(value);
+          }}
           onSearch={async (value) => {
             const res = await mockSearch(value);
             return res;
