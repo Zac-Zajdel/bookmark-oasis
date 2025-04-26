@@ -29,6 +29,14 @@ test('DELETE /bookmarks/{id}', async (ctx: OasisTestContext) => {
   expect(status).toBe(200);
   expect(success).toBe(true);
   expect(message).toBe('Bookmark was removed successfully.');
+
+  expect(
+    await prisma.bookmark.findUnique({
+      where: {
+        id: bookmark.id,
+      },
+    }),
+  ).toBeNull();
 });
 
 afterAll(async () => {

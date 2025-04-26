@@ -26,13 +26,13 @@ test('DELETE /tags/{id}', async (ctx: OasisTestContext) => {
   expect(success).toBe(true);
   expect(message).toBe('Tag was removed successfully.');
 
-  const deletedTag = await prisma.tag.findUnique({
-    where: {
-      id: tag.id,
-    },
-  });
-
-  expect(deletedTag).toBeNull();
+  expect(
+    await prisma.tag.findUnique({
+      where: {
+        id: tag.id,
+      },
+    }),
+  ).toBeNull();
 });
 
 afterAll(async () => {
