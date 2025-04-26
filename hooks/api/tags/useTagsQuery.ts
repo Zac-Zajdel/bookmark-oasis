@@ -10,6 +10,7 @@ interface UseTagsQueryParams {
   pageSize: number;
   pageIndex: number;
   globalFilter: string | undefined;
+  enabled?: boolean;
 }
 
 export const useTagsQuery = ({
@@ -19,6 +20,7 @@ export const useTagsQuery = ({
   pageIndex,
   pageSize,
   globalFilter,
+  enabled = true,
 }: UseTagsQueryParams) =>
   useQuery({
     queryKey: ['tags', column, order, pageSize, globalFilter, pageIndex + 1],
@@ -57,4 +59,5 @@ export const useTagsQuery = ({
         total: data.total,
       };
     },
+    enabled,
   });

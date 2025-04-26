@@ -17,8 +17,6 @@ import { forwardRef, useEffect } from 'react';
  * TODO:
  * 1. Remove Fixed Option
  * 2. Remove GroupBy Logic.
- * 3. Cleanup Component and types...
- * 4. Remove max selected limitations.
  */
 
 export interface Option {
@@ -60,11 +58,9 @@ interface MultipleSelectorProps {
    * i.e.: creatable, groupBy, delay.
    **/
   onSearchSync?: (value: string) => Option[];
-  onChange?: (options: Option[]) => void;
-  /** Limit the maximum number of selected options. */
-  maxSelected?: number;
-  /** When the number of selected options exceeds the limit, the onMaxSelected will be called. */
-  onMaxSelected?: (maxLimit: number) => void;
+  onSelect?: (options: Option[]) => void;
+  onCreate?: (value: Option) => void;
+  onRemove?: (option: Option) => void;
   /** Hide the placeholder when there are options selected. */
   hidePlaceholderWhenSelected?: boolean;
   disabled?: boolean;
@@ -88,8 +84,6 @@ interface MultipleSelectorProps {
     React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>,
     'value' | 'placeholder' | 'disabled'
   >;
-  /** hide the clear all button. */
-  hideClearAllButton?: boolean;
 }
 
 export interface MultipleSelectorRef {
@@ -193,7 +187,9 @@ const MultipleSelector = React.forwardRef<
   (
     {
       value,
-      onChange,
+      onSelect,
+      onCreate,
+      onRemove,
       placeholder,
       defaultOptions: arrayDefaultOptions = [],
       options: arrayOptions,
@@ -202,8 +198,6 @@ const MultipleSelector = React.forwardRef<
       onSearchSync,
       loadingIndicator,
       emptyIndicator,
-      maxSelected = Number.MAX_SAFE_INTEGER,
-      onMaxSelected,
       hidePlaceholderWhenSelected,
       disabled,
       groupBy,
@@ -214,7 +208,6 @@ const MultipleSelector = React.forwardRef<
       triggerSearchOnFocus = false,
       commandProps,
       inputProps,
-      hideClearAllButton = false,
     }: MultipleSelectorProps,
     ref: React.Ref<MultipleSelectorRef>,
   ) => {
@@ -258,9 +251,9 @@ const MultipleSelector = React.forwardRef<
       (option: Option) => {
         const newOptions = selected.filter((s) => s.value !== option.value);
         setSelected(newOptions);
-        onChange?.(newOptions);
+        onRemove?.(option);
       },
-      [onChange, selected],
+      [onRemove, selected],
     );
 
     const handleKeyDown = React.useCallback(
@@ -389,14 +382,9 @@ const MultipleSelector = React.forwardRef<
             e.stopPropagation();
           }}
           onSelect={(value: string) => {
-            if (selected.length >= maxSelected) {
-              onMaxSelected?.(selected.length);
-              return;
-            }
             setInputValue('');
-            const newOptions = [...selected, { value, label: value }];
-            setSelected(newOptions);
-            onChange?.(newOptions);
+            setSelected([...selected, { value, label: value }]);
+            onCreate?.({ value, label: value });
           }}
         >
           {`Create "${inputValue}"`}
@@ -561,23 +549,6 @@ const MultipleSelector = React.forwardRef<
                 inputProps?.className,
               )}
             />
-            <button
-              type="button"
-              onClick={() => {
-                setSelected(selected.filter((s) => s.fixed));
-                onChange?.(selected.filter((s) => s.fixed));
-              }}
-              className={cn(
-                'absolute right-0 h-6 w-6 p-0',
-                (hideClearAllButton ||
-                  disabled ||
-                  selected.length < 1 ||
-                  selected.filter((s) => s.fixed).length === selected.length) &&
-                  'hidden',
-              )}
-            >
-              <X />
-            </button>
           </div>
         </div>
 
@@ -625,14 +596,10 @@ const MultipleSelector = React.forwardRef<
                                 e.stopPropagation();
                               }}
                               onSelect={() => {
-                                if (selected.length >= maxSelected) {
-                                  onMaxSelected?.(selected.length);
-                                  return;
-                                }
                                 setInputValue('');
                                 const newOptions = [...selected, option];
                                 setSelected(newOptions);
-                                onChange?.(newOptions);
+                                onSelect?.(newOptions);
                               }}
                               className={cn(
                                 'cursor-pointer',
