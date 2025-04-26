@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Table } from '@tanstack/react-table';
 
 interface UseTagsQueryParams {
-  table: Table<Tag>;
+  table?: Table<Tag>;
   column: string | undefined;
   order: 'asc' | 'desc';
   pageSize: number;
@@ -25,7 +25,7 @@ export const useTagsQuery = ({
     queryFn: async (): Promise<{ data: Tag[]; total: number }> => {
       // Reset page index when adjusting filters
       if (globalFilter?.trim()?.length) {
-        table.setPageIndex(0);
+        table?.setPageIndex(0);
       }
 
       const queryParams = new URLSearchParams({

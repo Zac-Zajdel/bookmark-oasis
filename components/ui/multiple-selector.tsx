@@ -177,7 +177,7 @@ const CommandEmpty = forwardRef<
   return (
     <div
       ref={forwardedRef}
-      className={cn('py-6 text-center text-sm', className)}
+      className={cn('py-3 text-center text-sm', className)}
       cmdk-empty=""
       role="presentation"
       {...props}
@@ -229,7 +229,7 @@ const MultipleSelector = React.forwardRef<
       transToGroupOption(arrayDefaultOptions, groupBy),
     );
     const [inputValue, setInputValue] = React.useState('');
-    const debouncedSearchTerm = useDebounce(inputValue, delay || 500);
+    const debouncedSearchTerm = useDebounce(inputValue, delay || 250);
 
     React.useImperativeHandle(
       ref,
