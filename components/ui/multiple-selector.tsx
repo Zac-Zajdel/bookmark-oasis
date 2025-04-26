@@ -354,10 +354,13 @@ const MultipleSelector = React.forwardRef<
       const exec = async () => {
         if (!onSearch || !open) return;
 
-        if (triggerSearchOnFocus) {
+        // Only trigger search on focus if there's no search term
+        if (triggerSearchOnFocus && !debouncedSearchTerm) {
           await doSearch();
+          return;
         }
 
+        // Otherwise, only search when there's a search term
         if (debouncedSearchTerm) {
           await doSearch();
         }
