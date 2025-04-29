@@ -22,9 +22,15 @@ type TagBadgeProps = {
   tag: TagContent;
   className?: string;
   onRemove?: (tag: TagContent) => void;
+  disabled?: boolean;
 };
 
-export function TagBadge({ tag, className, onRemove }: TagBadgeProps) {
+export function TagBadge({
+  tag,
+  className,
+  disabled,
+  onRemove,
+}: TagBadgeProps) {
   const pickedColor = colorPickerOptions.find(
     (color) => color.name === tag.color,
   );
@@ -56,9 +62,11 @@ export function TagBadge({ tag, className, onRemove }: TagBadgeProps) {
       </span>
       <button
         type="button"
+        disabled={disabled}
         className={cn(
           'ring-offset-background focus:ring-ring ml-2 cursor-pointer rounded-full outline-none focus:ring-2 focus:ring-offset-2',
           !onRemove && 'hidden',
+          disabled && 'cursor-not-allowed opacity-50',
         )}
         onKeyDown={(e) => {
           if (e.key === 'Enter') {
@@ -73,7 +81,7 @@ export function TagBadge({ tag, className, onRemove }: TagBadgeProps) {
       >
         <X
           className={cn(
-            'hover:text-foreground size-3',
+            'size-3',
             pickedColor?.darkText ? 'text-black' : 'text-white',
           )}
         />

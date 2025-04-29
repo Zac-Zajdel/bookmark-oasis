@@ -16,7 +16,10 @@ export const getTagSchema = (user: AuthUser) => {
         .refine((val) => val >= 10, {
           message: 'limit cannot be less than 10',
         }),
-      column: z.enum(['name', 'color', 'createdAt']).nullable().optional(),
+      column: z
+        .enum(['id', 'name', 'color', 'createdAt'])
+        .nullable()
+        .optional(),
       order: z.enum(['asc', 'desc']).nullable().optional(),
       search: z.string().nullable(),
       bookmarkId: z.string().cuid().nullable().optional(),

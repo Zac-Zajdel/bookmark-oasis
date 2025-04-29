@@ -5,12 +5,14 @@ import { useTagsQuery } from '@/hooks/api/tags/useTagsQuery';
 import { OasisResponse } from '@/types/apiHelpers';
 import { Tag } from '@prisma/client';
 import { useMutation } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
 
 type TagSearchDropdownProps = {
   onSelect?: (value: Option) => void;
   onCreate?: (value: Option) => void;
   onRemove?: (value: Option) => void;
   bookmarkId?: string;
+  isPendingMutation?: boolean;
 };
 
 export default function TagSearchDropdown({
@@ -18,22 +20,32 @@ export default function TagSearchDropdown({
   onCreate,
   onRemove,
   bookmarkId,
+  isPendingMutation,
 }: TagSearchDropdownProps) {
+  const [selectedTags, setSelectedTags] = useState<Partial<Tag>[]>([]);
+
   const { data: initialTagData } = useTagsQuery({
     pageSize: 10,
     pageIndex: 0,
-    column: 'name',
+    column: 'id',
     order: 'asc',
     globalFilter: '',
     bookmarkId,
   });
+
+  // Update selectedTags when initialTagData changes and we're not in a pending mutation
+  useEffect(() => {
+    if (initialTagData?.data && !isPendingMutation) {
+      setSelectedTags(initialTagData.data);
+    }
+  }, [initialTagData?.data, isPendingMutation]);
 
   const searchMutation = useMutation({
     mutationFn: async (searchTerm: string): Promise<Option[]> => {
       const queryParams = new URLSearchParams({
         page: '1',
         limit: '10',
-        column: 'name',
+        column: 'id',
         order: 'asc',
         search: searchTerm,
       });
@@ -52,29 +64,45 @@ export default function TagSearchDropdown({
     },
   });
 
-  const mapTagsToOptions = (tags: Tag[]): Option[] => {
+  const mapTagsToOptions = (tags: Partial<Tag>[]): Option[] => {
     return (
-      tags?.map((tag: Tag) => ({
-        id: tag.id,
-        label: tag.name,
-        name: tag.name,
-        value: tag.name,
-        color: tag.color,
+      tags?.map((tag: Partial<Tag>) => ({
+        id: tag.id ?? '',
+        label: tag.name ?? '',
+        name: tag.name ?? '',
+        value: tag.name ?? '',
+        color: tag.color ?? '',
       })) ?? []
     );
   };
 
   return (
-    // I need a loading indicator to not make the component jump when the options are coming.
     <MultipleSelector
-      value={mapTagsToOptions(initialTagData?.data ?? [])}
+      value={mapTagsToOptions(selectedTags)}
       defaultOptions={mapTagsToOptions(initialTagData?.data ?? [])}
-      onSelect={(value) => onSelect?.(value)}
-      onCreate={(value) => onCreate?.(value)}
-      onRemove={(value) => onRemove?.(value)}
+      onSelect={(value) => {
+        setSelectedTags((prev) => [
+          ...prev,
+          { id: value.id, name: value.label, color: value.color },
+        ]);
+
+        onSelect?.(value);
+      }}
+      onCreate={(value) => {
+        setSelectedTags((prev) => [
+          ...prev,
+          { id: value.id, name: value.label, color: value.color },
+        ]);
+        onCreate?.(value);
+      }}
+      onRemove={(value) => {
+        setSelectedTags((prev) => prev.filter((tag) => tag.id !== value.id));
+        onRemove?.(value);
+      }}
       onSearch={async (value: string) =>
         await searchMutation.mutateAsync(value)
       }
+      isPendingMutation={isPendingMutation}
       hidePlaceholderWhenSelected
       triggerSearchOnFocus
       placeholder="Search Tags..."

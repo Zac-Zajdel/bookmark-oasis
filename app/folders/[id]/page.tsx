@@ -127,7 +127,7 @@ export default function FolderDetails(props: {
           id="description"
           placeholder="Folder information"
           value={loadedFolder?.description || ''}
-          rows={4}
+          rows={8}
           onChange={(e) =>
             setLoadedFolder({
               ...loadedFolder,

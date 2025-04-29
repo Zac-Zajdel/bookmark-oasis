@@ -136,6 +136,10 @@ export default function DetailsPage(props: {
       </div>
 
       <div className="grid w-full gap-1.5 pt-5">
+        <TagSection bookmarkId={params.id} />
+      </div>
+
+      <div className="grid w-full gap-1.5 pt-5">
         <Label
           htmlFor="description"
           className="mb-1"
@@ -145,7 +149,7 @@ export default function DetailsPage(props: {
         <Textarea
           id="description"
           placeholder="Bookmark information"
-          rows={4}
+          rows={8}
           value={loadedBookmark?.description || ''}
           onChange={(e) =>
             setLoadedBookmark({
@@ -154,10 +158,6 @@ export default function DetailsPage(props: {
             })
           }
         />
-      </div>
-
-      <div className="grid w-[50%] gap-1.5 pt-5">
-        <TagSection bookmarkId={params.id} />
       </div>
     </div>
   );

@@ -40,6 +40,7 @@ interface MultipleSelectorProps {
   /** manually controlled options */
   options?: Option[];
   placeholder?: string;
+  isPendingMutation?: boolean;
   /** Loading component. */
   loadingIndicator?: ReactNode;
   /** Empty component. */
@@ -208,6 +209,7 @@ const MultipleSelector = React.forwardRef<
       triggerSearchOnFocus = false,
       commandProps,
       inputProps,
+      isPendingMutation,
     }: MultipleSelectorProps,
     ref: React.Ref<MultipleSelectorRef>,
   ) => {
@@ -379,8 +381,8 @@ const MultipleSelector = React.forwardRef<
             e.preventDefault();
             e.stopPropagation();
           }}
+          disabled={isPendingMutation}
           onSelect={(value: string) => {
-            setInputValue('');
             setSelected([
               ...selected,
               { value, label: value, color: 'Blue', name: value, id: '' },
@@ -392,6 +394,7 @@ const MultipleSelector = React.forwardRef<
               name: value,
               id: '',
             });
+            setInputValue('');
           }}
         >
           {`Create "${inputValue}"`}
@@ -404,7 +407,12 @@ const MultipleSelector = React.forwardRef<
       }
 
       // For async search creatable. avoid showing creatable item before loading at first.
-      if (onSearch && debouncedSearchTerm.length > 0 && !isLoading) {
+      if (
+        onSearch &&
+        debouncedSearchTerm.length > 0 &&
+        inputValue.length > 0 &&
+        !isLoading
+      ) {
         return Item;
       }
 
@@ -475,6 +483,7 @@ const MultipleSelector = React.forwardRef<
             {
               'px-3 py-2': selected.length !== 0,
               'cursor-text': !disabled && selected.length !== 0,
+              'opacity-70': isPendingMutation,
             },
             className,
           )}
@@ -484,10 +493,18 @@ const MultipleSelector = React.forwardRef<
           }}
         >
           <div className="relative flex flex-wrap gap-1">
+            {/* Add a loading spinner when isPendingMutation is true */}
+            {isPendingMutation && (
+              <div className="absolute inset-y-0 right-2 flex items-center">
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-gray-600" />
+              </div>
+            )}
+
             {selected.map((option) => {
               return (
                 <TagBadge
                   key={option.value}
+                  disabled={isPendingMutation || disabled}
                   tag={{
                     id: option.id,
                     name: option.label,
@@ -504,7 +521,7 @@ const MultipleSelector = React.forwardRef<
               {...inputProps}
               ref={inputRef}
               value={inputValue}
-              disabled={disabled}
+              disabled={disabled || isPendingMutation}
               onValueChange={(value) => {
                 setInputValue(value);
                 inputProps?.onValueChange?.(value);
@@ -575,7 +592,9 @@ const MultipleSelector = React.forwardRef<
                             <CommandItem
                               key={option.value}
                               value={option.label}
-                              disabled={option.disable}
+                              disabled={
+                                option.disable || disabled || isPendingMutation
+                              }
                               onMouseDown={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();

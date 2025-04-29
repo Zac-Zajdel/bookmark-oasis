@@ -11,6 +11,10 @@ export default function TagSection({ bookmarkId }: { bookmarkId: string }) {
     <>
       <Label className="mb-1">Tags</Label>
       <TagSearchDropdown
+        isPendingMutation={
+          createBookmarkTagMutation.isPending ||
+          deleteBookmarkTagMutation.isPending
+        }
         bookmarkId={bookmarkId}
         onSelect={(option) => {
           createBookmarkTagMutation.mutate({

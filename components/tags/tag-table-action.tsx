@@ -92,8 +92,8 @@ export function TagTableAction({ row }: { row: Row<Tag> }) {
               Delete Tag {row?.getValue('name')}
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this tag? Any bookmarks or folders
-              with this tag will no longer have it.
+              Are you sure you want to delete this tag? Bookmark associations to
+              this tag will be removed.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="sm:justify-end">
