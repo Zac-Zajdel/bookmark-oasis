@@ -2,29 +2,6 @@ import { prisma } from '@/lib/db';
 import { AuthUser } from '@/types/auth';
 import { z } from 'zod';
 
-export const getBookmarkTagSchema = (user: AuthUser) => {
-  return z
-    .object({
-      search: z.string().nullable(),
-      bookmarkId: z.string().cuid(),
-    })
-    .superRefine(async (data, ctx) => {
-      const bookmark = await prisma.bookmark.findFirst({
-        where: {
-          id: data.bookmarkId,
-          userId: user.id,
-        },
-      });
-
-      if (!bookmark) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Bookmark not found.',
-        });
-      }
-    });
-};
-
 export const createBookmarkTagSchema = (user: AuthUser) => {
   return z
     .object({

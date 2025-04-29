@@ -3,52 +3,10 @@ import { prisma } from '@/lib/db';
 import {
   createBookmarkTagSchema,
   deleteBookmarkTagSchema,
-  getBookmarkTagSchema,
 } from '@/lib/zod/bookmarkTags';
 import { OasisResponse } from '@/types/apiHelpers';
 import { BookmarkTag, Tag } from '@prisma/client';
 import { NextResponse } from 'next/server';
-
-export const GET = withAuthManager(
-  async ({
-    user,
-    params,
-    searchParams,
-  }): Promise<NextResponse<OasisResponse<{ tags: Tag[] }>>> => {
-    const schema = getBookmarkTagSchema(user);
-    const { search, bookmarkId } = await schema.parseAsync({
-      search: searchParams.get('search'),
-      bookmarkId: params.id,
-    });
-
-    const bookmarkTags = await prisma.bookmarkTag.findMany({
-      where: {
-        bookmarkId,
-        ...(search && {
-          tag: {
-            name: { contains: search, mode: 'insensitive' },
-          },
-        }),
-      },
-      include: {
-        tag: true,
-      },
-    });
-
-    const tags = bookmarkTags.map((bt) => bt.tag);
-
-    return NextResponse.json(
-      {
-        success: true,
-        message: 'Bookmark tags gathered successfully.',
-        data: {
-          tags,
-        },
-      },
-      { status: 200 },
-    );
-  },
-);
 
 export const POST = withAuthManager(
   async ({
