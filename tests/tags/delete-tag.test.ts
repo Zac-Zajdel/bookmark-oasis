@@ -1,21 +1,17 @@
 import { prisma } from '@/lib/db';
 import { IntegrationHarness } from '@/tests/utils/integration';
 import { OasisTestContext, getSetupData } from '@/tests/utils/setup';
-import { afterAll, beforeAll, expect, test } from 'vitest';
+import { afterAll, expect, test } from 'vitest';
 
-beforeAll(async () => {
-  await prisma.bookmark.deleteMany({});
-});
-
-test('DELETE /bookmarks/:id', async (ctx: OasisTestContext) => {
+test('DELETE /tags/:id', async (ctx: OasisTestContext) => {
   const { user } = getSetupData();
   const { http } = await new IntegrationHarness(ctx).init();
 
-  const bookmark = await prisma.bookmark.create({
+  const tag = await prisma.tag.create({
     data: {
+      name: 'Coding Tutorials',
+      color: 'Blue',
       userId: user.id,
-      url: 'https://www.youtube.com/',
-      title: 'Youtube',
     },
   });
 
@@ -23,22 +19,22 @@ test('DELETE /bookmarks/:id', async (ctx: OasisTestContext) => {
     status,
     data: { success, message },
   } = await http.delete({
-    path: `/bookmarks/${bookmark.id}`,
+    path: `/tags/${tag.id}`,
   });
 
   expect(status).toBe(200);
   expect(success).toBe(true);
-  expect(message).toBe('Bookmark was removed successfully.');
+  expect(message).toBe('Tag was removed successfully.');
 
   expect(
-    await prisma.bookmark.findUnique({
+    await prisma.tag.findUnique({
       where: {
-        id: bookmark.id,
+        id: tag.id,
       },
     }),
   ).toBeNull();
 });
 
 afterAll(async () => {
-  await prisma.bookmark.deleteMany({});
+  await prisma.tag.deleteMany({});
 });

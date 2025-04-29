@@ -3,9 +3,7 @@ import { IntegrationHarness } from '@/tests/utils/integration';
 import { OasisTestContext, getSetupData } from '@/tests/utils/setup';
 import { afterAll, expect, test } from 'vitest';
 
-// TODO - Test folder keeping and removing bookmarks.
-
-test('DELETE /folders/{id}', async (ctx: OasisTestContext) => {
+test('DELETE /folders/:id', async (ctx: OasisTestContext) => {
   const { user } = getSetupData();
   const { http } = await new IntegrationHarness(ctx).init();
 
@@ -28,6 +26,14 @@ test('DELETE /folders/{id}', async (ctx: OasisTestContext) => {
   expect(status).toBe(200);
   expect(success).toBe(true);
   expect(message).toBe('Folder was removed successfully.');
+
+  expect(
+    await prisma.folder.findUnique({
+      where: {
+        id: folder.id,
+      },
+    }),
+  ).toBeNull();
 });
 
 afterAll(async () => {

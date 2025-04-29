@@ -8,7 +8,7 @@ beforeAll(async () => {
   await prisma.bookmark.deleteMany({});
 });
 
-test('UPDATE /bookmarks/{id}', async (ctx: OasisTestContext) => {
+test('UPDATE /bookmarks/:id', async (ctx: OasisTestContext) => {
   const { user } = getSetupData();
   const { http } = await new IntegrationHarness(ctx).init();
 

@@ -4,7 +4,7 @@ import { OasisTestContext, getSetupData } from '@/tests/utils/setup';
 import { Folder } from '@prisma/client';
 import { afterAll, expect, test } from 'vitest';
 
-test('GET /folders/{id}', async (ctx: OasisTestContext) => {
+test('GET /folders/:id', async (ctx: OasisTestContext) => {
   const { user } = getSetupData();
   const { http } = await new IntegrationHarness(ctx).init();
 

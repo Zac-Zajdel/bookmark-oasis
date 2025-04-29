@@ -7,7 +7,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { ModeToggle } from '@/components/ui/mode-toggle';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import { signOut, useSession } from 'next-auth/react';
@@ -73,9 +72,6 @@ export default function Navbar() {
                 </Link>
               </div>
             </div>
-          </div>
-          <div className="mr-4">
-            <ModeToggle />
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger

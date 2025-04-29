@@ -56,6 +56,7 @@ model User {
   bookmark Bookmark[]
   folder   Folder[]
   sessions Session[]
+  Tag      Tag[]
 
   @@map("users")
 }
@@ -83,8 +84,9 @@ model Bookmark {
   iconName    String?  @map("icon_name")
   folderId    String?  @map("folder_id")
 
-  folder Folder? @relation(fields: [folderId], references: [id])
-  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  folder      Folder?       @relation(fields: [folderId], references: [id])
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  BookmarkTag BookmarkTag[]
 
   @@unique([userId, url])
   @@index([userId])
@@ -105,9 +107,10 @@ model Folder {
   updatedAt      DateTime @updatedAt @map("updated_at")
 
   bookmarks    Bookmark[]
-  parentFolder Folder?    @relation("FolderSelfRelation", fields: [parentFolderId], references: [id])
-  subFolders   Folder[]   @relation("FolderSelfRelation")
-  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parentFolder Folder?     @relation("FolderSelfRelation", fields: [parentFolderId], references: [id])
+  subFolders   Folder[]    @relation("FolderSelfRelation")
+  user         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  FolderTag    FolderTag[]
 
   @@index([userId])
   @@index([parentFolderId])
@@ -128,4 +131,46 @@ model ApiToken {
   @@unique([userId, name])
   @@index([userId])
   @@map("api_tokens")
+}
+
+model Tag {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  name      String   @unique
+  color     String   @default("Blue")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  BookmarkTag BookmarkTag[]
+  FolderTag   FolderTag[]
+
+  @@index([userId])
+  @@map("tags")
+}
+
+model BookmarkTag {
+  id         String   @id @default(cuid())
+  tagId      String   @map("tag_id")
+  bookmarkId String   @map("bookmark_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  tag      Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  bookmark Bookmark @relation(fields: [bookmarkId], references: [id], onDelete: Cascade)
+
+  @@unique([tagId, bookmarkId])
+  @@map("bookmark_tag")
+}
+
+model FolderTag {
+  id        String   @id @default(cuid())
+  tagId     String   @map("tag_id")
+  folderId  String   @map("folder_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  folder Folder @relation(fields: [folderId], references: [id], onDelete: Cascade)
+
+  @@unique([tagId, folderId])
+  @@map("folder_tag")
 }
