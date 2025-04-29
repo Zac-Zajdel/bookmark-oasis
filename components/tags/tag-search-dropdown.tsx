@@ -10,12 +10,14 @@ type TagSearchDropdownProps = {
   onSelect?: (value: Option) => void;
   onCreate?: (value: Option) => void;
   onRemove?: (value: Option) => void;
+  bookmarkId?: string;
 };
 
 export default function TagSearchDropdown({
   onSelect,
   onCreate,
   onRemove,
+  bookmarkId,
 }: TagSearchDropdownProps) {
   const { data: initialTagData } = useTagsQuery({
     pageSize: 10,
@@ -23,6 +25,7 @@ export default function TagSearchDropdown({
     column: 'name',
     order: 'asc',
     globalFilter: '',
+    bookmarkId,
   });
 
   const searchMutation = useMutation({
@@ -62,7 +65,9 @@ export default function TagSearchDropdown({
   };
 
   return (
+    // I need a loading indicator to not make the component jump when the options are coming.
     <MultipleSelector
+      value={mapTagsToOptions(initialTagData?.data ?? [])}
       defaultOptions={mapTagsToOptions(initialTagData?.data ?? [])}
       onSelect={(value) => onSelect?.(value)}
       onCreate={(value) => onCreate?.(value)}

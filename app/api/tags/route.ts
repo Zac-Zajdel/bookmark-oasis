@@ -10,17 +10,26 @@ export const GET = withAuthManager(
     user,
     searchParams,
   }): Promise<NextResponse<OasisResponse<{ tags: Tag[]; total: number }>>> => {
-    const schema = getTagSchema();
-    const { page, limit, column, order, search } = schema.parse({
-      page: searchParams.get('page'),
-      limit: searchParams.get('limit'),
-      column: searchParams.get('column'),
-      order: searchParams.get('order'),
-      search: searchParams.get('search'),
-    });
+    const schema = getTagSchema(user);
+    const { page, limit, column, order, search, bookmarkId } =
+      await schema.parseAsync({
+        page: searchParams.get('page'),
+        limit: searchParams.get('limit'),
+        column: searchParams.get('column'),
+        order: searchParams.get('order'),
+        search: searchParams.get('search'),
+        bookmarkId: searchParams.get('bookmarkId'),
+      });
 
     const tagWhereInput: Prisma.TagWhereInput = {
       userId: user.id,
+      ...(bookmarkId && {
+        BookmarkTag: {
+          some: {
+            bookmarkId: bookmarkId,
+          },
+        },
+      }),
       ...(search && { name: { contains: search, mode: 'insensitive' } }),
     };
 

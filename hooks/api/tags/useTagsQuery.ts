@@ -11,6 +11,7 @@ interface UseTagsQueryParams {
   pageIndex: number;
   globalFilter: string | undefined;
   enabled?: boolean;
+  bookmarkId?: string;
 }
 
 export const useTagsQuery = ({
@@ -21,9 +22,18 @@ export const useTagsQuery = ({
   pageSize,
   globalFilter,
   enabled = true,
+  bookmarkId,
 }: UseTagsQueryParams) =>
   useQuery({
-    queryKey: ['tags', column, order, pageSize, globalFilter, pageIndex + 1],
+    queryKey: [
+      'tags',
+      column,
+      order,
+      pageSize,
+      globalFilter,
+      pageIndex + 1,
+      bookmarkId,
+    ],
     queryFn: async (): Promise<{ data: Tag[]; total: number }> => {
       // Reset page index when adjusting filters
       if (globalFilter?.trim()?.length) {
@@ -34,6 +44,10 @@ export const useTagsQuery = ({
         page: String(pageIndex + 1),
         limit: String(pageSize),
       });
+
+      if (bookmarkId) {
+        queryParams.append('bookmarkId', bookmarkId);
+      }
 
       if (column && order) {
         queryParams.append('column', column);

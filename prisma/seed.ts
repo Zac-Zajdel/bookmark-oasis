@@ -3,6 +3,7 @@ import { randomBytes } from 'crypto';
 import { hashApiToken } from '../lib/api/apiTokens/utils';
 import { prisma } from '../lib/db';
 
+// TODO - Start to break this out into designated seeder files.
 async function main() {
   try {
     const user = await seedUser();
@@ -56,7 +57,15 @@ async function seedBookmarksAndFolders(user: User): Promise<void> {
     },
   });
 
-  await prisma.bookmark.create({
+  const tagLearning = await prisma.tag.create({
+    data: {
+      name: 'YouTube',
+      color: 'Red',
+      userId: user.id,
+    },
+  });
+
+  const youtubeBookmark = await prisma.bookmark.create({
     data: {
       userId: user.id,
       folderId: learningFolder.id,
@@ -65,6 +74,13 @@ async function seedBookmarksAndFolders(user: User): Promise<void> {
       description:
         'Enjoy the videos and music you love, upload original content, and share it all with friends, family, and the world on YouTube.',
       imageUrl: 'https://www.youtube.com/s/desktop/87338098/img/favicon.ico',
+    },
+  });
+
+  await prisma.bookmarkTag.create({
+    data: {
+      bookmarkId: youtubeBookmark.id,
+      tagId: tagLearning.id,
     },
   });
 
@@ -97,7 +113,7 @@ async function seedBookmarksAndFolders(user: User): Promise<void> {
     },
   });
 
-  await prisma.bookmark.create({
+  const bookmarkRustBook = await prisma.bookmark.create({
     data: {
       userId: user.id,
       folderId: rustFolder.id,
@@ -107,16 +123,29 @@ async function seedBookmarksAndFolders(user: User): Promise<void> {
       iconName: 'Book',
     },
   });
+
+  const tagRust = await prisma.tag.create({
+    data: {
+      name: 'Rust',
+      color: 'Orange',
+      userId: user.id,
+    },
+  });
+
+  await prisma.bookmarkTag.create({
+    data: {
+      bookmarkId: bookmarkRustBook.id,
+      tagId: tagRust.id,
+    },
+  });
 }
 
 async function seedTags(user: User): Promise<void> {
   await prisma.tag.createMany({
     data: [
       { name: 'Data Structures', color: 'Blue', userId: user.id },
-      { name: 'YouTube', color: 'Red', userId: user.id },
       { name: 'Learning', color: 'Green', userId: user.id },
       { name: 'Programming', color: 'White', userId: user.id },
-      { name: 'Rust', color: 'Orange', userId: user.id },
     ],
   });
 }

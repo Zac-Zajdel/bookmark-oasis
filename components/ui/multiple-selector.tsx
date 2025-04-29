@@ -21,7 +21,7 @@ import {
 } from 'react';
 
 export interface Option {
-  id?: string;
+  id: string;
   value: string;
   label: string;
   color?: string;
@@ -363,7 +363,9 @@ const MultipleSelector = React.forwardRef<
       if (!creatable) return undefined;
 
       if (
-        isOptionsExist(options, [{ value: inputValue, label: inputValue }]) ||
+        isOptionsExist(options, [
+          { value: inputValue, label: inputValue, id: '' },
+        ]) ||
         selected.find((s) => s.value === inputValue)
       ) {
         return undefined;
@@ -381,9 +383,15 @@ const MultipleSelector = React.forwardRef<
             setInputValue('');
             setSelected([
               ...selected,
-              { value, label: value, color: 'Blue', name: value },
+              { value, label: value, color: 'Blue', name: value, id: '' },
             ]);
-            onCreate?.({ value, label: value });
+            onCreate?.({
+              value,
+              label: value,
+              color: 'Blue',
+              name: value,
+              id: '',
+            });
           }}
         >
           {`Create "${inputValue}"`}

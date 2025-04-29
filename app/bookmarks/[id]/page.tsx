@@ -2,6 +2,7 @@
 
 import BookmarkDetailsSkeleton from '@/components/bookmarks/bookmark-details-skeleton';
 import { IconHolder } from '@/components/icons/icon-holder';
+import TagSection from '@/components/tags/tag-section';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -153,6 +154,10 @@ export default function DetailsPage(props: {
             })
           }
         />
+      </div>
+
+      <div className="grid w-[50%] gap-1.5 pt-5">
+        <TagSection bookmarkId={params.id} />
       </div>
     </div>
   );
