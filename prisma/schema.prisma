@@ -154,7 +154,6 @@ model BookmarkTag {
   tagId      String   @map("tag_id")
   bookmarkId String   @map("bookmark_id")
   createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @updatedAt @map("updated_at")
 
   tag      Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
   bookmark Bookmark @relation(fields: [bookmarkId], references: [id], onDelete: Cascade)
@@ -168,7 +167,6 @@ model FolderTag {
   tagId     String   @map("tag_id")
   folderId  String   @map("folder_id")
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
 
   tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
   folder Folder @relation(fields: [folderId], references: [id], onDelete: Cascade)

@@ -16,7 +16,6 @@ CREATE TABLE "bookmark_tag" (
     "tag_id" TEXT NOT NULL,
     "bookmark_id" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "bookmark_tag_pkey" PRIMARY KEY ("id")
 );
@@ -27,7 +26,6 @@ CREATE TABLE "folder_tag" (
     "tag_id" TEXT NOT NULL,
     "folder_id" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "folder_tag_pkey" PRIMARY KEY ("id")
 );
