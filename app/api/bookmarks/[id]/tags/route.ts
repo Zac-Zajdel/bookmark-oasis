@@ -12,11 +12,13 @@ import { NextResponse } from 'next/server';
 export const GET = withAuthManager(
   async ({
     user,
+    params,
     searchParams,
   }): Promise<NextResponse<OasisResponse<{ tags: Tag[] }>>> => {
     const schema = getBookmarkTagSchema(user);
-    const { search, bookmarkId } = schema.parse({
-      bookmarkId: searchParams.get('bookmarkId'),
+    const { search, bookmarkId } = await schema.parseAsync({
+      search: searchParams.get('search'),
+      bookmarkId: params.id,
     });
 
     const bookmarkTags = await prisma.bookmarkTag.findMany({

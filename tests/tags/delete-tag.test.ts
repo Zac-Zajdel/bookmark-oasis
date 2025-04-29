@@ -3,7 +3,7 @@ import { IntegrationHarness } from '@/tests/utils/integration';
 import { OasisTestContext, getSetupData } from '@/tests/utils/setup';
 import { afterAll, expect, test } from 'vitest';
 
-test('DELETE /tags/{id}', async (ctx: OasisTestContext) => {
+test('DELETE /tags/:id', async (ctx: OasisTestContext) => {
   const { user } = getSetupData();
   const { http } = await new IntegrationHarness(ctx).init();
 

@@ -4,7 +4,7 @@ import { OasisTestContext, getSetupData } from '@/tests/utils/setup';
 import { Tag } from '@prisma/client';
 import { afterAll, expect, test } from 'vitest';
 
-test('UPDATE /tags/{id}', async (ctx: OasisTestContext) => {
+test('UPDATE /tags/:id', async (ctx: OasisTestContext) => {
   const { user } = getSetupData();
   const { http } = await new IntegrationHarness(ctx).init();
 
