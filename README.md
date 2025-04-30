@@ -2,10 +2,10 @@
 
 ## 🎉 Features
 
-- 🚀 [Next.js 14 (App router)](https://nextjs.org/) - Meta Framework for React
-- ⚛️ [React 18](https://react.dev/) - A library for web and native user interfaces
+- 🚀 [Next.js 15 (App router)](https://nextjs.org/) - Meta Framework for React
+- ⚛️ [React 19](https://react.dev/) - A library for web and native user interfaces
 - 📘 [Typescript](https://www.typescriptlang.org/) - JavaScript with syntax for types
-- 🎨 [TailwindCSS](https://tailwindcss.com/) - Class sorting, merging and linting
+- 🎨 [TailwindCSS V4](https://tailwindcss.com/) - Class sorting, merging and linting
 - 🛠️ [shadcn/ui](https://ui.shadcn.com/) - Customizable UI components
 - 🔒 [Auth.js](https://authjs.dev/) - Authentication library (Google provider)
 - 🛡️ [Prisma](https://www.prisma.io/) - Next-generation Node.js and TypeScript ORM
@@ -58,6 +58,7 @@ and open http://localhost:3000/ to see the landing page.
 ├── lib                             # Validation, functions, and utilities
 ├── prisma                          # Prisma schema and migrations
 ├── public                          # Public assets folder
+├── scripts                         # Various node scripts
 ├── styles                          # Styles folder
 ├── tests                           # Vitest API calls
 ├── types                           # Type definitions
@@ -65,7 +66,6 @@ and open http://localhost:3000/ to see the landing page.
 ├── logger.ts                       # Winston Log Generation config
 ├── auth.ts                         # Auth.js configuration
 ├── components.json                 # shadcn/ui configuration
-├── tailwind.config.ts              # Tailwind configuration
 ├── env.ts                          # T3-env build time ENV check
 ├── middleware.ts                   # Middleware for Next.js routes
 ```
