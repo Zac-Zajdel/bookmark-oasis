@@ -29,7 +29,7 @@ export default function SettingsHeader() {
   const pathname = usePathname();
 
   return (
-    <div className="-mt-3 space-x-5 text-sm">
+    <div className="-mt-3 flex flex-wrap gap-4 text-sm">
       {navTabs.map((tab, index) => {
         return (
           <Link
