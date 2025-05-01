@@ -12,6 +12,7 @@ type TagSearchDropdownProps = {
   onCreate?: (value: Option) => void;
   onRemove?: (value: Option) => void;
   bookmarkId?: string;
+  folderId?: string;
   isPendingMutation?: boolean;
 };
 
@@ -20,6 +21,7 @@ export default function TagSearchDropdown({
   onCreate,
   onRemove,
   bookmarkId,
+  folderId,
   isPendingMutation,
 }: TagSearchDropdownProps) {
   const [selectedTags, setSelectedTags] = useState<Partial<Tag>[]>([]);
@@ -31,6 +33,7 @@ export default function TagSearchDropdown({
     order: 'asc',
     globalFilter: '',
     bookmarkId,
+    folderId,
   });
 
   // Update selectedTags when initialTagData changes and we're not in a pending mutation
