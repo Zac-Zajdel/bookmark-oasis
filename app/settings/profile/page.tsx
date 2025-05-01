@@ -1,5 +1,6 @@
 'use client';
 
+import DangerZone from '@/components/settings/danger-zone';
 import { Button } from '@/components/ui/button';
 import {
   Command,
@@ -15,6 +16,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { SectionHeader } from '@/components/ui/section-header';
+import { Separator } from '@/components/ui/separator';
 import { useDebounce } from '@/hooks/useDebounce';
 import { cn } from '@/lib/utils';
 import { UserThemes } from '@/types/settings';
@@ -187,6 +189,9 @@ export default function ProfileSettings() {
           />
         </div>
       </div>
+
+      <Separator className="my-10" />
+      <DangerZone />
     </div>
   );
 }
