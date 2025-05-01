@@ -1,8 +1,9 @@
-import { Folder, User } from '@prisma/client';
+import { Folder, Tag, User } from '@prisma/client';
 import { prisma } from '../../lib/db';
 
 export async function folderSeeder(
   user: User,
+  tags: Record<string, Tag>,
 ): Promise<Record<string, Folder>> {
   const folders: Record<string, Folder> = {};
 
@@ -15,12 +16,26 @@ export async function folderSeeder(
     },
   });
 
+  await prisma.folderTag.create({
+    data: {
+      folderId: folders.devOps.id,
+      tagId: tags.dataStructures.id,
+    },
+  });
+
   folders.learning = await prisma.folder.create({
     data: {
       userId: user.id,
       title: 'Learning',
       description: 'Information to better my knowledge.',
       iconName: 'Brain',
+    },
+  });
+
+  await prisma.folderTag.create({
+    data: {
+      folderId: folders.learning.id,
+      tagId: tags.learning.id,
     },
   });
 
@@ -39,6 +54,13 @@ export async function folderSeeder(
       title: 'Rust',
       description: 'Resources to learn Rust.',
       iconName: 'Code',
+    },
+  });
+
+  await prisma.folderTag.create({
+    data: {
+      folderId: folders.rust.id,
+      tagId: tags.programming.id,
     },
   });
 

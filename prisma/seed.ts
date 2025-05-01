@@ -10,8 +10,8 @@ import {
 async function main() {
   try {
     const user = await userSeeder();
-    const folders = await folderSeeder(user);
     const tags = await tagSeeder(user);
+    const folders = await folderSeeder(user, tags);
     await bookmarkSeeder(user, folders, tags);
     await apiTokenSeeder(user);
   } catch (error) {
