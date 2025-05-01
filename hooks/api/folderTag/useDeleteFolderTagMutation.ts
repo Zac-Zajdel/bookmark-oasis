@@ -3,19 +3,19 @@ import { OasisResponse } from '@/types/apiHelpers';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-type DeleteBookmarkTagProps = {
-  bookmarkId: string;
+type DeleteFolderTagProps = {
+  folderId: string;
   tagId: string;
 };
 
-export function useDeleteBookmarkTagMutation() {
+export function useDeleteFolderTagMutation() {
   return useMutation({
     mutationFn: async ({
-      bookmarkId,
+      folderId,
       tagId,
-    }: DeleteBookmarkTagProps): Promise<string> => {
+    }: DeleteFolderTagProps): Promise<string> => {
       const { success, message }: OasisResponse = await (
-        await fetch(`/api/bookmarks/${bookmarkId}/tags`, {
+        await fetch(`/api/folders/${folderId}/tags`, {
           method: 'DELETE',
           body: JSON.stringify({
             tagId,

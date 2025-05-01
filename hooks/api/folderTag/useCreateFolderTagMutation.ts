@@ -4,23 +4,23 @@ import { Tag } from '@prisma/client';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-type CreateBookmarkTagProps = {
+type CreateFolderTagProps = {
   tagId?: string;
-  bookmarkId: string;
+  folderId: string;
   tagName?: string;
   tagColor?: string;
 };
 
-export const useCreateBookmarkTagMutation = () => {
+export const useCreateFolderTagMutation = () => {
   return useMutation({
     mutationFn: async ({
       tagId,
-      bookmarkId,
+      folderId,
       tagName,
       tagColor,
-    }: CreateBookmarkTagProps) => {
+    }: CreateFolderTagProps) => {
       const { success, message, data }: OasisResponse<Tag> = await (
-        await fetch(`/api/bookmarks/${bookmarkId}/tags`, {
+        await fetch(`/api/folders/${folderId}/tags`, {
           method: 'POST',
           body: JSON.stringify({
             tagId,

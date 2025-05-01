@@ -23,6 +23,7 @@ export const getTagSchema = (user: AuthUser) => {
       order: z.enum(['asc', 'desc']).nullable().optional(),
       search: z.string().nullable(),
       bookmarkId: z.string().cuid().nullable().optional(),
+      folderId: z.string().cuid().nullable().optional(),
     })
     .superRefine(async (data, ctx) => {
       if (data.bookmarkId) {
@@ -37,6 +38,22 @@ export const getTagSchema = (user: AuthUser) => {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: 'This Bookmark does not exist.',
+          });
+        }
+      }
+
+      if (data.folderId) {
+        const folder = await prisma.folder.findFirst({
+          where: {
+            id: data.folderId,
+            userId: user.id,
+          },
+        });
+
+        if (!folder) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'This Folder does not exist.',
           });
         }
       }

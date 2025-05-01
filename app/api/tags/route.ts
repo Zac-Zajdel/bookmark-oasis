@@ -11,7 +11,7 @@ export const GET = withAuthManager(
     searchParams,
   }): Promise<NextResponse<OasisResponse<{ tags: Tag[]; total: number }>>> => {
     const schema = getTagSchema(user);
-    const { page, limit, column, order, search, bookmarkId } =
+    const { page, limit, column, order, search, bookmarkId, folderId } =
       await schema.parseAsync({
         page: searchParams.get('page'),
         limit: searchParams.get('limit'),
@@ -19,6 +19,7 @@ export const GET = withAuthManager(
         order: searchParams.get('order'),
         search: searchParams.get('search'),
         bookmarkId: searchParams.get('bookmarkId'),
+        folderId: searchParams.get('folderId'),
       });
 
     const tagWhereInput: Prisma.TagWhereInput = {
@@ -27,6 +28,13 @@ export const GET = withAuthManager(
         BookmarkTag: {
           some: {
             bookmarkId: bookmarkId,
+          },
+        },
+      }),
+      ...(folderId && {
+        FolderTag: {
+          some: {
+            folderId: folderId,
           },
         },
       }),

@@ -2,6 +2,7 @@
 
 import BookmarkSection from '@/components/bookmarks/bookmark-section';
 import FolderDetailsSkeleton from '@/components/folders/folder-details-skeleton';
+import FolderTagSection from '@/components/folders/folder-tag-section';
 import { IconHolder } from '@/components/icons/icon-holder';
 import {
   Breadcrumb,
@@ -114,6 +115,10 @@ export default function FolderDetails(props: {
             />
           </div>
         </div>
+      </div>
+
+      <div className="grid w-full gap-1.5 pt-5">
+        <FolderTagSection folderId={params.id} />
       </div>
 
       <div className="grid w-full gap-1.5 pt-5">

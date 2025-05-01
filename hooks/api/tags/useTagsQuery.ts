@@ -12,6 +12,7 @@ interface UseTagsQueryParams {
   globalFilter: string | undefined;
   enabled?: boolean;
   bookmarkId?: string;
+  folderId?: string;
 }
 
 export const useTagsQuery = ({
@@ -23,6 +24,7 @@ export const useTagsQuery = ({
   globalFilter,
   enabled = true,
   bookmarkId,
+  folderId,
 }: UseTagsQueryParams) =>
   useQuery({
     queryKey: [
@@ -33,6 +35,7 @@ export const useTagsQuery = ({
       globalFilter,
       pageIndex + 1,
       bookmarkId,
+      folderId,
     ],
     queryFn: async (): Promise<{ data: Tag[]; total: number }> => {
       // Reset page index when adjusting filters
@@ -47,6 +50,10 @@ export const useTagsQuery = ({
 
       if (bookmarkId) {
         queryParams.append('bookmarkId', bookmarkId);
+      }
+
+      if (folderId) {
+        queryParams.append('folderId', folderId);
       }
 
       if (column && order) {

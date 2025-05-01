@@ -3,7 +3,11 @@ import { Label } from '@/components/ui/label';
 import { useCreateBookmarkTagMutation } from '@/hooks/api/bookmarkTag/useCreateBookmarkTagMutation';
 import { useDeleteBookmarkTagMutation } from '@/hooks/api/bookmarkTag/useDeleteBookmarkTagMutation';
 
-export default function TagSection({ bookmarkId }: { bookmarkId: string }) {
+export default function BookmarkTagSection({
+  bookmarkId,
+}: {
+  bookmarkId: string;
+}) {
   const createBookmarkTagMutation = useCreateBookmarkTagMutation();
   const deleteBookmarkTagMutation = useDeleteBookmarkTagMutation();
 
