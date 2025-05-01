@@ -11,14 +11,28 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { SectionHeader } from '@/components/ui/section-header';
+import { useDeleteUserMutation } from '@/hooks/api/users/useDeleteUserMutation';
 import { Handshake, Trash } from 'lucide-react';
+import { signOut, useSession } from 'next-auth/react';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 export default function DangerZone() {
   const [promptToDelete, setPromptToDelete] = useState('');
+  const deleteUserMutation = useDeleteUserMutation();
+  const { data: session } = useSession();
 
   const handleDeleteAccount = async () => {
-    console.log(promptToDelete);
+    if (promptToDelete !== 'Delete My Account') {
+      return toast.error('Please type "Delete My Account" to confirm.');
+    }
+
+    if (!session?.user.id) {
+      return toast.error('Something went wrong. Please try again.');
+    }
+
+    await deleteUserMutation.mutateAsync(session?.user.id);
+    await signOut({ redirect: true, redirectTo: '/' });
   };
 
   return (

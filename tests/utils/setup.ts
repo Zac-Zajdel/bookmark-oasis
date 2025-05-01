@@ -10,7 +10,9 @@ export interface OasisTestContext extends TestContext {
 }
 
 declare global {
+  // eslint-disable-next-line no-var
   var user: User;
+  // eslint-disable-next-line no-var
   var apiToken: string;
 }
 
