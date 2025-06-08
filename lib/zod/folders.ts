@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/db';
 import { AuthUser } from '@/types/auth';
 import { lucideIcons } from '@/types/lucideIcons';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 export const getFoldersSchema = () => {
   return z.object({
@@ -14,8 +14,8 @@ export const getFoldersSchema = () => {
     limit: z
       .string()
       .transform((val) => parseInt(val))
-      .refine((val) => val >= 5, {
-        message: 'limit cannot be less than 5',
+      .refine((val) => val >= 1, {
+        message: 'limit cannot be less than 1',
       }),
     search: z.string().optional(),
   });
@@ -24,19 +24,20 @@ export const getFoldersSchema = () => {
 export const showFolderSchema = (user: AuthUser) => {
   return z
     .object({
-      id: z.string().cuid(),
+      id: z.cuid(),
     })
-    .superRefine(async (data, ctx) => {
+    .check(async (ctx) => {
       const folder = await prisma.folder.findFirst({
         where: {
-          id: data.id,
+          id: ctx.value.id,
           userId: user.id,
         },
       });
 
       if (!folder) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+        ctx.issues.push({
+          code: 'custom',
+          input: ctx.value.id,
           message: 'This folder does not exist.',
         });
       }
@@ -49,23 +50,24 @@ export const createFolderSchema = (user: AuthUser) => {
       title: z.string().min(3),
       description: z.string().nullable().optional(),
       iconName: z.enum(lucideIcons).nullable().optional(),
-      parentFolderId: z.string().cuid().nullable().optional(),
+      parentFolderId: z.cuid().nullable().optional(),
     })
-    .superRefine(async (data, ctx) => {
-      if (!data.parentFolderId) {
+    .check(async (ctx) => {
+      if (!ctx.value.parentFolderId) {
         return;
       }
 
       const folder = await prisma.folder.findFirst({
         where: {
-          id: data.parentFolderId,
+          id: ctx.value.parentFolderId,
           userId: user.id,
         },
       });
 
       if (!folder) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+        ctx.issues.push({
+          code: 'custom',
+          input: ctx.value.parentFolderId,
           message: 'This folder does not exist.',
         });
       }
@@ -75,28 +77,29 @@ export const createFolderSchema = (user: AuthUser) => {
 export const updateFolderSchema = (user: AuthUser) => {
   return z
     .object({
-      id: z.string().cuid(),
-      title: z.string().trim().min(1, { message: 'Title is required' }),
+      id: z.cuid(),
+      title: z.string().trim().min(1, { error: 'Title is required' }),
       description: z.string().nullable().optional(),
       isFavorite: z.boolean(),
       iconName: z.enum(lucideIcons).nullable().optional(),
-      parentFolderId: z.string().cuid().nullable().optional(),
+      parentFolderId: z.cuid().nullable().optional(),
     })
-    .superRefine(async (data, ctx) => {
-      if (!data.parentFolderId) {
+    .check(async (ctx) => {
+      if (!ctx.value.parentFolderId) {
         return;
       }
 
       const folder = await prisma.folder.findFirst({
         where: {
-          id: data.parentFolderId,
+          id: ctx.value.parentFolderId,
           userId: user.id,
         },
       });
 
       if (!folder) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+        ctx.issues.push({
+          code: 'custom',
+          input: ctx.value.parentFolderId,
           message: 'This folder does not exist.',
         });
       }
@@ -106,13 +109,13 @@ export const updateFolderSchema = (user: AuthUser) => {
 export const deleteFolderSchema = (user: AuthUser) => {
   return z
     .object({
-      id: z.string().cuid(),
+      id: z.cuid(),
       keepBookmarks: z.boolean().optional(),
     })
-    .superRefine(async (data, ctx) => {
+    .check(async (ctx) => {
       const folder = await prisma.folder.findFirst({
         where: {
-          id: data.id,
+          id: ctx.value.id,
           userId: user.id,
         },
         include: {
@@ -125,15 +128,17 @@ export const deleteFolderSchema = (user: AuthUser) => {
       });
 
       if (!folder) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+        ctx.issues.push({
+          code: 'custom',
+          input: ctx.value.id,
           message: 'This folder does not exist.',
         });
       }
 
       if (folder && folder._count.subFolders > 0) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+        ctx.issues.push({
+          code: 'custom',
+          input: ctx.value.id,
           message: 'This folder has subfolders and cannot be deleted.',
         });
       }

@@ -4,7 +4,7 @@ import { prisma } from '@/lib/db';
 import { logger } from '@/logger';
 import { AuthUser, WithAuthManagerInterface } from '@/types/auth';
 import { NextResponse, type NextRequest } from 'next/server';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 export const withAuthManager =
   (handler: WithAuthManagerInterface) =>
@@ -84,14 +84,14 @@ export const withAuthManager =
       }
 
       if (error instanceof z.ZodError) {
-        const message = error.errors?.[0]?.message || 'Invalid data provided';
+        const message = error.issues?.[0]?.message || 'Invalid data provided';
 
         logger.error('Zod Error', { message, error });
 
         return NextResponse.json(
           {
             success: false,
-            message: error.errors?.[0]?.message || 'Invalid data provided',
+            message,
             error,
           },
           { status: 400 },

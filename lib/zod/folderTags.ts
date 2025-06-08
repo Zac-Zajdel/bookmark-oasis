@@ -1,12 +1,12 @@
 import { prisma } from '@/lib/db';
 import { AuthUser } from '@/types/auth';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 export const createFolderTagSchema = (user: AuthUser) => {
   return z
     .object({
-      folderId: z.string().cuid(),
-      tagId: z.string().cuid().optional(),
+      folderId: z.cuid(),
+      tagId: z.cuid().optional(),
       tagName: z.string().optional(),
       tagColor: z.string().optional(),
     })
@@ -23,62 +23,66 @@ export const createFolderTagSchema = (user: AuthUser) => {
           'Either provide an existing tagId OR both tagName and tagColor',
       },
     )
-    .superRefine(async (data, ctx) => {
+    .check(async (ctx) => {
       const folder = await prisma.folder.findFirst({
         where: {
-          id: data.folderId,
+          id: ctx.value.folderId,
           userId: user.id,
         },
       });
 
       if (!folder) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+        ctx.issues.push({
+          code: 'custom',
+          input: ctx.value.folderId,
           message: 'Folder not found.',
         });
       }
 
-      if (data.tagId) {
+      if (ctx.value.tagId) {
         const tag = await prisma.tag.findFirst({
           where: {
-            id: data.tagId,
+            id: ctx.value.tagId,
             userId: user.id,
           },
         });
 
         if (!tag) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
+          ctx.issues.push({
+            code: 'custom',
+            input: ctx.value.tagId,
             message: 'Tag not found.',
           });
         }
 
         const existingAssociation = await prisma.folderTag.findFirst({
           where: {
-            folderId: data.folderId,
-            tagId: data.tagId,
+            folderId: ctx.value.folderId,
+            tagId: ctx.value.tagId,
           },
         });
 
         if (existingAssociation) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
+          ctx.issues.push({
+            code: 'custom',
+            input: ctx.value.tagId,
             message: 'Tag already associated with folder.',
           });
         }
       }
 
-      if (data.tagName) {
+      if (ctx.value.tagName) {
         const tag = await prisma.tag.findFirst({
           where: {
-            name: data.tagName,
+            name: ctx.value.tagName,
             userId: user.id,
           },
         });
 
         if (tag) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
+          ctx.issues.push({
+            code: 'custom',
+            input: ctx.value.tagName,
             message: 'Tag name must be unique.',
           });
         }
@@ -89,35 +93,37 @@ export const createFolderTagSchema = (user: AuthUser) => {
 export const deleteFolderTagSchema = (user: AuthUser) => {
   return z
     .object({
-      folderId: z.string().cuid(),
-      tagId: z.string().cuid(),
+      folderId: z.cuid(),
+      tagId: z.cuid(),
     })
-    .superRefine(async (data, ctx) => {
+    .check(async (ctx) => {
       const folder = await prisma.folder.findFirst({
         where: {
-          id: data.folderId,
+          id: ctx.value.folderId,
           userId: user.id,
         },
       });
 
       if (!folder) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+        ctx.issues.push({
+          code: 'custom',
+          input: ctx.value.folderId,
           message: 'Folder not found.',
         });
       }
 
-      if (data.tagId) {
+      if (ctx.value.tagId) {
         const tag = await prisma.tag.findFirst({
           where: {
-            id: data.tagId,
+            id: ctx.value.tagId,
             userId: user.id,
           },
         });
 
         if (!tag) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
+          ctx.issues.push({
+            code: 'custom',
+            input: ctx.value.tagId,
             message: 'Tag not found.',
           });
         }
