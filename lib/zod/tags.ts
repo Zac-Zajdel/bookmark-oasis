@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/db';
 import { AuthUser } from '@/types/auth';
 import { colorPickerValues } from '@/types/colorPicker';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 export const getTagSchema = (user: AuthUser) => {
   return z
@@ -9,7 +9,7 @@ export const getTagSchema = (user: AuthUser) => {
       page: z
         .string()
         .transform((val) => parseInt(val))
-        .refine((val) => val >= 1, { message: 'page cannot be less than 1' }),
+        .refine((val) => val >= 1, { error: 'page cannot be less than 1' }),
       limit: z
         .enum(['10', '20', '30', '40', '50'])
         .transform((val) => parseInt(val))
@@ -22,37 +22,39 @@ export const getTagSchema = (user: AuthUser) => {
         .optional(),
       order: z.enum(['asc', 'desc']).nullable().optional(),
       search: z.string().nullable(),
-      bookmarkId: z.string().cuid().nullable().optional(),
-      folderId: z.string().cuid().nullable().optional(),
+      bookmarkId: z.cuid().nullable().optional(),
+      folderId: z.cuid().nullable().optional(),
     })
-    .superRefine(async (data, ctx) => {
-      if (data.bookmarkId) {
+    .check(async (ctx) => {
+      if (ctx.value.bookmarkId) {
         const bookmark = await prisma.bookmark.findFirst({
           where: {
-            id: data.bookmarkId,
+            id: ctx.value.bookmarkId,
             userId: user.id,
           },
         });
 
         if (!bookmark) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
+          ctx.issues.push({
+            code: 'custom',
+            input: ctx.value.bookmarkId,
             message: 'This Bookmark does not exist.',
           });
         }
       }
 
-      if (data.folderId) {
+      if (ctx.value.folderId) {
         const folder = await prisma.folder.findFirst({
           where: {
-            id: data.folderId,
+            id: ctx.value.folderId,
             userId: user.id,
           },
         });
 
         if (!folder) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
+          ctx.issues.push({
+            code: 'custom',
+            input: ctx.value.folderId,
             message: 'This Folder does not exist.',
           });
         }
@@ -63,20 +65,21 @@ export const getTagSchema = (user: AuthUser) => {
 export const createTagSchema = (user: AuthUser) => {
   return z
     .object({
-      name: z.string().min(1, { message: 'Name is required' }),
+      name: z.string().min(1, { error: 'Name is required' }),
       color: z.enum(colorPickerValues),
     })
-    .superRefine(async (data, ctx) => {
+    .check(async (ctx) => {
       const tag = await prisma.tag.findFirst({
         where: {
-          name: data.name,
+          name: ctx.value.name,
           userId: user.id,
         },
       });
 
       if (tag) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+        ctx.issues.push({
+          code: 'custom',
+          input: ctx.value.name,
           message: 'Tag names must be unique.',
         });
       }
@@ -86,21 +89,22 @@ export const createTagSchema = (user: AuthUser) => {
 export const updateTagSchema = (user: AuthUser) => {
   return z
     .object({
-      id: z.string().cuid(),
-      name: z.string().min(1, { message: 'Name is required' }),
+      id: z.cuid(),
+      name: z.string().min(1, { error: 'Name is required' }),
       color: z.enum(colorPickerValues),
     })
-    .superRefine(async (data, ctx) => {
+    .check(async (ctx) => {
       const tag = await prisma.tag.findFirst({
         where: {
-          id: data.id,
+          id: ctx.value.id,
           userId: user.id,
         },
       });
 
       if (!tag) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+        ctx.issues.push({
+          code: 'custom',
+          input: ctx.value.id,
           message: 'This Tag does not exist.',
         });
       }
@@ -110,19 +114,20 @@ export const updateTagSchema = (user: AuthUser) => {
 export const deleteTagSchema = (user: AuthUser) => {
   return z
     .object({
-      id: z.string().cuid(),
+      id: z.cuid(),
     })
-    .superRefine(async (data, ctx) => {
+    .check(async (ctx) => {
       const tag = await prisma.tag.findFirst({
         where: {
-          id: data.id,
+          id: ctx.value.id,
           userId: user.id,
         },
       });
 
       if (!tag) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+        ctx.issues.push({
+          code: 'custom',
+          input: ctx.value.id,
           message: 'This Tag does not exist.',
         });
       }

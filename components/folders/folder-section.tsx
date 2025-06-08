@@ -19,7 +19,7 @@ export default function FolderSection() {
   useEffect(() => setPage(1), [debouncedSearch]);
 
   const [page, setPage] = useState(1);
-  const [itemsPerPage] = useState(10);
+  const [itemsPerPage] = useState(8);
 
   const { folders, totalPages, isLoading } = useFoldersQuery(
     debouncedSearch,

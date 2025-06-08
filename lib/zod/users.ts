@@ -1,22 +1,23 @@
 import { prisma } from '@/lib/db';
 import { AuthUser } from '@/types/auth';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 export const deleteUserSchema = (user: AuthUser) => {
   return z
     .object({
-      id: z.string().cuid(),
+      id: z.cuid(),
     })
-    .superRefine(async (data, ctx) => {
+    .check(async (ctx) => {
       const searchUser = await prisma.user.findFirst({
         where: {
-          id: data.id,
+          id: ctx.value.id,
         },
       });
 
-      if (!searchUser || data.id !== user.id) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+      if (!searchUser || ctx.value.id !== user.id) {
+        ctx.issues.push({
+          code: 'custom',
+          input: ctx.value.id,
           message: 'Cannot delete account.',
         });
       }
