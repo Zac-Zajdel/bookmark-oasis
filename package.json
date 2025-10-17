@@ -60,7 +60,7 @@
     "@tailwindcss/postcss": "^4.1.4",
     "@tanstack/eslint-plugin-query": "^5.51.15",
     "@tanstack/react-query-devtools": "^5.51.21",
-    "@types/node": "^22",
+    "@types/node": "^24",
     "@types/react": "19.1.2",
     "@types/react-dom": "19.1.2",
     "@typescript-eslint/eslint-plugin": "^8.30.1",
